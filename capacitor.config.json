@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "retro-arcade-games",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}

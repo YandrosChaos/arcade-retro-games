@@ -1,0 +1,7 @@
+{
+  "name": "retro-arcade-games",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
