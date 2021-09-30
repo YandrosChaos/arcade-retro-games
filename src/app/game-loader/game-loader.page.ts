@@ -60,5 +60,6 @@ export class GameLoaderPage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.phaserGame.destroy(true, false);
+    this.dataTransferenceService.clearOne("K-BOOM!");
   }
 }
