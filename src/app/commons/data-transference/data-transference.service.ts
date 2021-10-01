@@ -12,7 +12,7 @@ export class DataTransferenceService {
   }
 
   public getOne(key: string): DataTransferItem {
-    return this.dataTransferItems.find(
+    return this.dataTransferItems?.find(
       (item: DataTransferItem) => item.key === key
     );
   }

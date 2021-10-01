@@ -1,6 +1,6 @@
-import Phaser from 'phaser';
-import { platformHeight, platformWidth } from '../game-loader.page';
-import { GAMEPLAY_MUSIC_VOLUME, SOUND_EFFECTS_VOLUME } from './k-boom.config';
+import Phaser from "phaser";
+import { platformHeight, platformWidth } from "../game-loader.page";
+import { GAMEPLAY_MUSIC_VOLUME, SOUND_EFFECTS_VOLUME } from "./k-boom.config";
 import {
   BACKGROUND_IMG_PATH,
   BACKGROUND_SECTION_NAME,
@@ -19,33 +19,38 @@ import {
   MAIN_GAME_MUSIC_PATH,
   DEAD_SOUND_SECTION_NAME,
   MAIN_GAME_MUSIC_SECTION_NAME,
-} from './k-boom.routes';
+} from "./k-boom.routes";
 
+interface Bomb extends Phaser.Physics.Arcade.Image {}
+interface Sound extends Phaser.Sound.BaseSound {}
+interface Background extends Phaser.GameObjects.TileSprite {}
+interface Group extends Phaser.GameObjects.Group {}
+interface StaticGroup extends Phaser.Physics.Arcade.StaticGroup {}
+interface Text extends Phaser.GameObjects.Text {}
+
+const MAX_LIFES: number = 3;
+const MAX_BOMBER_TIME: number = 1000;
+const MIN_BOMBER_TIME: number = 500;
+const REDUCER_BOMBER_TIME: number = 20;
+const FLOOR_FRAME_QUANTITY: number = 2;
 export class GameScene extends Phaser.Scene {
-  private delta: number;
-  private lastBombTime: number;
-  private bombsCaught: number;
-  private bombsFallen: number;
+  private delta: number = MAX_BOMBER_TIME;
+  private lastBombTime: number = 0;
+  private bombsCaught: number = 0;
+  private bombsFallen: number = 0;
 
-  private floor: Phaser.Physics.Arcade.StaticGroup;
-  private info: Phaser.GameObjects.Text;
+  private floor: StaticGroup;
+  private info: Text;
 
-  private explosions: Phaser.GameObjects.Group;
-  private explosionSound: Phaser.Sound.BaseSound;
-  private deadSound: Phaser.Sound.BaseSound;
-  private music: Phaser.Sound.BaseSound;
+  private explosions: Group;
+  private explosionSound: Sound;
+  private deadSound: Sound;
+  private music: Sound;
 
   constructor() {
     super({
       key: GAME_SCENE_NAME,
     });
-  }
-
-  init(params): void {
-    this.delta = 1000;
-    this.lastBombTime = 0;
-    this.bombsCaught = 0;
-    this.bombsFallen = 0;
   }
 
   preload(): void {
@@ -61,19 +66,34 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  create(): void {
+  public create(): void {
+    this.createSounds();
+    this.createBackground();
+    this.createFloor();
+    this.createAnimations();
+    this.music.play();
+
+    this.info = this.add.text(10, 10, "", {
+      font: "16px Minecraft",
+      color: "#FBFBAC",
+    });
+  }
+
+  private createSounds(): void {
     this.music = this.sound.add(MAIN_GAME_MUSIC_SECTION_NAME, {
       volume: GAMEPLAY_MUSIC_VOLUME,
       loop: true,
     });
-    this.music.play();
     this.explosionSound = this.sound.add(EXPLOSION_SOUND_SECTION_NAME, {
       volume: SOUND_EFFECTS_VOLUME,
     });
     this.deadSound = this.sound.add(DEAD_SOUND_SECTION_NAME, {
       volume: SOUND_EFFECTS_VOLUME,
     });
-    const background: Phaser.GameObjects.TileSprite = this.add.tileSprite(
+  }
+
+  private createBackground(): void {
+    const background: Background = this.add.tileSprite(
       0,
       platformHeight / 2,
       platformWidth * 2,
@@ -81,9 +101,12 @@ export class GameScene extends Phaser.Scene {
       BACKGROUND_SECTION_NAME
     );
     background.setAngle(90);
+  }
+
+  private createFloor(): void {
     this.floor = this.physics.add.staticGroup({
       key: FLOOR_SECTION_NAME,
-      frameQuantity: 2,
+      frameQuantity: FLOOR_FRAME_QUANTITY,
     });
     Phaser.Actions.PlaceOnLine(
       this.floor.getChildren(),
@@ -95,11 +118,9 @@ export class GameScene extends Phaser.Scene {
       )
     );
     this.floor.refresh();
-    this.info = this.add.text(10, 10, '', {
-      font: '24px Minecraft Bold',
-      color: '#FBFBAC',
-    });
+  }
 
+  private createAnimations(): void {
     this.anims.create({
       key: KABOOM_ANIM_NAME,
       frames: this.anims.generateFrameNumbers(EXPLOSION_SECTION_NAME, {
@@ -117,69 +138,67 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  update(time: number): void {
+  public update(time: number): void {
     const diff: number = time - this.lastBombTime;
     if (diff > this.delta) {
       this.lastBombTime = time;
-      if (this.delta > 500) {
-        this.delta -= 20;
-      }
+      if (this.delta > MIN_BOMBER_TIME) this.delta -= REDUCER_BOMBER_TIME;
       this.emitBomb();
     }
+    this.updateText();
+  }
+
+  private updateText(): void {
     this.info.text =
-      this.bombsCaught + ' caught - ' + this.bombsFallen + ' fallen (max 3)';
-  }
-
-  private onClick(bomb: Phaser.Physics.Arcade.Image): () => void {
-    return async function () {
-      bomb.setVelocity(0, 0);
-      this.bombsCaught += 1;
-      this.time.delayedCall(
-        100,
-        async function (bomb) {
-          this.explosionEffect(bomb);
-          bomb.destroy();
-        },
-        [bomb],
-        this
-      );
-    };
-  }
-
-  private onFall(bomb: Phaser.Physics.Arcade.Image): () => void {
-    return async function () {
-      this.bombsFallen += 1;
-      this.time.delayedCall(
-        100,
-        async function (bomb) {
-          this.explosionEffect(bomb);
-          bomb.destroy();
-          if (this.bombsFallen > 2) {
-            this.gameOver();
-          }
-        },
-        [bomb],
-        this
-      );
-    };
+      this.bombsCaught + " caught - " + this.bombsFallen + " fallen ( max 3 )";
   }
 
   private emitBomb(): void {
-    const randomVelocity: number = Phaser.Math.Between(100, 200);
-    const randomBombWidth: number = Phaser.Math.FloatBetween(0.12, 0.17);
-    const x: number = Phaser.Math.Between(25, platformWidth - 25);
+    const bomb: Bomb = this.buildBomb();
+    this.physics.add.collider(bomb, this.floor, this.onFall(bomb), null, this);
+  }
+
+  private buildBomb(): Bomb {
+    const randomVelocity: number = this.generateRandomBetween(100, 200);
+    const randomBombWidth: number = this.generateRandomBetween(0.12, 0.17);
+    const x: number = this.generateRandomBetween(25, platformWidth - 25);
     const y: number = 25;
-    const bomb: Phaser.Physics.Arcade.Image = this.physics.add.image(
-      x,
-      y,
-      BOMB_SECTION_NAME
-    );
+    const bomb: Bomb = this.physics.add.image(x, y, BOMB_SECTION_NAME);
     bomb.setAngle(180);
     bomb.setDisplaySize(platformWidth * randomBombWidth, platformHeight * 0.15);
     bomb.setVelocity(0, randomVelocity);
     bomb.setInteractive();
-    bomb.on('pointerdown', this.onClick(bomb), this);
-    this.physics.add.collider(bomb, this.floor, this.onFall(bomb), null, this);
+    bomb.on("pointerdown", this.onClick(bomb), this);
+    return bomb;
+  }
+
+  private generateRandomBetween(first: number, second: number): number {
+    return Phaser.Math.FloatBetween(first, second);
+  }
+
+  private onClick(bomb: Bomb): () => void {
+    return async function () {
+      bomb.setVelocity(0, 0);
+      this.bombsCaught += 1;
+      this.time.delayedCall(100, this.onTouchedBomb(bomb), [bomb], this);
+    };
+  }
+
+  private onFall(bomb: Bomb): () => void {
+    return async function () {
+      this.bombsFallen += 1;
+      this.time.delayedCall(100, this.onTouchedBomb(bomb), [bomb], this);
+    };
+  }
+
+  private onTouchedBomb(bomb: Bomb): () => void {
+    return async function () {
+      this.explosionEffect(bomb);
+      bomb.destroy();
+      if (this.bombsFallen === MAX_LIFES) {
+        this.gameOver();
+      }
+    };
   }
 
   private gameOver(): void {
@@ -190,11 +209,11 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  private explosionEffect(obj): void {
+  private explosionEffect(bomb: Bomb): void {
     const explosion = this.explosions.get().setActive(true);
     explosion.setOrigin(0.5, 0.5);
-    explosion.x = obj.x;
-    explosion.y = obj.y;
+    explosion.x = bomb.x;
+    explosion.y = bomb.y;
     this.explosionSound.play();
     explosion.play(KABOOM_ANIM_NAME);
   }
