@@ -19,6 +19,8 @@ import {
   MAIN_GAME_MUSIC_PATH,
   DEAD_SOUND_SECTION_NAME,
   MAIN_GAME_MUSIC_SECTION_NAME,
+  RIP_IMG_PATH,
+  RIP_SECTION_NAME,
 } from "./k-boom.routes";
 
 interface Bomb extends Phaser.Physics.Arcade.Image {}
@@ -40,6 +42,7 @@ export class GameScene extends Phaser.Scene {
   private bombsFallen: number = 0;
 
   private floor: StaticGroup;
+  private lifeIcons: Group;
   private info: Text;
 
   private explosions: Group;
@@ -53,6 +56,13 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
+  init(params) {
+    this.delta = MAX_BOMBER_TIME;
+    this.lastBombTime = 0;
+    this.bombsCaught = 0;
+    this.bombsFallen = 0;
+  }
+
   preload(): void {
     this.load.audio(EXPLOSION_SOUND_SECTION_NAME, EXPLOSION_SOUND_PATH);
     this.load.audio(DEAD_SOUND_SECTION_NAME, DEAD_SOUND_PATH);
@@ -60,6 +70,7 @@ export class GameScene extends Phaser.Scene {
     this.load.image(BOMB_SECTION_NAME, BOMB_IMG_PATH);
     this.load.image(FLOOR_SECTION_NAME, FLOOR_IMG_PATH);
     this.load.image(BACKGROUND_SECTION_NAME, BACKGROUND_IMG_PATH);
+    this.load.image(RIP_SECTION_NAME, RIP_IMG_PATH);
     this.load.spritesheet(EXPLOSION_SECTION_NAME, KABOOM_IMG_PATH, {
       frameWidth: 128,
       frameHeight: 128,
@@ -71,9 +82,14 @@ export class GameScene extends Phaser.Scene {
     this.createBackground();
     this.createFloor();
     this.createAnimations();
+    this.lifeIcons = this.add.group();
     this.music.play();
 
-    this.info = this.add.text(10, 10, "", {
+    const destroyedBombs = this.add.image(25, 25, BOMB_SECTION_NAME);
+    destroyedBombs.setScale(0.05);
+    destroyedBombs.angle = 180;
+
+    this.info = this.add.text(50, 20, "", {
       font: "16px Minecraft",
       color: "#FBFBAC",
     });
@@ -149,8 +165,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   private updateText(): void {
-    this.info.text =
-      this.bombsCaught + " caught - " + this.bombsFallen + " fallen ( max 3 )";
+    this.info.text = String(this.bombsCaught);
   }
 
   private emitBomb(): void {
@@ -187,17 +202,29 @@ export class GameScene extends Phaser.Scene {
   private onFall(bomb: Bomb): () => void {
     return async function () {
       this.bombsFallen += 1;
+      this.isGameOver();
       this.time.delayedCall(100, this.onTouchedBomb(bomb), [bomb], this);
     };
+  }
+
+  private isGameOver(): void {
+    if (this.bombsFallen > MAX_LIFES) {
+      this.gameOver();
+    } else {
+      const destroyedBombs = this.add.image(
+        platformWidth - (25 + this.bombsFallen * 40),
+        25,
+        RIP_SECTION_NAME
+      );
+      destroyedBombs.setScale(0.2);
+      this.lifeIcons.add(destroyedBombs);
+    }
   }
 
   private onTouchedBomb(bomb: Bomb): () => void {
     return async function () {
       this.explosionEffect(bomb);
       bomb.destroy();
-      if (this.bombsFallen === MAX_LIFES) {
-        this.gameOver();
-      }
     };
   }
 
