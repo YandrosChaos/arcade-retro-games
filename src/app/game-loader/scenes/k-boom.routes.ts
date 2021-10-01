@@ -11,6 +11,8 @@ export const BACKGROUND_MENU_SECTION_NAME: string = "background-menu";
 export const BACKGROUND_SECTION_NAME: string = "background";
 export const FLOOR_SECTION_NAME: string = "floor";
 export const BOMB_SECTION_NAME: string = "bomb";
+export const BOMB_NUCLEAR_SECTION_NAME: string = "bomb-nuclear";
+export const BOMB_ATOMIC_SECTION_NAME: string = "bomb-atomic";
 export const EXPLOSION_SECTION_NAME: string = "kaboom";
 export const RIP_SECTION_NAME: string = "RIP";
 export const MAIN_GAME_MUSIC_SECTION_NAME: string = "ingame-music";
@@ -43,7 +45,11 @@ export const TEXT_BITMAP_FONT_PATH_FNT: string =
 export const BACKGROUND_MENU_IMG_PATH: string =
   "assets/games/k-boom/menu_background.jpg";
 export const BACKGROUND_IMG_PATH: string = "assets/games/k-boom/space.jpg";
-export const BOMB_IMG_PATH: string = "assets/games/k-boom/meteo.png";
+export const BOMB_IMG_PATH: string = "assets/games/k-boom/bomb.svg";
+export const BOMB_ATOMIC_IMG_PATH: string =
+  "assets/games/k-boom/bomb-atomic.svg";
+export const BOMB_NUCLEAR_IMG_PATH: string =
+  "assets/games/k-boom/bomb-nuclear.svg";
 export const FLOOR_IMG_PATH: string = "assets/games/k-boom/sand.png";
 export const KABOOM_IMG_PATH: string = "assets/games/k-boom/explode.png";
 export const RIP_IMG_PATH: string = "assets/games/k-boom/skull.svg";

@@ -21,9 +21,17 @@ import {
   MAIN_GAME_MUSIC_SECTION_NAME,
   RIP_IMG_PATH,
   RIP_SECTION_NAME,
+  BOMB_ATOMIC_IMG_PATH,
+  BOMB_ATOMIC_SECTION_NAME,
+  BOMB_NUCLEAR_SECTION_NAME,
+  BOMB_NUCLEAR_IMG_PATH,
 } from "./k-boom.routes";
 
-interface Bomb extends Phaser.Physics.Arcade.Image {}
+class Bomb extends Phaser.Physics.Arcade.Image {
+  public points?: number = 0;
+  public damage?: number = 0;
+  public generatedVelocity?: number = 0;
+}
 interface Sound extends Phaser.Sound.BaseSound {}
 interface Background extends Phaser.GameObjects.TileSprite {}
 interface Group extends Phaser.GameObjects.Group {}
@@ -42,8 +50,8 @@ export class GameScene extends Phaser.Scene {
   private bombsFallen: number = 0;
 
   private floor: StaticGroup;
-  private lifeIcons: Group;
-  private info: Text;
+  private score: Text;
+  private lifes: Text;
 
   private explosions: Group;
   private explosionSound: Sound;
@@ -68,6 +76,8 @@ export class GameScene extends Phaser.Scene {
     this.load.audio(DEAD_SOUND_SECTION_NAME, DEAD_SOUND_PATH);
     this.load.audio(MAIN_GAME_MUSIC_SECTION_NAME, MAIN_GAME_MUSIC_PATH);
     this.load.image(BOMB_SECTION_NAME, BOMB_IMG_PATH);
+    this.load.image(BOMB_ATOMIC_SECTION_NAME, BOMB_ATOMIC_IMG_PATH);
+    this.load.image(BOMB_NUCLEAR_SECTION_NAME, BOMB_NUCLEAR_IMG_PATH);
     this.load.image(FLOOR_SECTION_NAME, FLOOR_IMG_PATH);
     this.load.image(BACKGROUND_SECTION_NAME, BACKGROUND_IMG_PATH);
     this.load.image(RIP_SECTION_NAME, RIP_IMG_PATH);
@@ -82,14 +92,20 @@ export class GameScene extends Phaser.Scene {
     this.createBackground();
     this.createFloor();
     this.createAnimations();
-    this.lifeIcons = this.add.group();
     this.music.play();
 
     const destroyedBombs = this.add.image(25, 25, BOMB_SECTION_NAME);
-    destroyedBombs.setScale(0.05);
-    destroyedBombs.angle = 180;
+    destroyedBombs.setScale(0.07);
 
-    this.info = this.add.text(50, 20, "", {
+    const lifes = this.add.image(100, 30, RIP_SECTION_NAME);
+    lifes.setScale(0.15);
+
+    this.score = this.add.text(50, 20, "", {
+      font: "16px Minecraft",
+      color: "#FBFBAC",
+    });
+
+    this.lifes = this.add.text(125, 20, "", {
       font: "16px Minecraft",
       color: "#FBFBAC",
     });
@@ -161,11 +177,16 @@ export class GameScene extends Phaser.Scene {
       if (this.delta > MIN_BOMBER_TIME) this.delta -= REDUCER_BOMBER_TIME;
       this.emitBomb();
     }
-    this.updateText();
+    this.updateScoreText();
+    this.updateLifesText();
   }
 
-  private updateText(): void {
-    this.info.text = String(this.bombsCaught);
+  private updateScoreText(): void {
+    this.score.text = String(this.bombsCaught);
+  }
+
+  private updateLifesText(): void {
+    this.lifes.text = String(MAX_LIFES - this.bombsFallen);
   }
 
   private emitBomb(): void {
@@ -174,14 +195,29 @@ export class GameScene extends Phaser.Scene {
   }
 
   private buildBomb(): Bomb {
-    const randomVelocity: number = this.generateRandomBetween(100, 200);
-    const randomBombWidth: number = this.generateRandomBetween(0.12, 0.17);
+    const randomBombType: number = this.generateRandomBetween(0, 100);
+    const randomBombWidth: number = this.generateRandomBetween(0.17, 0.25);
     const x: number = this.generateRandomBetween(25, platformWidth - 25);
     const y: number = 25;
-    const bomb: Bomb = this.physics.add.image(x, y, BOMB_SECTION_NAME);
-    bomb.setAngle(180);
+    let bomb: Bomb;
+    if (randomBombType < 85) {
+      bomb = this.physics.add.image(x, y, BOMB_SECTION_NAME);
+      bomb.generatedVelocity = this.generateRandomBetween(100, 200);
+      bomb.points = 1;
+      bomb.damage = 1;
+    } else if (randomBombType > 85 && randomBombType < 98) {
+      bomb = this.physics.add.image(x, y, BOMB_NUCLEAR_SECTION_NAME);
+      bomb.generatedVelocity = this.generateRandomBetween(150, 200);
+      bomb.points = 10;
+      bomb.damage = 2;
+    } else {
+      bomb = this.physics.add.image(x, y, BOMB_ATOMIC_SECTION_NAME);
+      bomb.generatedVelocity = this.generateRandomBetween(200, 230);
+      bomb.points = 100;
+      bomb.damage = 3;
+    }
     bomb.setDisplaySize(platformWidth * randomBombWidth, platformHeight * 0.15);
-    bomb.setVelocity(0, randomVelocity);
+    bomb.setVelocity(0, bomb.generatedVelocity);
     bomb.setInteractive();
     bomb.on("pointerdown", this.onClick(bomb), this);
     return bomb;
@@ -194,14 +230,14 @@ export class GameScene extends Phaser.Scene {
   private onClick(bomb: Bomb): () => void {
     return async function () {
       bomb.setVelocity(0, 0);
-      this.bombsCaught += 1;
+      this.bombsCaught += bomb.points;
       this.time.delayedCall(100, this.onTouchedBomb(bomb), [bomb], this);
     };
   }
 
   private onFall(bomb: Bomb): () => void {
     return async function () {
-      this.bombsFallen += 1;
+      this.bombsFallen += bomb.damage;
       this.isGameOver();
       this.time.delayedCall(100, this.onTouchedBomb(bomb), [bomb], this);
     };
@@ -210,14 +246,6 @@ export class GameScene extends Phaser.Scene {
   private isGameOver(): void {
     if (this.bombsFallen > MAX_LIFES) {
       this.gameOver();
-    } else {
-      const destroyedBombs = this.add.image(
-        platformWidth - (25 + this.bombsFallen * 40),
-        25,
-        RIP_SECTION_NAME
-      );
-      destroyedBombs.setScale(0.2);
-      this.lifeIcons.add(destroyedBombs);
     }
   }
 
