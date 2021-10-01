@@ -6,6 +6,17 @@
     <ion-title>Games</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content class="ion-padding ion-text-center">
-  <ion-button (click)="onNavigateTo()">Play K-BOOM</ion-button>
+<ion-content class="card-background-page">
+  <div *ngIf="games?.length; else noData"></div>
+  <ion-card class="card" *ngFor="let game of games" (click)="onNavigate(game)">
+    <div class="card-title">{{game.name}}</div>
+    <div class="card-subtitle">{{game.type}}</div>
+    <img class="card-img" src="{{game.imgLink}}" alt="image" />
+  </ion-card>
+
+  <ng-template #noData>
+    <div class="no-data-text ion-padding">
+      <ion-text> Parece que hubo un error =( </ion-text>
+    </div>
+  </ng-template>
 </ion-content>

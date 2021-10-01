@@ -1,0 +1,41 @@
+.card-background-page {
+  margin-left: 0;
+  margin-right: 0;
+  .card-img {
+    filter: brightness(90%) opacity(70%) grayscale(100%);
+    max-height: 250px;
+    width: auto;
+  }
+  .card {
+    padding: 0;
+    position: relative;
+    text-align: center;
+    box-shadow: none !important;
+  }
+  .card-title {
+    font-family: Xenon;
+    font-size: 5rem;
+    position: absolute;
+    top: 30%;
+    width: 100%;
+    z-index: 10;
+    color: var(--ion-color-tertiary-contrast);
+  }
+  .card-subtitle {
+    font-family: Minecraft;
+    text-align: end;
+    font-size: 1rem;
+    position: absolute;
+    right: 5%;
+    bottom: 5%;
+    width: 100%;
+    z-index: 10;
+    color: var(--ion-color-tertiary-contrast);
+  }
+}
+
+.no-data-text {
+  font-family: Minecraft;
+  text-align: center;
+  font-size: 1rem;
+}
