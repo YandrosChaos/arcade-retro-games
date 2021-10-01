@@ -25,13 +25,17 @@ import {
   BOMB_ATOMIC_SECTION_NAME,
   BOMB_NUCLEAR_SECTION_NAME,
   BOMB_NUCLEAR_IMG_PATH,
+  SAFE_PACK_SECTION_NAME,
+  SAFE_PACK_IMG_PATH,
 } from "./k-boom.routes";
 
-class Bomb extends Phaser.Physics.Arcade.Image {
+class ThrowableItem extends Phaser.Physics.Arcade.Image {
   public points?: number = 0;
   public damage?: number = 0;
   public generatedVelocity?: number = 0;
 }
+interface Bomb extends ThrowableItem {}
+interface SafePackage extends ThrowableItem {}
 interface Sound extends Phaser.Sound.BaseSound {}
 interface Background extends Phaser.GameObjects.TileSprite {}
 interface Group extends Phaser.GameObjects.Group {}
@@ -78,6 +82,7 @@ export class GameScene extends Phaser.Scene {
     this.load.image(BOMB_SECTION_NAME, BOMB_IMG_PATH);
     this.load.image(BOMB_ATOMIC_SECTION_NAME, BOMB_ATOMIC_IMG_PATH);
     this.load.image(BOMB_NUCLEAR_SECTION_NAME, BOMB_NUCLEAR_IMG_PATH);
+    this.load.image(SAFE_PACK_SECTION_NAME, SAFE_PACK_IMG_PATH);
     this.load.image(FLOOR_SECTION_NAME, FLOOR_IMG_PATH);
     this.load.image(BACKGROUND_SECTION_NAME, BACKGROUND_IMG_PATH);
     this.load.image(RIP_SECTION_NAME, RIP_IMG_PATH);
@@ -190,44 +195,77 @@ export class GameScene extends Phaser.Scene {
   }
 
   private emitBomb(): void {
-    const bomb: Bomb = this.buildBomb();
+    const bomb: ThrowableItem = this.buildThrowableItem();
     this.physics.add.collider(bomb, this.floor, this.onFall(bomb), null, this);
   }
 
-  private buildBomb(): Bomb {
+  private buildThrowableItem(): ThrowableItem {
     const randomBombType: number = this.generateRandomBetween(0, 100);
-    const randomBombWidth: number = this.generateRandomBetween(0.17, 0.25);
     const x: number = this.generateRandomBetween(25, platformWidth - 25);
     const y: number = 25;
-    let bomb: Bomb;
     if (randomBombType < 85) {
-      bomb = this.physics.add.image(x, y, BOMB_SECTION_NAME);
-      bomb.generatedVelocity = this.generateRandomBetween(100, 200);
-      bomb.points = 1;
-      bomb.damage = 1;
-    } else if (randomBombType > 85 && randomBombType < 98) {
-      bomb = this.physics.add.image(x, y, BOMB_NUCLEAR_SECTION_NAME);
-      bomb.generatedVelocity = this.generateRandomBetween(150, 200);
-      bomb.points = 10;
-      bomb.damage = 2;
+      return this.buildBomb(BOMB_SECTION_NAME, x, y, 1, 1, 100, 200);
+    } else if (randomBombType >= 85 && randomBombType < 95) {
+      return this.buildBomb(BOMB_NUCLEAR_SECTION_NAME, x, y, 10, 2, 150, 200);
+    } else if (randomBombType >= 95 && randomBombType < 98) {
+      return this.buildBomb(BOMB_ATOMIC_SECTION_NAME, x, y, 100, 3, 200, 230);
     } else {
-      bomb = this.physics.add.image(x, y, BOMB_ATOMIC_SECTION_NAME);
-      bomb.generatedVelocity = this.generateRandomBetween(200, 230);
-      bomb.points = 100;
-      bomb.damage = 3;
+      return this.buildSafePackage(x, y);
     }
+  }
+
+  private buildBomb(
+    section: string,
+    x: number,
+    y: number,
+    points: number,
+    damage: number,
+    randomVelocityFrom: number,
+    randomVelocityTo: number
+  ): Bomb {
+    const randomBombWidth: number = this.generateRandomBetween(0.17, 0.25);
+    const bomb: Bomb = this.physics.add.image(x, y, section);
+    bomb.generatedVelocity = this.generateRandomBetween(
+      randomVelocityFrom,
+      randomVelocityTo
+    );
     bomb.setDisplaySize(platformWidth * randomBombWidth, platformHeight * 0.15);
     bomb.setVelocity(0, bomb.generatedVelocity);
     bomb.setInteractive();
-    bomb.on("pointerdown", this.onClick(bomb), this);
+    bomb.on("pointerdown", this.onBombTouched(bomb), this);
+    bomb.points = points;
+    bomb.damage = damage;
     return bomb;
+  }
+
+  private buildSafePackage(x: number, y: number): SafePackage {
+    const randomWidth: number = this.generateRandomBetween(0.17, 0.25);
+    const safePackage: SafePackage = this.physics.add.image(
+      x,
+      y,
+      SAFE_PACK_SECTION_NAME
+    );
+    safePackage.generatedVelocity = this.generateRandomBetween(200, 230);
+    safePackage.setDisplaySize(platformWidth * randomWidth, platformHeight * 0.15);
+    safePackage.setVelocity(0, safePackage.generatedVelocity);
+    safePackage.setInteractive();
+    safePackage.on("pointerdown", this.onSafeTouched(safePackage), this);
+    return safePackage;
   }
 
   private generateRandomBetween(first: number, second: number): number {
     return Phaser.Math.FloatBetween(first, second);
   }
 
-  private onClick(bomb: Bomb): () => void {
+  private onSafeTouched(bomb: Bomb): () => void {
+    return async function () {
+      bomb.setVelocity(0, 0);
+      this.bombsFallen--;
+      this.time.delayedCall(100, this.onTouchedBomb(bomb), [bomb], this);
+    };
+  }
+
+  private onBombTouched(bomb: Bomb): () => void {
     return async function () {
       bomb.setVelocity(0, 0);
       this.bombsCaught += bomb.points;

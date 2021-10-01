@@ -13,6 +13,7 @@ export const FLOOR_SECTION_NAME: string = "floor";
 export const BOMB_SECTION_NAME: string = "bomb";
 export const BOMB_NUCLEAR_SECTION_NAME: string = "bomb-nuclear";
 export const BOMB_ATOMIC_SECTION_NAME: string = "bomb-atomic";
+export const SAFE_PACK_SECTION_NAME: string = "safe-pak";
 export const EXPLOSION_SECTION_NAME: string = "kaboom";
 export const RIP_SECTION_NAME: string = "RIP";
 export const MAIN_GAME_MUSIC_SECTION_NAME: string = "ingame-music";
@@ -53,6 +54,7 @@ export const BOMB_NUCLEAR_IMG_PATH: string =
 export const FLOOR_IMG_PATH: string = "assets/games/k-boom/sand.png";
 export const KABOOM_IMG_PATH: string = "assets/games/k-boom/explode.png";
 export const RIP_IMG_PATH: string = "assets/games/k-boom/skull.svg";
+export const SAFE_PACK_IMG_PATH: string = "assets/games/k-boom/paracaidas.svg";
 
 // music paths
 export const MENU_MUSIC_PATH: string = "assets/games/k-boom/k-boom_menu.mp3";
