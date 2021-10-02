@@ -1,0 +1,52 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button menu="side-drawer-menu" color="tertiary">
+        <ion-icon src="assets/icon/favicon.svg"></ion-icon>
+      </ion-menu-button>
+    </ion-buttons>
+    <ion-title class="custom-title-font" color="tertiary">About</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <div class="ion-text-center">
+    <ion-icon class="big-icon" src="assets/icon/favicon.svg"></ion-icon>
+  </div>
+  <ion-label class="ion-text-justify">
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Purus viverra accumsan
+      in nisl nisi scelerisque eu. Massa sed elementum tempus egestas sed sed
+      risus pretium quam. Mauris commodo quis imperdiet massa tincidunt nunc
+      pulvinar sapien. Amet mauris commodo quis imperdiet massa.
+    </p>
+    <p>
+      Mauris augue neque gravida in fermentum et sollicitudin ac orci. Senectus
+      et netus et malesuada fames ac turpis. Dui accumsan sit amet nulla
+      facilisi. Pellentesque diam volutpat commodo sed egestas egestas fringilla
+      phasellus faucibus.
+    </p>
+    <p>
+      Diam phasellus vestibulum lorem sed risus. Maecenas pharetra convallis
+      posuere morbi leo. Magna sit amet purus gravida. Nisi est sit amet
+      facilisis magna etiam tempor orci eu. In egestas erat imperdiet sed
+      euismod nisi porta lorem.
+    </p>
+  </ion-label>
+  <ion-grid class="ion-text-center">
+    <ion-row>
+      <ion-col>
+        <ion-button (click)="presentModal()" expand="block" color="tertiary">
+          Contact!
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="block" color="success" disabled>
+          Donate!
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

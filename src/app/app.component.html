@@ -2,7 +2,7 @@
   <ion-menu side="start" menuId="side-drawer-menu" contentId="menuContent">
     <ion-header class="ion-no-border">
       <ion-toolbar>
-        <ion-title class="ion-text-center custom-font">RetroGames</ion-title>
+        <ion-title class="ion-text-center custom-title-font">RetroGames</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -21,7 +21,11 @@
           </ion-item>
         </ion-menu-toggle>
         <ion-menu-toggle auto-hide="true">
-          <ion-item lines="none" routerLinkActive="active-link">
+          <ion-item
+            lines="none"
+            routerLinkActive="active-link"
+            [routerLink]="['/about']"
+          >
             <ion-icon name="information-circle-sharp" slot="start"></ion-icon>
             <ion-label>About</ion-label>
           </ion-item>
