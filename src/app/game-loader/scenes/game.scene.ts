@@ -260,6 +260,8 @@ export class GameScene extends Phaser.Scene {
     safePackage.setVelocity(0, safePackage.generatedVelocity);
     safePackage.setInteractive();
     safePackage.on("pointerdown", this.onSafeTouched(safePackage), this);
+    safePackage.points = 0;
+    safePackage.damage = 0;
     return safePackage;
   }
 

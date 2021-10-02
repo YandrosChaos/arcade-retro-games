@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { Platform } from "@ionic/angular";
 import Phaser from "phaser";
-import { DataTransferenceService } from "../commons/data-transference/data-transference.service";
+import { DataTransferenceService } from "../commons/services/data-transference/data-transference.service";
 import { DataTransferItem } from "../commons/interfaces/data-transfer.interface";
 import { GameScene } from "./scenes/game.scene";
 import { GAME_NAME } from "./scenes/k-boom.routes";
@@ -51,7 +51,7 @@ export class GameLoaderPage implements OnInit, OnDestroy {
           debug: false,
         },
       },
-      backgroundColor: "#000033",
+      backgroundColor: "#000000",
     };
   }
   ngOnInit() {
@@ -60,6 +60,6 @@ export class GameLoaderPage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.phaserGame.destroy(true, false);
-    this.dataTransferenceService.clearOne("K-BOOM!");
+    this.dataTransferenceService.delete(this.gameName);
   }
 }

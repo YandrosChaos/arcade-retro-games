@@ -6,7 +6,7 @@ import { IonicModule, IonicRouteStrategy } from "@ionic/angular";
 
 import { AppComponent } from "./app.component";
 import { AppRoutingModule } from "./app-routing.module";
-import { DataTransferenceService } from "./commons/data-transference/data-transference.service";
+import { DataTransferenceService } from "./commons/services/data-transference/data-transference.service";
 
 @NgModule({
   declarations: [AppComponent],

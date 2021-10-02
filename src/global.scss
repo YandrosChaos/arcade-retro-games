@@ -20,6 +20,13 @@
     url(./assets/fonts/minecraft/Minecraft.ttf) format("truetype");
 }
 
+.active-link {
+  color: var(--ion-color-success);
+  ion-icon {
+    color: var(--ion-color-success) !important;
+  }
+}
+
 /* Core CSS required for Ionic components to work properly */
 @import "~@ionic/angular/css/core.css";
 

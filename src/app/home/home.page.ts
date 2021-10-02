@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { DataTransferenceService } from "../commons/data-transference/data-transference.service";
+import { DataTransferenceService } from "../commons/services/data-transference/data-transference.service";
 import { VIDEO_GAMES } from "../commons/data/videogames.data";
 import { Videogame } from "../commons/interfaces/videogame.interface";
 
@@ -10,17 +10,20 @@ import { Videogame } from "../commons/interfaces/videogame.interface";
   styleUrls: ["home.page.scss"],
 })
 export class HomePage implements OnInit, OnDestroy {
-  public games: Videogame[] = VIDEO_GAMES;
+  private games: Videogame[] = VIDEO_GAMES;
+
+  public filteredGames: Videogame[] = VIDEO_GAMES;
+  public isSearching: boolean = false;
 
   constructor(
     private router: Router,
     private dataTransferenceService: DataTransferenceService
   ) {}
 
-  ngOnInit() {}
+  public ngOnInit(): void {}
 
   public onNavigate(game: Videogame): void {
-    this.dataTransferenceService.save({
+    this.dataTransferenceService.create({
       key: game.name,
       data: {
         gameName: game.name,
@@ -30,7 +33,28 @@ export class HomePage implements OnInit, OnDestroy {
     this.router.navigate(["/game-loader"]);
   }
 
-  ngOnDestroy() {
-    this.dataTransferenceService.clearAll();
+  public onSearchValueChanged(event): void {
+    const item: string = event.detail.value;
+    const inputValue: string = this.transformInputValue(item);
+    this.filteredGames = this.games.filter(
+      (game: Videogame) =>
+        this.transformInputValue(game.name).includes(inputValue) ||
+        this.transformInputValue(game.type).includes(inputValue)
+    );
+  }
+
+  private transformInputValue(value: string): string {
+    return value
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/\p{Diacritic}/gu, "");
+  }
+
+  public onSearchButtonTouched(): void {
+    this.isSearching = !this.isSearching;
+  }
+
+  public ngOnDestroy(): void {
+    this.dataTransferenceService.holyGrenade();
   }
 }

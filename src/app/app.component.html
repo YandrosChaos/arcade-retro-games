@@ -1,3 +1,33 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+  <ion-menu side="start" menuId="side-drawer-menu" contentId="menuContent">
+    <ion-header class="ion-no-border">
+      <ion-toolbar>
+        <ion-title class="ion-text-center custom-font">RetroGames</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <div class="ion-text-center">
+        <ion-icon class="big-icon" src="assets/icon/favicon.svg"></ion-icon>
+      </div>
+      <ion-list class="ion-no-padding">
+        <ion-menu-toggle auto-hide="true">
+          <ion-item
+            lines="none"
+            [routerLink]="['/home']"
+            routerLinkActive="active-link"
+          >
+            <ion-icon name="game-controller-sharp" slot="start"></ion-icon>
+            <ion-label>Games</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+        <ion-menu-toggle auto-hide="true">
+          <ion-item lines="none" routerLinkActive="active-link">
+            <ion-icon name="information-circle-sharp" slot="start"></ion-icon>
+            <ion-label>About</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+  <ion-router-outlet id="menuContent"></ion-router-outlet>
 </ion-app>

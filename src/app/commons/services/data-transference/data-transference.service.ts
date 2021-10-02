@@ -1,8 +1,11 @@
 import { Injectable } from "@angular/core";
-import { DataTransferItem } from "../interfaces/data-transfer.interface";
+import { DataTransferItem } from "../../interfaces/data-transfer.interface";
+import { AbstractService } from "../abstract/abstract-service.interface";
 
 @Injectable()
-export class DataTransferenceService {
+export class DataTransferenceService
+  implements AbstractService<DataTransferItem>
+{
   private dataTransferItems: DataTransferItem[];
 
   constructor() {}
@@ -17,7 +20,7 @@ export class DataTransferenceService {
     );
   }
 
-  public save(item: any): void {
+  public create(item: DataTransferItem): void {
     if (this.dataTransferItems) {
       this.dataTransferItems.push(item);
     } else {
@@ -26,14 +29,18 @@ export class DataTransferenceService {
     }
   }
 
-  public clearAll(): void {
-    this.dataTransferItems = undefined;
+  public update(item: DataTransferItem): void {
+    throw "not implemented yet";
   }
 
-  public clearOne(key: string): void {
+  public delete(key: string): void {
     const index: number = this.dataTransferItems.findIndex(
       (item: DataTransferItem) => item.key === key
     );
     if (index > -1) this.dataTransferItems.splice(index, 1);
+  }
+
+  public holyGrenade(): void {
+    this.dataTransferItems = undefined;
   }
 }
