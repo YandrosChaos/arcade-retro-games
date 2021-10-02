@@ -27,6 +27,8 @@ import {
   BOMB_NUCLEAR_IMG_PATH,
   SAFE_PACK_SECTION_NAME,
   SAFE_PACK_IMG_PATH,
+  BONUS_SOUND_SECTION_NAME,
+  BONUS_SOUND_PATH,
 } from "./k-boom.routes";
 
 class ThrowableItem extends Phaser.Physics.Arcade.Image {
@@ -59,6 +61,7 @@ export class GameScene extends Phaser.Scene {
 
   private explosions: Group;
   private explosionSound: Sound;
+  private bonusSound: Sound;
   private deadSound: Sound;
   private music: Sound;
 
@@ -77,6 +80,7 @@ export class GameScene extends Phaser.Scene {
 
   preload(): void {
     this.load.audio(EXPLOSION_SOUND_SECTION_NAME, EXPLOSION_SOUND_PATH);
+    this.load.audio(BONUS_SOUND_SECTION_NAME, BONUS_SOUND_PATH);
     this.load.audio(DEAD_SOUND_SECTION_NAME, DEAD_SOUND_PATH);
     this.load.audio(MAIN_GAME_MUSIC_SECTION_NAME, MAIN_GAME_MUSIC_PATH);
     this.load.image(BOMB_SECTION_NAME, BOMB_IMG_PATH);
@@ -125,6 +129,9 @@ export class GameScene extends Phaser.Scene {
       volume: SOUND_EFFECTS_VOLUME,
     });
     this.deadSound = this.sound.add(DEAD_SOUND_SECTION_NAME, {
+      volume: SOUND_EFFECTS_VOLUME,
+    });
+    this.bonusSound = this.sound.add(BONUS_SOUND_SECTION_NAME, {
       volume: SOUND_EFFECTS_VOLUME,
     });
   }
@@ -246,7 +253,10 @@ export class GameScene extends Phaser.Scene {
       SAFE_PACK_SECTION_NAME
     );
     safePackage.generatedVelocity = this.generateRandomBetween(200, 230);
-    safePackage.setDisplaySize(platformWidth * randomWidth, platformHeight * 0.15);
+    safePackage.setDisplaySize(
+      platformWidth * randomWidth,
+      platformHeight * 0.15
+    );
     safePackage.setVelocity(0, safePackage.generatedVelocity);
     safePackage.setInteractive();
     safePackage.on("pointerdown", this.onSafeTouched(safePackage), this);
@@ -257,11 +267,18 @@ export class GameScene extends Phaser.Scene {
     return Phaser.Math.FloatBetween(first, second);
   }
 
-  private onSafeTouched(bomb: Bomb): () => void {
+  private onSafeTouched(item: ThrowableItem): () => void {
     return async function () {
-      bomb.setVelocity(0, 0);
       this.bombsFallen--;
-      this.time.delayedCall(100, this.onTouchedBomb(bomb), [bomb], this);
+      this.time.delayedCall(100, this.safeTouchedEffect(item), [item], this);
+    };
+  }
+
+  private safeTouchedEffect(item: ThrowableItem): () => void {
+    return async function () {
+      item.setVelocity(0, 0);
+      this.bonusSound.play();
+      item.destroy();
     };
   }
 
