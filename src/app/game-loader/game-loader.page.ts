@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { Platform } from "@ionic/angular";
+import { MenuController, Platform } from "@ionic/angular";
 import Phaser from "phaser";
 import { DataTransferenceService } from "../commons/services/data-transference/data-transference.service";
 import { DataTransferItem } from "../commons/interfaces/data-transfer.interface";
@@ -26,6 +26,7 @@ export class GameLoaderPage implements OnInit, OnDestroy {
   constructor(
     private platform: Platform,
     private router: Router,
+    private menuCtrl: MenuController,
     private dataTransferenceService: DataTransferenceService
   ) {
     platformWidth = platform.width();
@@ -54,8 +55,17 @@ export class GameLoaderPage implements OnInit, OnDestroy {
       backgroundColor: "#000000",
     };
   }
+
   ngOnInit() {
     this.phaserGame = new Phaser.Game(this.config);
+  }
+
+  ionViewDidEnter() {
+    this.menuCtrl.enable(false, "side-drawer-menu");
+  }
+
+  ionViewWillLeave() {
+    this.menuCtrl.enable(true, "side-drawer-menu");
   }
 
   ngOnDestroy() {
