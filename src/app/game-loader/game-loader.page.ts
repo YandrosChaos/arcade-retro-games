@@ -4,10 +4,8 @@ import { MenuController, Platform } from "@ionic/angular";
 import Phaser from "phaser";
 import { DataTransferenceService } from "../commons/services/data-transference/data-transference.service";
 import { DataTransferItem } from "../commons/interfaces/data-transfer.interface";
-import { GameScene } from "./scenes/game.scene";
-import { GAME_NAME } from "./scenes/k-boom.routes";
-import { ScoreScene } from "./scenes/score.scene";
-import { WelcomeScene } from "./scenes/welcome.scene";
+import EventEmitter from "events";
+
 
 export let platformWidth: number = 0;
 export let platformHeight: number = 0;
@@ -18,6 +16,8 @@ export let platformHeight: number = 0;
   styleUrls: ["game-loader.page.scss"],
 })
 export class GameLoaderPage implements OnInit, OnDestroy {
+  private retroEmitter: EventEmitter = new EventEmitter();
+
   private gameName: string;
   private scenes: Phaser.Scene[];
   private phaserGame: Phaser.Game;
@@ -40,6 +40,9 @@ export class GameLoaderPage implements OnInit, OnDestroy {
       title: this.gameName,
       width: platformWidth,
       height: platformHeight,
+      render: {
+        pixelArt: true,
+      },
       scale: {
         width: platformWidth,
         height: platformHeight,
@@ -49,7 +52,7 @@ export class GameLoaderPage implements OnInit, OnDestroy {
       physics: {
         default: "arcade",
         arcade: {
-          debug: false,
+          debug: true,
         },
       },
       backgroundColor: "#000000",
@@ -58,6 +61,9 @@ export class GameLoaderPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.phaserGame = new Phaser.Game(this.config);
+    this.retroEmitter.on("test", (n: string) => {
+      console.log("prueba", n);
+    });
   }
 
   ionViewDidEnter() {

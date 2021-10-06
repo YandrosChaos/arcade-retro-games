@@ -1,3 +1,35 @@
+export const IMAGES: Map<string, string> = new Map([
+  ["background-menu", "menu_background.jpg"],
+  ["background", "space.jpg"],
+  ["floor", "sand.png"],
+  ["bomb", "bomb.svg"],
+  ["bomb-nuclear", "bomb-nuclear.svg"],
+  ["bomb-atomic", "bomb-atomic.svg"],
+  ["safe-pak", "paracaidas.svg"],
+  ["RIP", "skull.svg"],
+]);
+
+export const SOUNDS: Map<string, string> = new Map([
+  ["ingame-music", "IntergalacticOdyssey.ogg"],
+  ["menu-music", "k-boom_menu.mp3"],
+  ["explosion-sound", "explosion-sound-effect.mp3"],
+  ["dead-sound", "deadnotification.wav"],
+  ["start-sound", "start-game.wav"],
+  ["safe-bonus", "extra-bonus.wav"],
+]);
+
+export const SPRITES: Map<string, string> = new Map([
+  ["explode", "assets/games/k-boom/explode.png"],
+]);
+
+export enum SCENES{
+  LOAD = 'LoadScene',
+  WELCOME = 'WelcomeScene',
+  MENU = 'MenuScene',
+  GAME = 'GameScene',
+  SCORE = 'ScoreScene'
+}
+
 // game name
 export const GAME_NAME: string = "K-BOOM!";
 
@@ -5,6 +37,7 @@ export const GAME_NAME: string = "K-BOOM!";
 export const WELCOME_SCENE_NAME: string = "WelcomeScene";
 export const GAME_SCENE_NAME: string = "GameScene";
 export const SCORE_SCENE_NAME: string = "ScoreScene";
+export const LOAD_SCENE_NAME: string = "LoadScene";
 
 // section names
 export const BACKGROUND_MENU_SECTION_NAME: string = "background-menu";
@@ -14,8 +47,10 @@ export const BOMB_SECTION_NAME: string = "bomb";
 export const BOMB_NUCLEAR_SECTION_NAME: string = "bomb-nuclear";
 export const BOMB_ATOMIC_SECTION_NAME: string = "bomb-atomic";
 export const SAFE_PACK_SECTION_NAME: string = "safe-pak";
+
 export const EXPLOSION_SECTION_NAME: string = "kaboom";
 export const RIP_SECTION_NAME: string = "RIP";
+
 export const MAIN_GAME_MUSIC_SECTION_NAME: string = "ingame-music";
 export const MENU_MUSIC_SECTION_NAME: string = "menu-music";
 export const EXPLOSION_SOUND_SECTION_NAME: string = "explosion-sound";

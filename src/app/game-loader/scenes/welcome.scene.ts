@@ -1,7 +1,7 @@
-import Phaser from 'phaser';
-import { calculateHalfOfHalf } from '../../commons/functions/responsive.function';
-import { platformHeight, platformWidth } from '../game-loader.page';
-import { MENU_MUSIC_VOLUME, SOUND_EFFECTS_VOLUME } from './k-boom.config';
+import Phaser from "phaser";
+import { calculateHalfOfHalf } from "../../commons/functions/responsive.function";
+import { platformHeight, platformWidth } from "../game-loader.page";
+import { MENU_MUSIC_VOLUME, SOUND_EFFECTS_VOLUME } from "./k-boom.config";
 import {
   BACKGROUND_MENU_IMG_PATH,
   BACKGROUND_MENU_SECTION_NAME,
@@ -9,6 +9,7 @@ import {
   GAME_SCENE_NAME,
   MENU_MUSIC_PATH,
   MENU_MUSIC_SECTION_NAME,
+  SCENES,
   START_SOUND_PATH,
   START_SOUND_SECTION_NAME,
   TEXT_BITMAP_FONT_PATH_FNT,
@@ -18,12 +19,12 @@ import {
   TITLE_BITMAP_FONT_PATH_PNG,
   TITLE_FONT_NAME,
   WELCOME_SCENE_NAME,
-} from './k-boom.routes';
+} from "./k-boom.routes";
 
 export class WelcomeScene extends Phaser.Scene {
   private title: Phaser.GameObjects.BitmapText;
   private hint: Phaser.GameObjects.BitmapText;
-  private hintText: string = 'Touch!';
+  private hintText: string = "Touch!";
 
   private music: Phaser.Sound.BaseSound;
   private startGameSound: Phaser.Sound.BaseSound;
@@ -74,11 +75,11 @@ export class WelcomeScene extends Phaser.Scene {
       platformWidth / 5
     );
     this.input.on(
-      'pointerdown',
+      "pointerdown",
       function () {
         this.startGameSound.play();
-        this.music.destroy();
-        this.scene.start(GAME_SCENE_NAME);
+        //this.music.destroy();
+        this.scene.start(SCENES.MENU);
       },
       this
     );

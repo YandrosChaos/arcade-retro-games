@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { Router } from "@angular/router";
 import { App } from "@capacitor/app";
 import { Platform } from "@ionic/angular";
 
@@ -8,7 +9,10 @@ import { Platform } from "@ionic/angular";
   styleUrls: ["app.component.scss"],
 })
 export class AppComponent {
-  constructor(private platform: Platform) {
+  constructor(private platform: Platform, private router: Router) {
+    this.platform.backButton.subscribeWithPriority(0, () => {
+      this.router.navigate(["/home"]);
+    });
     this.platform.backButton.subscribeWithPriority(-1, () => {
       App.exitApp();
     });
