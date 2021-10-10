@@ -45,22 +45,25 @@ export class LoadScene extends Phaser.Scene {
 
   private loadImages(): void {
     this.load.setPath(RESOURCES_PATH);
-    IMAGES.forEach((key: string, value: string) => {
+    IMAGES.forEach((value: string, key: string) => {
       this.load.image(key, value);
     });
   }
 
   private loadAudio(): void {
     this.load.setPath(RESOURCES_PATH);
-    SOUNDS.forEach((key: string, value: string) => {
+    SOUNDS.forEach((value: string, key: string) => {
       this.load.image(key, value);
     });
   }
 
   private loadSprites(): void {
     this.load.setPath(RESOURCES_PATH);
-    SPRITES.forEach((key: string, value: string) => {
-      this.load.spritesheet(key, value);
+    SPRITES.forEach((value: string, key: string) => {
+      this.load.spritesheet(key, value, {
+        frameWidth: 128,
+        frameHeight: 128,
+      });
     });
   }
 

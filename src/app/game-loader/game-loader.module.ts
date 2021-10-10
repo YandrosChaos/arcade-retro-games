@@ -4,7 +4,6 @@ import { IonicModule } from "@ionic/angular";
 import { FormsModule } from "@angular/forms";
 import { GameLoaderPage } from "./game-loader.page";
 import { GameLoaderPageRoutingModule } from "./game-loader-routing.module";
-import { MenuScene } from "./scenes/menu.scene";
 
 @NgModule({
   imports: [
@@ -13,6 +12,6 @@ import { MenuScene } from "./scenes/menu.scene";
     IonicModule,
     GameLoaderPageRoutingModule,
   ],
-  declarations: [GameLoaderPage, MenuScene],
+  declarations: [GameLoaderPage],
 })
 export class GameLoaderPageModule {}

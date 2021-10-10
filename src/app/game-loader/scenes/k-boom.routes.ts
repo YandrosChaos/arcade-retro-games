@@ -7,6 +7,7 @@ export const IMAGES: Map<string, string> = new Map([
   ["bomb-atomic", "bomb-atomic.svg"],
   ["safe-pak", "paracaidas.svg"],
   ["RIP", "skull.svg"],
+  ["background-menu-2", "menu-background-2.jpg"],
 ]);
 
 export const SOUNDS: Map<string, string> = new Map([
@@ -19,15 +20,15 @@ export const SOUNDS: Map<string, string> = new Map([
 ]);
 
 export const SPRITES: Map<string, string> = new Map([
-  ["explode", "assets/games/k-boom/explode.png"],
+  ["explode", "explode.png"],
 ]);
 
-export enum SCENES{
-  LOAD = 'LoadScene',
-  WELCOME = 'WelcomeScene',
-  MENU = 'MenuScene',
-  GAME = 'GameScene',
-  SCORE = 'ScoreScene'
+export enum SCENES {
+  LOAD = "LoadScene",
+  WELCOME = "WelcomeScene",
+  MENU = "MenuScene",
+  GAME = "GameScene",
+  SCORE = "ScoreScene",
 }
 
 // game name

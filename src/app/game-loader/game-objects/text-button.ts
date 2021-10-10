@@ -1,5 +1,4 @@
 import Phaser from "phaser";
-import { callbackify } from "util";
 
 export class TextButton extends Phaser.GameObjects.Text {
   constructor(
