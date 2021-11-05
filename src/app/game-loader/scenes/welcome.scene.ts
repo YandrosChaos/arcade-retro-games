@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { calculateHalfOfHalf } from "../../commons/functions/responsive.function";
 import { platformHeight, platformWidth } from "../game-loader.page";
+import { TileSprite } from "../game-objects/tile-sprite";
 import { MENU_MUSIC_VOLUME, SOUND_EFFECTS_VOLUME } from "./k-boom.config";
 import {
   BACKGROUND_MENU_IMG_PATH,
@@ -60,13 +61,8 @@ export class WelcomeScene extends Phaser.Scene {
       loop: true,
     });
     this.music.play();
-    const background: Phaser.GameObjects.TileSprite = this.add.tileSprite(
-      0,
-      platformHeight,
-      platformWidth * 2,
-      platformHeight * 2,
-      BACKGROUND_MENU_SECTION_NAME
-    );
+    const background: TileSprite = this.buildBackground();
+    this.add.existing(background);
     this.title = this.add.bitmapText(
       calculateHalfOfHalf(platformWidth) / 2.5,
       calculateHalfOfHalf(platformHeight) - 100,
@@ -78,7 +74,6 @@ export class WelcomeScene extends Phaser.Scene {
       "pointerdown",
       function () {
         this.startGameSound.play();
-        //this.music.destroy();
         this.scene.start(SCENES.MENU);
       },
       this
@@ -97,5 +92,16 @@ export class WelcomeScene extends Phaser.Scene {
         platformWidth / 10
       );
     }
+  }
+
+  private buildBackground(): TileSprite {
+    return new TileSprite(
+      this,
+      this.renderer.width / 2,
+      this.renderer.height / 2,
+      this.renderer.width,
+      this.renderer.height,
+      BACKGROUND_MENU_SECTION_NAME
+    );
   }
 }
