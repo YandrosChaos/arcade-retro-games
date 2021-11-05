@@ -16,8 +16,6 @@ export let platformHeight: number = 0;
   styleUrls: ["game-loader.page.scss"],
 })
 export class GameLoaderPage implements OnInit, OnDestroy {
-  private retroEmitter: EventEmitter = new EventEmitter();
-
   private gameName: string;
   private scenes: Phaser.Scene[];
   private phaserGame: Phaser.Game;
@@ -61,9 +59,6 @@ export class GameLoaderPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.phaserGame = new Phaser.Game(this.config);
-    this.retroEmitter.on("test", (n: string) => {
-      console.log("prueba", n);
-    });
   }
 
   ionViewDidEnter() {
