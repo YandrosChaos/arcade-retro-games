@@ -1,4 +1,8 @@
 import Phaser from "phaser";
+import {
+  readGameData,
+  writeGameData,
+} from "src/app/commons/functions/reader.functions";
 import { platformHeight, platformWidth } from "../game-loader.page";
 import { GAMEPLAY_MUSIC_VOLUME, SOUND_EFFECTS_VOLUME } from "./k-boom.config";
 import {

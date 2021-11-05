@@ -4,8 +4,10 @@ import { MenuController, Platform } from "@ionic/angular";
 import Phaser from "phaser";
 import { DataTransferenceService } from "../commons/services/data-transference/data-transference.service";
 import { DataTransferItem } from "../commons/interfaces/data-transfer.interface";
-import EventEmitter from "events";
-
+import {
+  readGameData,
+  writeGameData,
+} from "../commons/functions/reader.functions";
 
 export let platformWidth: number = 0;
 export let platformHeight: number = 0;
@@ -59,6 +61,15 @@ export class GameLoaderPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.phaserGame = new Phaser.Game(this.config);
+
+    readGameData().subscribe((changes) => {
+      if (changes.includes("exit")) {
+        this.phaserGame.destroy(true);
+        this.router.navigate(["/"]);
+      }
+    });
+
+    writeGameData("1234");
   }
 
   ionViewDidEnter() {
