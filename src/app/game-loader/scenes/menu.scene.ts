@@ -2,7 +2,7 @@ import { TextButton } from "../game-objects/text-button";
 import { IMAGES, SCENES } from "./k-boom.routes";
 import Phaser from "phaser";
 import { TileSprite } from "../game-objects/tile-sprite";
-import { writeGameData } from "src/app/commons/functions/reader.functions";
+import { HolyData } from "src/app/commons/functions/reader.functions";
 
 const BUTTON_CONFIG = {
   font: "3rem Minecraft",
@@ -37,7 +37,7 @@ export class MenuScene extends Phaser.Scene {
       this.scene.start(SCENES.GAME);
     });
     optionsButton.on("pointerdown", () => {
-      writeGameData("exit");
+      HolyData.addPrayer("exit");
     });
   }
 

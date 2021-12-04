@@ -1,6 +1,5 @@
 import Phaser from "phaser";
 import { calculateHalfOfHalf } from "src/app/commons/functions/responsive.function";
-import { platformHeight, platformWidth } from "../game-loader.page";
 import {
   BACKGROUND_IMG_PATH,
   BACKGROUND_SECTION_NAME,
@@ -33,8 +32,8 @@ export class ScoreScene extends Phaser.Scene {
     this.hint?.destroy();
     if (seconds % 2 !== 0) {
       this.hint = this.add.text(
-        calculateHalfOfHalf(platformWidth) / 2,
-        platformHeight - 100,
+        calculateHalfOfHalf(this.renderer.width) / 2,
+        this.renderer.height - 100,
         this.hintText,
         {
           font: "2rem Minecraft",
@@ -47,16 +46,16 @@ export class ScoreScene extends Phaser.Scene {
   create(): void {
     const background: Phaser.GameObjects.TileSprite = this.add.tileSprite(
       0,
-      platformHeight / 2,
-      platformWidth * 2,
-      platformHeight * 2,
+      this.renderer.height / 2,
+      this.renderer.width * 2,
+      this.renderer.height * 2,
       BACKGROUND_SECTION_NAME
     );
     background.setAngle(90);
     const resultText: string = "Your score is " + this.score;
     this.result = this.add.text(
-      calculateHalfOfHalf(platformWidth) / 1.5,
-      calculateHalfOfHalf(platformHeight) - 100,
+      calculateHalfOfHalf(this.renderer.width) / 1.5,
+      calculateHalfOfHalf(this.renderer.height) - 100,
       resultText,
       {
         font: "2rem Minecraft",

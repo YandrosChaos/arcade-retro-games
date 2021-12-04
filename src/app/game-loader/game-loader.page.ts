@@ -4,13 +4,8 @@ import { MenuController, Platform } from "@ionic/angular";
 import Phaser from "phaser";
 import { DataTransferenceService } from "../commons/services/data-transference/data-transference.service";
 import { DataTransferItem } from "../commons/interfaces/data-transfer.interface";
-import {
-  readGameData,
-  writeGameData,
-} from "../commons/functions/reader.functions";
-
-export let platformWidth: number = 0;
-export let platformHeight: number = 0;
+import { HolyData } from "../commons/functions/reader.functions";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-game-loader",
@@ -23,14 +18,14 @@ export class GameLoaderPage implements OnInit, OnDestroy {
   private phaserGame: Phaser.Game;
   private config: Phaser.Types.Core.GameConfig;
 
+  private subHolyData: Subscription;
+
   constructor(
     private platform: Platform,
     private router: Router,
     private menuCtrl: MenuController,
     private dataTransferenceService: DataTransferenceService
   ) {
-    platformWidth = platform.width();
-    platformHeight = platform.height();
     const game: DataTransferItem =
       this.dataTransferenceService.getOne("K-BOOM!");
     if (!game) this.router.navigate(["/home"]);
@@ -38,14 +33,14 @@ export class GameLoaderPage implements OnInit, OnDestroy {
     this.scenes = game.data.scenes;
     this.config = {
       title: this.gameName,
-      width: platformWidth,
-      height: platformHeight,
+      width: platform.width(),
+      height: platform.height(),
       render: {
         pixelArt: true,
       },
       scale: {
-        width: platformWidth,
-        height: platformHeight,
+        width: platform.width(),
+        height: platform.height(),
       },
       parent: "game",
       scene: this.scenes,
@@ -62,14 +57,13 @@ export class GameLoaderPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.phaserGame = new Phaser.Game(this.config);
 
-    readGameData().subscribe((changes) => {
+    this.subHolyData = HolyData.getPrayer().subscribe((changes) => {
       if (changes.includes("exit")) {
         this.phaserGame.destroy(true);
+        HolyData.killPrayer("exit");
         this.router.navigate(["/"]);
       }
     });
-
-    writeGameData("1234");
   }
 
   ionViewDidEnter() {
@@ -83,5 +77,6 @@ export class GameLoaderPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.phaserGame.destroy(true, false);
     this.dataTransferenceService.delete(this.gameName);
+    this.subHolyData.unsubscribe();
   }
 }

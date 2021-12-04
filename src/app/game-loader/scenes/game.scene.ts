@@ -1,9 +1,4 @@
 import Phaser from "phaser";
-import {
-  readGameData,
-  writeGameData,
-} from "src/app/commons/functions/reader.functions";
-import { platformHeight, platformWidth } from "../game-loader.page";
 import { GAMEPLAY_MUSIC_VOLUME, SOUND_EFFECTS_VOLUME } from "./k-boom.config";
 import {
   BACKGROUND_IMG_PATH,
@@ -143,9 +138,9 @@ export class GameScene extends Phaser.Scene {
   private createBackground(): void {
     const background: Background = this.add.tileSprite(
       0,
-      platformHeight / 2,
-      platformWidth * 2,
-      platformHeight * 2,
+      this.renderer.height / 2,
+      this.renderer.width * 2,
+      this.renderer.height * 2,
       BACKGROUND_SECTION_NAME
     );
     background.setAngle(90);
@@ -160,9 +155,9 @@ export class GameScene extends Phaser.Scene {
       this.floor.getChildren(),
       new Phaser.Geom.Line(
         25,
-        platformHeight - 50,
-        platformWidth + 200,
-        platformHeight - 50
+        this.renderer.height - 50,
+        this.renderer.width + 200,
+        this.renderer.height - 50
       )
     );
     this.floor.refresh();
@@ -212,7 +207,7 @@ export class GameScene extends Phaser.Scene {
 
   private buildThrowableItem(): ThrowableItem {
     const randomBombType: number = this.generateRandomBetween(0, 100);
-    const x: number = this.generateRandomBetween(25, platformWidth - 25);
+    const x: number = this.generateRandomBetween(25, this.renderer.width - 25);
     const y: number = 25;
     if (randomBombType < 85) {
       return this.buildBomb(BOMB_SECTION_NAME, x, y, 1, 1, 100, 200);
@@ -240,7 +235,10 @@ export class GameScene extends Phaser.Scene {
       randomVelocityFrom,
       randomVelocityTo
     );
-    bomb.setDisplaySize(platformWidth * randomBombWidth, platformHeight * 0.15);
+    bomb.setDisplaySize(
+      this.renderer.width * randomBombWidth,
+      this.renderer.height * 0.15
+    );
     bomb.setVelocity(0, bomb.generatedVelocity);
     bomb.setInteractive();
     bomb.on("pointerdown", this.onBombTouched(bomb), this);
@@ -258,8 +256,8 @@ export class GameScene extends Phaser.Scene {
     );
     safePackage.generatedVelocity = this.generateRandomBetween(200, 230);
     safePackage.setDisplaySize(
-      platformWidth * randomWidth,
-      platformHeight * 0.15
+      this.renderer.width * randomWidth,
+      this.renderer.height * 0.15
     );
     safePackage.setVelocity(0, safePackage.generatedVelocity);
     safePackage.setInteractive();

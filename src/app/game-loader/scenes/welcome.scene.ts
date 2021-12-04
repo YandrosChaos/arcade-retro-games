@@ -1,6 +1,5 @@
 import Phaser from "phaser";
 import { calculateHalfOfHalf } from "../../commons/functions/responsive.function";
-import { platformHeight, platformWidth } from "../game-loader.page";
 import { TileSprite } from "../game-objects/tile-sprite";
 import { MENU_MUSIC_VOLUME, SOUND_EFFECTS_VOLUME } from "./k-boom.config";
 import {
@@ -64,11 +63,11 @@ export class WelcomeScene extends Phaser.Scene {
     const background: TileSprite = this.buildBackground();
     this.add.existing(background);
     this.title = this.add.bitmapText(
-      calculateHalfOfHalf(platformWidth) / 2.5,
-      calculateHalfOfHalf(platformHeight) - 100,
+      calculateHalfOfHalf(this.renderer.height) / 2.5,
+      calculateHalfOfHalf(this.renderer.width) - 100,
       TITLE_FONT_NAME,
       GAME_NAME,
-      platformWidth / 5
+      this.renderer.width / 5
     );
     this.input.on(
       "pointerdown",
@@ -85,11 +84,11 @@ export class WelcomeScene extends Phaser.Scene {
     this.hint?.destroy();
     if (seconds % 2 !== 0) {
       this.hint = this.add.bitmapText(
-        calculateHalfOfHalf(platformWidth) + 50,
-        platformHeight - 100,
+        calculateHalfOfHalf(this.renderer.width) + 50,
+        this.renderer.height - 100,
         TEXT_FONT_NAME,
         this.hintText,
-        platformWidth / 10
+        this.renderer.width / 10
       );
     }
   }
