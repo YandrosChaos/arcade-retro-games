@@ -29,6 +29,7 @@ export enum SCENES {
   MENU = "MenuScene",
   GAME = "GameScene",
   SCORE = "ScoreScene",
+  LEVELS = "LevelsScene",
 }
 
 // game name
