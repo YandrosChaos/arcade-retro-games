@@ -9,6 +9,7 @@ const BUTTON_CONFIG = {
   color: "#BC00FF",
 };
 
+const NUMBER_OF_BUTTONS: number = 4;
 export class MenuScene extends Phaser.Scene {
   constructor() {
     super({
@@ -27,16 +28,18 @@ export class MenuScene extends Phaser.Scene {
     const playButton = this.buildTextButton("PLAY", 60, 0);
     const levelsButton = this.buildTextButton("LEVELS", 90, 100);
     const optionsButton = this.buildTextButton("OPTIONS", 105, 200);
+    const exitButton = this.buildTextButton("EXIT", 60, 300);
 
     this.add.existing(background);
     this.add.existing(optionsButton);
     this.add.existing(playButton);
     this.add.existing(levelsButton);
+    this.add.existing(exitButton);
     playButton.on("pointerdown", () => {
       this.sound.stopAll();
       this.scene.start(SCENES.GAME);
     });
-    optionsButton.on("pointerdown", () => {
+    exitButton.on("pointerdown", () => {
       HolyData.addPrayer("exit");
     });
   }
@@ -49,7 +52,7 @@ export class MenuScene extends Phaser.Scene {
     return new TextButton(
       this,
       this.renderer.width / 2 - xDifferenceFactor,
-      this.renderer.height / 3 + yDifferneceFactor,
+      this.renderer.height / NUMBER_OF_BUTTONS + yDifferneceFactor,
       text,
       BUTTON_CONFIG
     );
