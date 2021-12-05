@@ -2,7 +2,8 @@ import { TextButton } from "../game-objects/text-button";
 import { IMAGES, SCENES } from "./k-boom.routes";
 import Phaser from "phaser";
 import { TileSprite } from "../game-objects/tile-sprite";
-import { HolyData } from "src/app/commons/functions/reader.functions";
+import { HolyData } from "src/app/commons/services/holy-data/holy-data.service";
+import { EXIT_PRAY } from "src/app/commons/const/pray-name";
 
 const BUTTON_CONFIG: Phaser.Types.GameObjects.Text.TextStyle = {
   font: "3rem Minecraft",
@@ -41,7 +42,7 @@ export class MenuScene extends Phaser.Scene {
       this.scene.start(SCENES.LEVELS);
     });
     exitButton.on("pointerdown", () => {
-      HolyData.addPrayer("exit");
+      HolyData.updatePrayer({ key: EXIT_PRAY, data: "exit" });
     });
   }
 

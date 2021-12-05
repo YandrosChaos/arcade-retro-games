@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { DataTransferenceService } from "../commons/services/data-transference/data-transference.service";
+import { GAME_PRAY } from "../commons/const/pray-name";
 import { VIDEO_GAMES } from "../commons/data/videogames.data";
 import { Videogame } from "../commons/interfaces/videogame.interface";
+import { HolyData } from "../commons/services/holy-data/holy-data.service";
 
 @Component({
   selector: "app-home",
@@ -15,16 +16,13 @@ export class HomePage implements OnInit, OnDestroy {
   public filteredGames: Videogame[] = VIDEO_GAMES;
   public isSearching: boolean = false;
 
-  constructor(
-    private router: Router,
-    private dataTransferenceService: DataTransferenceService
-  ) {}
+  constructor(private router: Router) {}
 
   public ngOnInit(): void {}
 
   public onNavigate(game: Videogame): void {
-    this.dataTransferenceService.create({
-      key: game.name,
+    HolyData.addPrayer({
+      key: GAME_PRAY,
       data: {
         gameName: game.name,
         scenes: game.scenes,
@@ -54,7 +52,5 @@ export class HomePage implements OnInit, OnDestroy {
     this.isSearching = !this.isSearching;
   }
 
-  public ngOnDestroy(): void {
-    this.dataTransferenceService.holyGrenade();
-  }
+  public ngOnDestroy(): void {}
 }

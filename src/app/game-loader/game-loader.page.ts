@@ -1,11 +1,12 @@
+import Phaser from "phaser";
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { MenuController, Platform } from "@ionic/angular";
-import Phaser from "phaser";
-import { DataTransferenceService } from "../commons/services/data-transference/data-transference.service";
-import { DataTransferItem } from "../commons/interfaces/data-transfer.interface";
-import { HolyData } from "../commons/functions/reader.functions";
+import { HolyData } from "../commons/services/holy-data/holy-data.service";
 import { Subscription } from "rxjs";
+import { map } from "rxjs/operators";
+import { Payload } from "../commons/interfaces/HolyData/Payload";
+import { EXIT_PRAY, GAME_PRAY } from "../commons/const/pray-name";
 
 @Component({
   selector: "app-game-loader",
@@ -13,56 +14,33 @@ import { Subscription } from "rxjs";
   styleUrls: ["game-loader.page.scss"],
 })
 export class GameLoaderPage implements OnInit, OnDestroy {
-  private gameName: string;
-  private scenes: Phaser.Scene[];
+  private gameData;
   private phaserGame: Phaser.Game;
   private config: Phaser.Types.Core.GameConfig;
 
-  private subHolyData: Subscription;
+  private subCloseGame: Subscription;
+  private subGamedata: Subscription;
 
   constructor(
     private platform: Platform,
     private router: Router,
-    private menuCtrl: MenuController,
-    private dataTransferenceService: DataTransferenceService
-  ) {
-    const game: DataTransferItem =
-      this.dataTransferenceService.getOne("K-BOOM!");
-    if (!game) this.router.navigate(["/home"]);
-    this.gameName = game.data.gameName;
-    this.scenes = game.data.scenes;
-    this.config = {
-      title: this.gameName,
-      width: platform.width(),
-      height: platform.height(),
-      render: {
-        pixelArt: true,
-      },
-      scale: {
-        width: platform.width(),
-        height: platform.height(),
-      },
-      parent: "game",
-      scene: this.scenes,
-      physics: {
-        default: "arcade",
-        arcade: {
-          debug: true,
-        },
-      },
-      backgroundColor: "#000000",
-    };
-  }
+    private menuCtrl: MenuController
+  ) {}
 
   ngOnInit() {
-    this.phaserGame = new Phaser.Game(this.config);
-
-    this.subHolyData = HolyData.getPrayer().subscribe((changes) => {
-      if (changes.includes("exit")) {
-        this.phaserGame.destroy(true);
-        HolyData.killPrayer("exit");
+    this.subGamedata = HolyData.getPrayer(GAME_PRAY).subscribe((payload) => {
+      if (payload) {
+        this.gameData = payload.data;
+        this.setGameConfig();
+        this.phaserGame = new Phaser.Game(this.config);
+      } else {
         this.router.navigate(["/"]);
       }
+    });
+
+    HolyData.addPrayer({ key: EXIT_PRAY, data: null });
+    this.subCloseGame = HolyData.getPrayer(EXIT_PRAY).subscribe((item) => {
+      if (item.data) this.onGameExit();
     });
   }
 
@@ -74,9 +52,39 @@ export class GameLoaderPage implements OnInit, OnDestroy {
     this.menuCtrl.enable(true, "side-drawer-menu");
   }
 
+  private setGameConfig(): void {
+    this.config = {
+      title: this.gameData.gameName,
+      width: this.platform.width(),
+      height: this.platform.height(),
+      render: {
+        pixelArt: true,
+      },
+      scale: {
+        width: this.platform.width(),
+        height: this.platform.height(),
+      },
+      parent: "game",
+      scene: this.gameData.scenes,
+      physics: {
+        default: "arcade",
+        arcade: {
+          debug: true,
+        },
+      },
+      backgroundColor: "#000000",
+    };
+  }
+
+  private onGameExit(): void {
+    this.phaserGame.destroy(true);
+    this.router.navigate(["/"]);
+  }
+
   ngOnDestroy() {
     this.phaserGame.destroy(true, false);
-    this.dataTransferenceService.delete(this.gameName);
-    this.subHolyData.unsubscribe();
+    this.subCloseGame.unsubscribe();
+    this.subGamedata.unsubscribe();
+    HolyData.holyGrenade();
   }
 }
