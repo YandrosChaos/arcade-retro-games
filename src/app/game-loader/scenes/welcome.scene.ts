@@ -83,7 +83,7 @@ export class WelcomeScene extends Phaser.Scene {
     this.hint?.destroy();
     if (seconds % 2 !== 0) {
       this.hint = this.add.bitmapText(
-        calculateHalfOfHalf(this.renderer.width) + 50,
+        this.renderer.width / 2 - 65,
         this.renderer.height - 100,
         TEXT_FONT_NAME,
         this.hintText,
