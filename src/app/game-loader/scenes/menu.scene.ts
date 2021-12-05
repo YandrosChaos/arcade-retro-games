@@ -4,7 +4,7 @@ import Phaser from "phaser";
 import { TileSprite } from "../game-objects/tile-sprite";
 import { HolyData } from "src/app/commons/functions/reader.functions";
 
-const BUTTON_CONFIG = {
+const BUTTON_CONFIG: Phaser.Types.GameObjects.Text.TextStyle = {
   font: "3rem Minecraft",
   color: "#BC00FF",
 };
