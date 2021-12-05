@@ -29,12 +29,10 @@ export class GameLoaderPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subGamedata = HolyData.getPrayer(GAME_PRAY).subscribe((payload) => {
-      if (payload) {
+      if (payload && !this.phaserGame) {
         this.gameData = payload.data;
         this.setGameConfig();
         this.phaserGame = new Phaser.Game(this.config);
-      } else {
-        this.router.navigate(["/"]);
       }
     });
 
@@ -77,8 +75,8 @@ export class GameLoaderPage implements OnInit, OnDestroy {
   }
 
   private onGameExit(): void {
-    this.phaserGame.destroy(true);
     this.router.navigate(["/"]);
+    this.ngOnDestroy();
   }
 
   ngOnDestroy() {
