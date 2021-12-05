@@ -6,7 +6,6 @@ import {
   BACKGROUND_MENU_IMG_PATH,
   BACKGROUND_MENU_SECTION_NAME,
   GAME_NAME,
-  GAME_SCENE_NAME,
   MENU_MUSIC_PATH,
   MENU_MUSIC_SECTION_NAME,
   SCENES,
@@ -63,8 +62,8 @@ export class WelcomeScene extends Phaser.Scene {
     const background: TileSprite = this.buildBackground();
     this.add.existing(background);
     this.title = this.add.bitmapText(
-      calculateHalfOfHalf(this.renderer.height) / 2.5,
-      calculateHalfOfHalf(this.renderer.width) - 100,
+      this.renderer.width / 10,
+      this.renderer.height - (this.renderer.height - 40),
       TITLE_FONT_NAME,
       GAME_NAME,
       this.renderer.width / 5
