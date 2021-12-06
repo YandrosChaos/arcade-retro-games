@@ -1,4 +1,15 @@
 import Phaser from "phaser";
+import { Subscription } from "rxjs";
+import {
+  GAME_PRAY,
+  SELECTED_LEVEL_PRAY,
+} from "src/app/commons/const/pray-name";
+import {
+  Level,
+  VideoGame,
+} from "src/app/commons/interfaces/game/videogame.interface";
+import { Payload } from "src/app/commons/interfaces/HolyData/Payload";
+import { HolyData } from "src/app/commons/services/holy-data/holy-data.service";
 import { GAMEPLAY_MUSIC_VOLUME, SOUND_EFFECTS_VOLUME } from "./k-boom.config";
 import {
   BACKGROUND_IMG_PATH,
@@ -49,6 +60,12 @@ const MIN_BOMBER_TIME: number = 500;
 const REDUCER_BOMBER_TIME: number = 20;
 const FLOOR_FRAME_QUANTITY: number = 2;
 export class GameScene extends Phaser.Scene {
+  private subLevelConfig: Subscription;
+  private subGame: Subscription;
+
+  private levelConfig: Level;
+  private videoGame: VideoGame;
+
   private delta: number = MAX_BOMBER_TIME;
   private lastBombTime: number = 0;
   private bombsCaught: number = 0;
@@ -71,10 +88,21 @@ export class GameScene extends Phaser.Scene {
   }
 
   init(params) {
+    this.initAllSubscriptions();
     this.delta = MAX_BOMBER_TIME;
     this.lastBombTime = 0;
     this.bombsCaught = 0;
     this.bombsFallen = 0;
+  }
+
+  private initAllSubscriptions(): void {
+    this.subGame = HolyData.getPrayer(GAME_PRAY).subscribe(
+      (payload: Payload) => (this.videoGame = payload.data)
+    );
+    this.subLevelConfig = HolyData.getPrayer(SELECTED_LEVEL_PRAY).subscribe(
+      (payload: Payload) =>
+        (this.levelConfig = payload?.data || this.videoGame.levels[0])
+    );
   }
 
   preload(): void {

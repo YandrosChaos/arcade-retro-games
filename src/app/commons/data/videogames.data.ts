@@ -4,13 +4,46 @@ import { LoadScene } from "src/app/game-loader/scenes/load.scene";
 import { MenuScene } from "src/app/game-loader/scenes/menu.scene";
 import { ScoreScene } from "src/app/game-loader/scenes/score.scene";
 import { WelcomeScene } from "src/app/game-loader/scenes/welcome.scene";
-import { Videogame } from "../interfaces/videogame.interface";
+import { Difficulty, VideoGame } from "../interfaces/game/videogame.interface";
 
-export const VIDEO_GAMES: Videogame[] = [
+export const VIDEO_GAMES: VideoGame[] = [
   {
     name: "K-BOOM!",
     type: "arcade",
     imgLink: "assets/games/k-boom/menu_background.jpg",
-    scenes: [LoadScene, WelcomeScene, MenuScene, GameScene, ScoreScene, LevelsScene],
+    scenes: [
+      LoadScene,
+      WelcomeScene,
+      MenuScene,
+      GameScene,
+      ScoreScene,
+      LevelsScene,
+    ],
+    levels: [
+      {
+        name: "Level 0",
+        type: Difficulty.Easy,
+        backgroundPath: "",
+        musicPath: "",
+        unlockPoints: 0,
+        hardnessMultiplicator: 1,
+      },
+      {
+        name: "Level 1",
+        type: Difficulty.Easy,
+        backgroundPath: "",
+        musicPath: "",
+        unlockPoints: 0,
+        hardnessMultiplicator: 1.5,
+      },
+      {
+        name: "Level 2",
+        type: Difficulty.Easy,
+        backgroundPath: "",
+        musicPath: "",
+        unlockPoints: 0,
+        hardnessMultiplicator: 2,
+      },
+    ],
   },
 ];

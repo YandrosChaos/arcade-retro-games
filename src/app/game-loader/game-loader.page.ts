@@ -4,9 +4,8 @@ import { Router } from "@angular/router";
 import { MenuController, Platform } from "@ionic/angular";
 import { HolyData } from "../commons/services/holy-data/holy-data.service";
 import { Subscription } from "rxjs";
-import { map } from "rxjs/operators";
-import { Payload } from "../commons/interfaces/HolyData/Payload";
 import { EXIT_PRAY, GAME_PRAY } from "../commons/const/pray-name";
+import { VideoGame } from "../commons/interfaces/game/videogame.interface";
 
 @Component({
   selector: "app-game-loader",
@@ -14,7 +13,7 @@ import { EXIT_PRAY, GAME_PRAY } from "../commons/const/pray-name";
   styleUrls: ["game-loader.page.scss"],
 })
 export class GameLoaderPage implements OnInit, OnDestroy {
-  private gameData;
+  private videoGame: VideoGame;
   private phaserGame: Phaser.Game;
   private config: Phaser.Types.Core.GameConfig;
 
@@ -30,7 +29,7 @@ export class GameLoaderPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.subGamedata = HolyData.getPrayer(GAME_PRAY).subscribe((payload) => {
       if (payload && !this.phaserGame) {
-        this.gameData = payload.data;
+        this.videoGame = payload.data;
         this.setGameConfig();
         this.phaserGame = new Phaser.Game(this.config);
       }
@@ -52,7 +51,7 @@ export class GameLoaderPage implements OnInit, OnDestroy {
 
   private setGameConfig(): void {
     this.config = {
-      title: this.gameData.gameName,
+      title: this.videoGame.name,
       width: this.platform.width(),
       height: this.platform.height(),
       render: {
@@ -63,7 +62,7 @@ export class GameLoaderPage implements OnInit, OnDestroy {
         height: this.platform.height(),
       },
       parent: "game",
-      scene: this.gameData.scenes,
+      scene: this.videoGame.scenes,
       physics: {
         default: "arcade",
         arcade: {
