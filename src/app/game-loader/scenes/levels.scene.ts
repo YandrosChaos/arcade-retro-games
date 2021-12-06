@@ -103,6 +103,7 @@ export class LevelsScene extends Phaser.Scene {
     this.levelsButtons.forEach((button: TextButton) => {
       button.on("pointerdown", () => {
         this.addHolyPray(button.text);
+        this.sound.stopAll();
         this.scene.start(SCENES.GAME);
       });
     });

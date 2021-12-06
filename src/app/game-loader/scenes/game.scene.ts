@@ -55,9 +55,6 @@ interface StaticGroup extends Phaser.Physics.Arcade.StaticGroup {}
 interface Text extends Phaser.GameObjects.Text {}
 
 const MAX_LIFES: number = 3;
-const MAX_BOMBER_TIME: number = 1000;
-const MIN_BOMBER_TIME: number = 500;
-const REDUCER_BOMBER_TIME: number = 20;
 const FLOOR_FRAME_QUANTITY: number = 2;
 export class GameScene extends Phaser.Scene {
   private subLevelConfig: Subscription;
@@ -66,7 +63,10 @@ export class GameScene extends Phaser.Scene {
   private levelConfig: Level;
   private videoGame: VideoGame;
 
-  private delta: number = MAX_BOMBER_TIME;
+  private reducerBomberTime: number = 20;
+  private minBomberTime: number = 500;
+  private maxBomberTime: number = 1000;
+  private delta: number;
   private lastBombTime: number = 0;
   private bombsCaught: number = 0;
   private bombsFallen: number = 0;
@@ -89,10 +89,16 @@ export class GameScene extends Phaser.Scene {
 
   init(params) {
     this.initAllSubscriptions();
-    this.delta = MAX_BOMBER_TIME;
+    this.setLevelInitialConfig();
+    this.delta = this.maxBomberTime;
     this.lastBombTime = 0;
     this.bombsCaught = 0;
     this.bombsFallen = 0;
+  }
+
+  private setLevelInitialConfig(): void {
+    this.reducerBomberTime =
+      this.reducerBomberTime * this.levelConfig.hardnessMultiplicator;
   }
 
   private initAllSubscriptions(): void {
@@ -213,7 +219,7 @@ export class GameScene extends Phaser.Scene {
     const diff: number = time - this.lastBombTime;
     if (diff > this.delta) {
       this.lastBombTime = time;
-      if (this.delta > MIN_BOMBER_TIME) this.delta -= REDUCER_BOMBER_TIME;
+      if (this.delta > this.minBomberTime) this.delta -= this.reducerBomberTime;
       this.emitBomb();
     }
     this.updateScoreText();
@@ -346,6 +352,8 @@ export class GameScene extends Phaser.Scene {
   private gameOver(): void {
     this.music.destroy();
     this.deadSound.play();
+    this.subGame.unsubscribe();
+    this.subLevelConfig.unsubscribe();
     this.scene.start(SCORE_SCENE_NAME, {
       bombsCaught: this.bombsCaught,
     });
