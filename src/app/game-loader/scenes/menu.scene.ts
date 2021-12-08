@@ -4,12 +4,8 @@ import Phaser from "phaser";
 import { TileSprite } from "../game-objects/tile-sprite";
 import { HolyData } from "src/app/commons/services/holy-data/holy-data.service";
 import { EXIT_PRAY } from "src/app/commons/const/pray-name";
-
-const BUTTON_CONFIG: Phaser.Types.GameObjects.Text.TextStyle = {
-  font: "3rem Minecraft",
-  color: "#BC00FF",
-};
-
+import { BUTTON_CONFIG, TITLE_BUTTON_CONFIG } from "./k-boom.config";
+2;
 const NUMBER_OF_BUTTONS: number = 3;
 export class MenuScene extends Phaser.Scene {
   constructor() {
@@ -26,11 +22,13 @@ export class MenuScene extends Phaser.Scene {
 
   create() {
     const background: TileSprite = this.buildBackground();
+    const titleButton = this.buildTitleButton();
     const playButton = this.buildTextButton("PLAY", 60, 0);
     const levelsButton = this.buildTextButton("LEVELS", 90, 100);
     const exitButton = this.buildTextButton("EXIT", 60, 200);
 
     this.add.existing(background);
+    this.add.existing(titleButton);
     this.add.existing(playButton);
     this.add.existing(levelsButton);
     this.add.existing(exitButton);
@@ -44,6 +42,16 @@ export class MenuScene extends Phaser.Scene {
     exitButton.on("pointerdown", () => {
       HolyData.updatePrayer({ key: EXIT_PRAY, data: "exit" });
     });
+  }
+
+  private buildTitleButton(): TextButton {
+    return new TextButton(
+      this,
+      this.renderer.width / 10,
+      this.renderer.height - (this.renderer.height - 40),
+      "K-BOOM!",
+      TITLE_BUTTON_CONFIG
+    );
   }
 
   private buildTextButton(

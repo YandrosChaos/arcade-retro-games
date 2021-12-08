@@ -1,4 +1,4 @@
-import Phaser, { Scenes } from "phaser";
+import Phaser from "phaser";
 import { Subscription } from "rxjs";
 import { GAME_PRAY } from "src/app/commons/const/pray-name";
 import {
