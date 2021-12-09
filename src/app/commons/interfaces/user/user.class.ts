@@ -13,9 +13,10 @@ export class User implements UserInterface {
   }
 
   public formattedPoints(): string {
-    if (this.points >= 0 && this.points <= 9) return "000" + this.points;
-    if (this.points > 9 && this.points <= 99) return "00" + this.points;
-    if (this.points > 99 && this.points <= 999) return "0" + this.points;
-    if (this.points > 999 && this.points <= 9999) return this.points.toString();
+    if (this.points >= 0 && this.points <= 9) return "000" + this.points + "P";
+    if (this.points > 9 && this.points <= 99) return "00" + this.points + "P";
+    if (this.points > 99 && this.points <= 999) return "0" + this.points + "P";
+    if (this.points > 999 && this.points <= 9999)
+      return this.points.toString() + "P";
   }
 }

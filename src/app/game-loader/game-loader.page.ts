@@ -49,7 +49,7 @@ export class GameLoaderPage implements OnInit, OnDestroy {
       this.videoGame = payload.data;
       this.setGameConfig();
       this.phaserGame = new Phaser.Game(this.config);
-    }
+    } else if (!payload) this.router.navigate(["/home"]);
   }
 
   ionViewDidEnter() {

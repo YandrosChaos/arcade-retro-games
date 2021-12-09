@@ -9,19 +9,18 @@ import { Payload } from "src/app/commons/interfaces/HolyData/Payload";
 import { User } from "src/app/commons/interfaces/user/user.class";
 import { HolyData } from "src/app/commons/services/holy-data/holy-data.service";
 import { UserService } from "src/app/commons/services/user/user.service";
+import UnlockLevelModal from "../game-modals/unlock-level.game-modal";
 import { TextButton } from "../game-objects/text-button";
-import { LOCK_BUTTON_CONFIG, SECONDARY_BUTTON_CONFIG } from "./k-boom.config";
+import {
+  BUTTON_CONFIG,
+  LOCK_BUTTON_CONFIG,
+  SECONDARY_BUTTON_CONFIG,
+} from "./k-boom.config";
 import { SCENES } from "./k-boom.routes";
-
-const BUTTON_CONFIG: Phaser.Types.GameObjects.Text.TextStyle = {
-  font: "3rem Minecraft",
-  color: "#BC00FF",
-};
 
 export class LevelsScene extends Phaser.Scene {
   private returnButton: TextButton;
   private pointsButton: TextButton;
-  private levelsButtons: TextButton[];
 
   private subUser: Subscription;
   private subGame: Subscription;
@@ -62,7 +61,7 @@ export class LevelsScene extends Phaser.Scene {
   private createPointsButton(): void {
     this.pointsButton = new TextButton(
       this,
-      this.renderer.width - 120,
+      this.renderer.width - 150,
       10,
       this.currentUser.formattedPoints(),
       SECONDARY_BUTTON_CONFIG
@@ -72,7 +71,7 @@ export class LevelsScene extends Phaser.Scene {
   private createReturnButton(): void {
     this.returnButton = new TextButton(
       this,
-      10,
+      20,
       10,
       "<",
       SECONDARY_BUTTON_CONFIG
@@ -80,46 +79,46 @@ export class LevelsScene extends Phaser.Scene {
   }
 
   private createLevelsButtons(): void {
-    this.levelsButtons = [];
     this.videoGame.levels.forEach((level: Level, index: number) => {
       const button: TextButton = this.buildTextButton(level, 90, 100 * index);
-      if (!level.unlocked) button.disableInteractive();
-      this.levelsButtons.push(button);
+      if (!level.unlocked) this.addUnlockEvent(button, level);
+      else this.addPlayEvent(button);
+      this.add.existing(button);
+    });
+  }
+
+  private addUnlockEvent(button: TextButton, level: Level): void {
+    button.on("pointerdown", () => {
+      const unlockLevelPanel: UnlockLevelModal = new UnlockLevelModal(
+        this,
+        level
+      );
+      unlockLevelPanel.show();
+    });
+  }
+
+  private addPlayEvent(button: TextButton): void {
+    button.on("pointerdown", () => {
+      this.addHolyPray(button.text);
+      this.sound.stopAll();
+      this.unsubscribeAll();
+      this.scene.start(SCENES.GAME);
     });
   }
 
   private addAllExisting(): void {
     this.add.existing(this.returnButton);
     this.add.existing(this.pointsButton);
-    this.addLevelsButtons();
-  }
-
-  private addLevelsButtons(): void {
-    this.levelsButtons.forEach((button: TextButton) =>
-      this.add.existing(button)
-    );
   }
 
   private addAllTouchEvents(): void {
     this.addReturnEvent();
-    this.addGoToLevelEvent();
   }
 
   private addReturnEvent(): void {
     this.returnButton.on("pointerdown", () => {
       this.unsubscribeAll();
       this.scene.start(SCENES.MENU);
-    });
-  }
-
-  private addGoToLevelEvent(): void {
-    this.levelsButtons.forEach((button: TextButton) => {
-      button.on("pointerdown", () => {
-        this.addHolyPray(button.text);
-        this.sound.stopAll();
-        this.unsubscribeAll();
-        this.scene.start(SCENES.GAME);
-      });
     });
   }
 
