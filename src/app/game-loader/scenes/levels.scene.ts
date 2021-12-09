@@ -82,7 +82,9 @@ export class LevelsScene extends Phaser.Scene {
   private createLevelsButtons(): void {
     this.levelsButtons = [];
     this.videoGame.levels.forEach((level: Level, index: number) => {
-      this.levelsButtons.push(this.buildTextButton(level, 90, 100 * index));
+      const button: TextButton = this.buildTextButton(level, 90, 100 * index);
+      if (!level.unlocked) button.disableInteractive();
+      this.levelsButtons.push(button);
     });
   }
 
