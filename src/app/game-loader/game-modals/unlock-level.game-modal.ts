@@ -1,12 +1,14 @@
 import Phaser, { Scene } from "phaser";
 import { Level } from "src/app/commons/interfaces/game/level.class";
 import { Level as LevelInterface } from "src/app/commons/interfaces/game/videogame.interface";
+import { HolyData } from "src/app/commons/services/holy-data/holy-data.service";
 import { TextButton } from "../game-objects/text-button";
 import {
   BUTTON_CONFIG,
-  LOCK_BUTTON_CONFIG,
   SECONDARY_BUTTON_CONFIG,
 } from "../scenes/k-boom.config";
+import { BACKGROUND_CONF } from "./unlock-level.config";
+import { MODAL_PRAY } from "../../commons/const/pray-name";
 
 export default class UnlockLevelModal {
   private scene: Scene;
@@ -25,12 +27,7 @@ export default class UnlockLevelModal {
     this.level.assign(level);
     this.scene = scene;
     this.container = scene.add.container(this.scene.scale.width + 300, 0);
-    this.background = scene.add.graphics({
-      fillStyle: {
-        color: 0x000000,
-        alpha: 0.7,
-      },
-    });
+    this.background = scene.add.graphics(BACKGROUND_CONF);
 
     this.background.fillRect(0, 0, scene.scale.width, scene.scale.height);
     this.container.add(this.background);
@@ -87,6 +84,7 @@ export default class UnlockLevelModal {
   }
 
   public hide(): void {
+    HolyData.updatePrayer({ key: MODAL_PRAY, data: true });
     this.scene.add.tween({
       targets: this.container,
       x: this.scene.scale.width + 300,

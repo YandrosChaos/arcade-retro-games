@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import { Subscription } from "rxjs";
-import { GAME_PRAY } from "src/app/commons/const/pray-name";
+import { GAME_PRAY, MODAL_PRAY } from "src/app/commons/const/pray-name";
 import {
   Level,
   VideoGame,
@@ -21,9 +21,11 @@ import { SCENES } from "./k-boom.routes";
 export class LevelsScene extends Phaser.Scene {
   private returnButton: TextButton;
   private pointsButton: TextButton;
+  private levelButtons: TextButton[];
 
   private subUser: Subscription;
   private subGame: Subscription;
+  private subModal: Subscription;
 
   private currentUser: User = new User();
   private videoGame: VideoGame;
@@ -33,6 +35,11 @@ export class LevelsScene extends Phaser.Scene {
   }
 
   init(params) {
+    HolyData.updatePrayer({ key: MODAL_PRAY, data: false });
+    this.initAllSubscriptions();
+  }
+
+  private initAllSubscriptions(): void {
     this.subUser = UserService.getCurrent().subscribe((user) =>
       this.currentUser.assign(user)
     );
@@ -42,6 +49,17 @@ export class LevelsScene extends Phaser.Scene {
         if (gameData) this.videoGame = gameData.data;
       }
     );
+    this.subModal = HolyData.getPrayer(MODAL_PRAY).subscribe(
+      (modalStatus: Payload) => this.onModal(modalStatus?.data)
+    );
+  }
+
+  private onModal(status: boolean): void {
+    if (status) {
+      this.returnButton.setInteractive();
+      this.destroyAllLevelButtons();
+      this.createAllLevelButtons();
+    }
   }
 
   preload() {}
@@ -55,7 +73,7 @@ export class LevelsScene extends Phaser.Scene {
   private createAllButtons(): void {
     this.createPointsButton();
     this.createReturnButton();
-    this.createLevelsButtons();
+    this.createAllLevelButtons();
   }
 
   private createPointsButton(): void {
@@ -78,17 +96,20 @@ export class LevelsScene extends Phaser.Scene {
     );
   }
 
-  private createLevelsButtons(): void {
+  private createAllLevelButtons(): void {
+    this.levelButtons = [];
     this.videoGame.levels.forEach((level: Level, index: number) => {
       const button: TextButton = this.buildTextButton(level, 90, 100 * index);
       if (!level.unlocked) this.addUnlockEvent(button, level);
       else this.addPlayEvent(button);
       this.add.existing(button);
+      this.levelButtons.push(button);
     });
   }
 
   private addUnlockEvent(button: TextButton, level: Level): void {
     button.on("pointerdown", () => {
+      this.allButtonsDisabled();
       const unlockLevelPanel: UnlockLevelModal = new UnlockLevelModal(
         this,
         level
@@ -104,6 +125,17 @@ export class LevelsScene extends Phaser.Scene {
       this.unsubscribeAll();
       this.scene.start(SCENES.GAME);
     });
+  }
+
+  private allButtonsDisabled(): void {
+    this.returnButton.disableInteractive();
+    this.levelButtons.forEach((button: TextButton) =>
+      button.disableInteractive()
+    );
+  }
+
+  private destroyAllLevelButtons(): void {
+    this.levelButtons.forEach((button: TextButton) => button.destroy());
   }
 
   private addAllExisting(): void {
