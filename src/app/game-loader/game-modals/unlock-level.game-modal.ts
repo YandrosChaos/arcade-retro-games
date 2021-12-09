@@ -5,12 +5,21 @@ import { HolyData } from "src/app/commons/services/holy-data/holy-data.service";
 import { TextButton } from "../game-objects/text-button";
 import {
   BUTTON_CONFIG,
+  LOCK_SECONDARY_BUTTON_CONFIG,
   SECONDARY_BUTTON_CONFIG,
+  TERTIARY_BUTTON_CONFIG,
 } from "../scenes/k-boom.config";
 import { BACKGROUND_CONF } from "./unlock-level.config";
 import { MODAL_PRAY } from "../../commons/const/pray-name";
+import { Subscription } from "rxjs";
+import { User } from "src/app/commons/interfaces/user/user.interface";
+import { UserService } from "src/app/commons/services/user/user.service";
 
 export default class UnlockLevelModal {
+  private subUser: Subscription;
+  private user: User;
+  private userCanPay: boolean;
+
   private scene: Scene;
   private container!: Phaser.GameObjects.Container;
 
@@ -32,9 +41,37 @@ export default class UnlockLevelModal {
     this.background.fillRect(0, 0, scene.scale.width, scene.scale.height);
     this.container.add(this.background);
     this.container;
-    this.setupButtons();
-    this.addButtonEvents();
-    this.addButtons();
+  }
+
+  public show(): void {
+    this.initAllSubscriptions();
+    this.scene.add.tween({
+      targets: this.container,
+      x: 10,
+      duration: 300,
+      ease: Phaser.Math.Easing.Sine.InOut,
+    });
+  }
+
+  public hide(): void {
+    this.subUser?.unsubscribe();
+    HolyData.updatePrayer({ key: MODAL_PRAY, data: true });
+    this.scene.add.tween({
+      targets: this.container,
+      x: this.scene.scale.width + 300,
+      duration: 300,
+      ease: Phaser.Math.Easing.Sine.InOut,
+    });
+  }
+
+  private initAllSubscriptions(): void {
+    this.subUser = UserService.getCurrent().subscribe((user: User) => {
+      this.user = user;
+      this.canPay();
+      this.setupButtons();
+      this.addButtonEvents();
+      this.addButtons();
+    });
   }
 
   private setupButtons(): void {
@@ -52,13 +89,13 @@ export default class UnlockLevelModal {
       60,
       150,
       "Pay",
-      SECONDARY_BUTTON_CONFIG
+      this.buttonStyle()
     ).setOrigin(1, 0);
     this.cancelButton = this.createButton(
       35,
       150,
       "Nah",
-      BUTTON_CONFIG
+      TERTIARY_BUTTON_CONFIG
     ).setOrigin(-1, 0);
   }
 
@@ -70,34 +107,19 @@ export default class UnlockLevelModal {
   }
 
   private addButtonEvents(): void {
-    this.confirmButton.on("pointerdown", () => this.hide());
+    if (this.userCanPay)
+      this.confirmButton.on("pointerdown", () => {
+        UserService.diffPoints(this.level.unlockPoints);
+        this.hide();
+      });
     this.cancelButton.on("pointerdown", () => this.hide());
-  }
-
-  public show(): void {
-    this.scene.add.tween({
-      targets: this.container,
-      x: 10,
-      duration: 300,
-      ease: Phaser.Math.Easing.Sine.InOut,
-    });
-  }
-
-  public hide(): void {
-    HolyData.updatePrayer({ key: MODAL_PRAY, data: true });
-    this.scene.add.tween({
-      targets: this.container,
-      x: this.scene.scale.width + 300,
-      duration: 300,
-      ease: Phaser.Math.Easing.Sine.InOut,
-    });
   }
 
   private createButton(
     xDifferenciator: number,
     yDifferenciator: number,
     text: string,
-    style: Phaser.Types.GameObjects.Text.TextStyle = SECONDARY_BUTTON_CONFIG
+    style: Phaser.Types.GameObjects.Text.TextStyle = BUTTON_CONFIG
   ): TextButton {
     return new TextButton(
       this.scene,
@@ -106,5 +128,18 @@ export default class UnlockLevelModal {
       text,
       style
     );
+  }
+
+  private buttonStyle(): Phaser.Types.GameObjects.Text.TextStyle {
+    switch (this.userCanPay) {
+      case true:
+        return SECONDARY_BUTTON_CONFIG;
+      case false:
+        return LOCK_SECONDARY_BUTTON_CONFIG;
+    }
+  }
+
+  private canPay(): void {
+    this.userCanPay = this.user.points >= this.level.unlockPoints;
   }
 }

@@ -57,7 +57,10 @@ export class LevelsScene extends Phaser.Scene {
   private onModal(status: boolean): void {
     if (status) {
       this.returnButton.setInteractive();
+      this.pointsButton.destroy();
       this.destroyAllLevelButtons();
+      this.createPointsButton();
+      this.add.existing(this.pointsButton);
       this.createAllLevelButtons();
     }
   }
@@ -194,5 +197,6 @@ export class LevelsScene extends Phaser.Scene {
   private unsubscribeAll(): void {
     this.subUser.unsubscribe();
     this.subGame.unsubscribe();
+    this.subModal.unsubscribe();
   }
 }

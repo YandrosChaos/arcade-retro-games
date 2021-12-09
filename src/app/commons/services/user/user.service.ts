@@ -4,7 +4,7 @@ import { User } from "../../interfaces/user/user.interface";
 let user: BehaviorSubject<User> = new BehaviorSubject({
   name: "SnowCrash",
   hash: "SnowCrash",
-  points: 0,
+  points: 1000,
 });
 let userObs: Observable<User> = user.asObservable();
 

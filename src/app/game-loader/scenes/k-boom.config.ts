@@ -10,9 +10,19 @@ export const LOCK_BUTTON_CONFIG: Phaser.Types.GameObjects.Text.TextStyle = {
   font: "3rem Minecraft",
   color: "#4e006a",
 };
-export const SECONDARY_BUTTON_CONFIG: Phaser.Types.GameObjects.Text.TextStyle = {
+export const SECONDARY_BUTTON_CONFIG: Phaser.Types.GameObjects.Text.TextStyle =
+  {
+    font: "3rem Minecraft",
+    color: "#43ff00",
+  };
+export const LOCK_SECONDARY_BUTTON_CONFIG: Phaser.Types.GameObjects.Text.TextStyle =
+  {
+    font: "3rem Minecraft",
+    color: "#154e00",
+  };
+export const TERTIARY_BUTTON_CONFIG: Phaser.Types.GameObjects.Text.TextStyle = {
   font: "3rem Minecraft",
-  color: "#43ff00",
+  color: "#ff0043",
 };
 export const TITLE_BUTTON_CONFIG: Phaser.Types.GameObjects.Text.TextStyle = {
   font: "5rem Xenon",
