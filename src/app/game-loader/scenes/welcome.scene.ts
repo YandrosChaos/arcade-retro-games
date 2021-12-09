@@ -1,7 +1,11 @@
 import Phaser from "phaser";
 import { TextButton } from "../game-objects/text-button";
 import { TileSprite } from "../game-objects/tile-sprite";
-import { BUTTON_CONFIG, MENU_MUSIC_VOLUME, SOUND_EFFECTS_VOLUME, TITLE_BUTTON_CONFIG } from "./k-boom.config";
+import {
+  BUTTON_CONFIG,
+  MENU_MUSIC_VOLUME,
+  SOUND_EFFECTS_VOLUME,
+} from "./k-boom.config";
 import {
   BACKGROUND_MENU_IMG_PATH,
   BACKGROUND_MENU_SECTION_NAME,
@@ -87,8 +91,11 @@ export class WelcomeScene extends Phaser.Scene {
     this.titleButton = this.buildTextButton(
       "K-BOOM!",
       this.renderer.width / 10,
-      this.renderer.height/2 - 40,
-      TITLE_BUTTON_CONFIG
+      this.renderer.height / 2 - 40,
+      {
+        font: "5rem Xenon",
+        color: "black",
+      }
     );
   }
 
@@ -96,7 +103,7 @@ export class WelcomeScene extends Phaser.Scene {
     this.touchButton = this.buildTextButton(
       "Touch!",
       this.renderer.width / 2 - 75,
-      this.renderer.height/2 + 40,
+      this.renderer.height / 2 + 40,
       BUTTON_CONFIG
     );
   }

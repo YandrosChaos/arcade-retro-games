@@ -6,6 +6,7 @@ import { HolyData } from "../commons/services/holy-data/holy-data.service";
 import { Subscription } from "rxjs";
 import { EXIT_PRAY, GAME_PRAY } from "../commons/const/pray-name";
 import { VideoGame } from "../commons/interfaces/game/videogame.interface";
+import { Payload } from "../commons/interfaces/HolyData/Payload";
 
 @Component({
   selector: "app-game-loader",
@@ -27,18 +28,28 @@ export class GameLoaderPage implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.subGamedata = HolyData.getPrayer(GAME_PRAY).subscribe((payload) => {
-      if (payload && !this.phaserGame) {
-        this.videoGame = payload.data;
-        this.setGameConfig();
-        this.phaserGame = new Phaser.Game(this.config);
-      }
-    });
-
     HolyData.addPrayer({ key: EXIT_PRAY, data: null });
-    this.subCloseGame = HolyData.getPrayer(EXIT_PRAY).subscribe((item) => {
-      if (item.data) this.onGameExit();
-    });
+    this.initAllSubscriptions();
+  }
+
+  private initAllSubscriptions(): void {
+    this.subGamedata = HolyData.getPrayer(GAME_PRAY).subscribe(
+      (payload: Payload) => this.onGame(payload)
+    );
+
+    this.subCloseGame = HolyData.getPrayer(EXIT_PRAY).subscribe(
+      (payload: Payload) => {
+        if (payload.data) this.onGameExit();
+      }
+    );
+  }
+
+  private onGame(payload: Payload): void {
+    if (payload && !this.phaserGame) {
+      this.videoGame = payload.data;
+      this.setGameConfig();
+      this.phaserGame = new Phaser.Game(this.config);
+    }
   }
 
   ionViewDidEnter() {
@@ -66,7 +77,7 @@ export class GameLoaderPage implements OnInit, OnDestroy {
       physics: {
         default: "arcade",
         arcade: {
-          debug: true,
+          debug: false,
         },
       },
       backgroundColor: "#000000",
@@ -79,7 +90,7 @@ export class GameLoaderPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.phaserGame.destroy(true, false);
+    this.phaserGame?.destroy(true, false);
     this.subCloseGame.unsubscribe();
     this.subGamedata.unsubscribe();
     HolyData.holyGrenade();

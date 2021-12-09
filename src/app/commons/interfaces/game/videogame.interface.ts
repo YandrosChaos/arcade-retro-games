@@ -10,8 +10,8 @@ export interface Level {
   name: string;
   type: Difficulty;
   unlockPoints: number;
+  unlocked: boolean;
   hardnessMultiplicator: number;
-
   backgroundPath?: string;
   musicPath?: string;
 }
