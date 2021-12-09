@@ -6,11 +6,12 @@ import {
   VideoGame,
 } from "src/app/commons/interfaces/game/videogame.interface";
 import { Payload } from "src/app/commons/interfaces/HolyData/Payload";
+import { User } from "src/app/commons/interfaces/user/user.class";
 import { HolyData } from "src/app/commons/services/holy-data/holy-data.service";
+import { UserService } from "src/app/commons/services/user/user.service";
 import { TextButton } from "../game-objects/text-button";
-import { TileSprite } from "../game-objects/tile-sprite";
-import { LOCK_BUTTON_CONFIG } from "./k-boom.config";
-import { IMAGES, SCENES } from "./k-boom.routes";
+import { LOCK_BUTTON_CONFIG, SECONDARY_BUTTON_CONFIG } from "./k-boom.config";
+import { SCENES } from "./k-boom.routes";
 
 const BUTTON_CONFIG: Phaser.Types.GameObjects.Text.TextStyle = {
   font: "3rem Minecraft",
@@ -19,16 +20,24 @@ const BUTTON_CONFIG: Phaser.Types.GameObjects.Text.TextStyle = {
 
 export class LevelsScene extends Phaser.Scene {
   private returnButton: TextButton;
+  private pointsButton: TextButton;
   private levelsButtons: TextButton[];
 
+  private subUser: Subscription;
   private subGame: Subscription;
+
+  private currentUser: User = new User();
   private videoGame: VideoGame;
 
   constructor() {
     super({ key: SCENES.LEVELS });
   }
 
-  preload() {
+  init(params) {
+    this.subUser = UserService.getCurrent().subscribe((user) =>
+      this.currentUser.assign(user)
+    );
+
     this.subGame = HolyData.getPrayer(GAME_PRAY).subscribe(
       (gameData: Payload) => {
         if (gameData) this.videoGame = gameData.data;
@@ -36,7 +45,7 @@ export class LevelsScene extends Phaser.Scene {
     );
   }
 
-  init() {}
+  preload() {}
 
   create() {
     this.createAllButtons();
@@ -45,12 +54,29 @@ export class LevelsScene extends Phaser.Scene {
   }
 
   private createAllButtons(): void {
+    this.createPointsButton();
     this.createReturnButton();
     this.createLevelsButtons();
   }
 
+  private createPointsButton(): void {
+    this.pointsButton = new TextButton(
+      this,
+      this.renderer.width - 120,
+      10,
+      this.currentUser.formattedPoints(),
+      SECONDARY_BUTTON_CONFIG
+    );
+  }
+
   private createReturnButton(): void {
-    this.returnButton = new TextButton(this, 10, 10, "<", BUTTON_CONFIG);
+    this.returnButton = new TextButton(
+      this,
+      10,
+      10,
+      "<",
+      SECONDARY_BUTTON_CONFIG
+    );
   }
 
   private createLevelsButtons(): void {
@@ -62,6 +88,7 @@ export class LevelsScene extends Phaser.Scene {
 
   private addAllExisting(): void {
     this.add.existing(this.returnButton);
+    this.add.existing(this.pointsButton);
     this.addLevelsButtons();
   }
 
@@ -78,6 +105,7 @@ export class LevelsScene extends Phaser.Scene {
 
   private addReturnEvent(): void {
     this.returnButton.on("pointerdown", () => {
+      this.unsubscribeAll();
       this.scene.start(SCENES.MENU);
     });
   }
@@ -87,6 +115,7 @@ export class LevelsScene extends Phaser.Scene {
       button.on("pointerdown", () => {
         this.addHolyPray(button.text);
         this.sound.stopAll();
+        this.unsubscribeAll();
         this.scene.start(SCENES.GAME);
       });
     });
@@ -127,5 +156,10 @@ export class LevelsScene extends Phaser.Scene {
       case false:
         return LOCK_BUTTON_CONFIG;
     }
+  }
+
+  private unsubscribeAll(): void {
+    this.subUser.unsubscribe();
+    this.subGame.unsubscribe();
   }
 }

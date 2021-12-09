@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import { calculateHalfOfHalf } from "src/app/commons/functions/responsive.function";
+import { UserService } from "src/app/commons/services/user/user.service";
 import {
   BACKGROUND_IMG_PATH,
   BACKGROUND_SECTION_NAME,
@@ -21,6 +22,7 @@ export class ScoreScene extends Phaser.Scene {
 
   init(params: any): void {
     this.score = params.bombsCaught;
+    UserService.sumPoints(this.score);
   }
 
   preload() {
