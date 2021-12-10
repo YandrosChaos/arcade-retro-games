@@ -21,6 +21,7 @@ export class UserService {
 
   static sumPoints(value: number): void {
     user.getValue().points += value;
+    if (user.getValue().points > 9999) user.getValue().points = 9999;
     user.next(user.getValue());
   }
 
