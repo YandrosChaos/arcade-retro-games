@@ -28,6 +28,7 @@ export const VIDEO_GAMES: VideoGame[] = [
         unlockPoints: 0,
         unlocked: true,
         hardnessMultiplicator: 1,
+        ranges: [85, 95, 98],
       },
       {
         name: "Level 1",
@@ -37,6 +38,7 @@ export const VIDEO_GAMES: VideoGame[] = [
         unlockPoints: 300,
         unlocked: false,
         hardnessMultiplicator: 2,
+        ranges: [75, 95, 98],
       },
       {
         name: "Level 2",
@@ -46,6 +48,7 @@ export const VIDEO_GAMES: VideoGame[] = [
         unlockPoints: 500,
         unlocked: false,
         hardnessMultiplicator: 3,
+        ranges: [70, 90, 98],
       },
       {
         name: "Level 3",
@@ -55,6 +58,7 @@ export const VIDEO_GAMES: VideoGame[] = [
         unlockPoints: 800,
         unlocked: false,
         hardnessMultiplicator: 4,
+        ranges: [65, 90, 98],
       },
       {
         name: "Level 4",
@@ -64,6 +68,7 @@ export const VIDEO_GAMES: VideoGame[] = [
         unlockPoints: 1000,
         unlocked: false,
         hardnessMultiplicator: 5,
+        ranges: [50, 75, 98],
       },
       {
         name: "Level 5",
@@ -73,6 +78,7 @@ export const VIDEO_GAMES: VideoGame[] = [
         unlockPoints: 2000,
         unlocked: false,
         hardnessMultiplicator: 6,
+        ranges: [50, 65, 98],
       },
     ],
   },

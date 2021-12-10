@@ -1,6 +1,7 @@
-import { Difficulty, Level as LevelInterface } from "./videogame.interface";
+import { Difficulty, Level as LevelInterface  } from "./videogame.interface";
 
 export class Level implements LevelInterface {
+  ranges: number[];
   name: string;
   type: Difficulty;
   unlockPoints: number;

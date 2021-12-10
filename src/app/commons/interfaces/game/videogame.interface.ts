@@ -14,6 +14,7 @@ export interface Level {
   hardnessMultiplicator: number;
   backgroundPath?: string;
   musicPath?: string;
+  ranges?: number[];
 }
 
 export enum Difficulty {

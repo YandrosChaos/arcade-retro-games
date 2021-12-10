@@ -90,15 +90,14 @@ export class GameScene extends Phaser.Scene {
   init(params) {
     this.initAllSubscriptions();
     this.setLevelInitialConfig();
+  }
+
+  private setLevelInitialConfig(): void {
+    this.reducerBomberTime = 20 * this.levelConfig.hardnessMultiplicator;
     this.delta = this.maxBomberTime;
     this.lastBombTime = 0;
     this.bombsCaught = 0;
     this.bombsFallen = 0;
-  }
-
-  private setLevelInitialConfig(): void {
-    this.reducerBomberTime =
-      this.reducerBomberTime * this.levelConfig.hardnessMultiplicator;
   }
 
   private initAllSubscriptions(): void {
@@ -243,11 +242,17 @@ export class GameScene extends Phaser.Scene {
     const randomBombType: number = this.generateRandomBetween(0, 100);
     const x: number = this.generateRandomBetween(25, this.renderer.width - 25);
     const y: number = 25;
-    if (randomBombType < 85) {
+    if (randomBombType < this.levelConfig.ranges[0]) {
       return this.buildBomb(BOMB_SECTION_NAME, x, y, 1, 1, 100, 200);
-    } else if (randomBombType >= 85 && randomBombType < 95) {
+    } else if (
+      randomBombType >= this.levelConfig.ranges[0] &&
+      randomBombType < this.levelConfig.ranges[1]
+    ) {
       return this.buildBomb(BOMB_NUCLEAR_SECTION_NAME, x, y, 10, 2, 150, 200);
-    } else if (randomBombType >= 95 && randomBombType < 98) {
+    } else if (
+      randomBombType >= this.levelConfig.ranges[1] &&
+      randomBombType < this.levelConfig.ranges[2]
+    ) {
       return this.buildBomb(BOMB_ATOMIC_SECTION_NAME, x, y, 100, 3, 200, 230);
     } else {
       return this.buildSafePackage(x, y);

@@ -4,7 +4,6 @@ import { App } from "@capacitor/app";
 import { Platform } from "@ionic/angular";
 import { Subscription } from "rxjs";
 import { User } from "./commons/interfaces/user/user.class";
-import { HolyData } from "./commons/services/holy-data/holy-data.service";
 import { UserService } from "./commons/services/user/user.service";
 
 @Component({
