@@ -75,7 +75,7 @@ export const VIDEO_GAMES: VideoGame[] = [
         type: Difficulty.Hard,
         backgroundPath: "",
         musicPath: "",
-        unlockPoints: 10000,
+        unlockPoints: 9999,
         unlocked: false,
         hardnessMultiplicator: 6,
         ranges: [50, 65, 98],

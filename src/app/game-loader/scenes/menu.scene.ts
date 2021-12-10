@@ -1,20 +1,33 @@
 import { TextButton } from "../game-objects/text-button";
-import { IMAGES, SCENES } from "./k-boom.routes";
+import { SCENES } from "./k-boom.routes";
 import Phaser from "phaser";
-import { TileSprite } from "../game-objects/tile-sprite";
 import { HolyData } from "src/app/commons/services/holy-data/holy-data.service";
 import { EXIT_PRAY } from "src/app/commons/const/pray-name";
-import { BUTTON_CONFIG, TITLE_BUTTON_CONFIG } from "./k-boom.config";
+import {
+  BUTTON_CONFIG,
+  TERTIARY_BUTTON_CONFIG,
+  TITLE_BUTTON_CONFIG,
+} from "./k-boom.config";
+import { Subscription } from "rxjs";
+import { User } from "src/app/commons/interfaces/user/user.class";
+import { UserService } from "src/app/commons/services/user/user.service";
 
 const NUMBER_OF_BUTTONS: number = 3;
 export class MenuScene extends Phaser.Scene {
+  private subUser: Subscription;
+  private user: User = new User();
+
   constructor() {
     super({
       key: SCENES.MENU,
     });
   }
 
-  preload() {}
+  preload() {
+    this.subUser = UserService.getCurrent().subscribe((user) =>
+      this.user.assign(user)
+    );
+  }
 
   init() {}
 
@@ -23,19 +36,24 @@ export class MenuScene extends Phaser.Scene {
     const playButton = this.buildTextButton("PLAY", 60, 0);
     const levelsButton = this.buildTextButton("LEVELS", 90, 100);
     const exitButton = this.buildTextButton("EXIT", 60, 200);
+    const pointsText = this.buildPointsButton();
 
     this.add.existing(titleButton);
     this.add.existing(playButton);
     this.add.existing(levelsButton);
     this.add.existing(exitButton);
+    this.add.existing(pointsText);
     playButton.on("pointerdown", () => {
+      this.subUser.unsubscribe();
       this.sound.stopAll();
       this.scene.start(SCENES.GAME);
     });
     levelsButton.on("pointerdown", () => {
+      this.subUser.unsubscribe();
       this.scene.start(SCENES.LEVELS);
     });
     exitButton.on("pointerdown", () => {
+      this.subUser.unsubscribe();
       HolyData.updatePrayer({ key: EXIT_PRAY, data: "exit" });
     });
   }
@@ -47,6 +65,16 @@ export class MenuScene extends Phaser.Scene {
       this.renderer.height - (this.renderer.height - 40),
       "K-BOOM!",
       TITLE_BUTTON_CONFIG
+    );
+  }
+
+  private buildPointsButton(): TextButton {
+    return new TextButton(
+      this,
+      10,
+      this.renderer.height - 50,
+      this.user.formattedPoints(),
+      TERTIARY_BUTTON_CONFIG
     );
   }
 
