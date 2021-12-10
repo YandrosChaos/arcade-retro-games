@@ -2,13 +2,26 @@
   <ion-menu side="start" menuId="side-drawer-menu" contentId="menuContent">
     <ion-header class="ion-no-border">
       <ion-toolbar>
-        <ion-title class="ion-text-center custom-title-font">RetroGames</ion-title>
+        <ion-title class="ion-text-center custom-title-font"
+          >RetroGames</ion-title
+        >
       </ion-toolbar>
     </ion-header>
     <ion-content>
       <div class="ion-text-center">
         <ion-icon class="big-icon" src="assets/icon/favicon.svg"></ion-icon>
       </div>
+      <ion-row>
+        <ion-col class="ion-text-center"
+          ><ion-label color="tertiary">{{ user.name }}</ion-label></ion-col
+        >
+        <ion-col class="ion-text-center"
+          ><ion-label color="tertiary">{{
+            user.formattedPoints()
+          }}</ion-label></ion-col
+        >
+      </ion-row>
+      <hr color="primary" />
       <ion-list class="ion-no-padding">
         <ion-menu-toggle auto-hide="true">
           <ion-item
