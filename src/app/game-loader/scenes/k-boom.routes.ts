@@ -7,7 +7,6 @@ export const IMAGES: Map<string, string> = new Map([
   ["bomb-atomic", "bomb-atomic.svg"],
   ["safe-pak", "paracaidas.svg"],
   ["RIP", "skull.svg"],
-  ["background-menu-2", "menu-background-2.jpg"],
 ]);
 
 export const SOUNDS: Map<string, string> = new Map([
