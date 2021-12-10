@@ -10,13 +10,17 @@ import {
   TERTIARY_BUTTON_CONFIG,
 } from "../scenes/k-boom.config";
 import { BACKGROUND_CONF } from "./unlock-level.config";
-import { MODAL_PRAY } from "../../commons/const/pray-name";
+import { GAME_PRAY, MODAL_PRAY } from "../../commons/const/pray-name";
 import { Subscription } from "rxjs";
 import { User } from "src/app/commons/interfaces/user/user.interface";
 import { UserService } from "src/app/commons/services/user/user.service";
+import { VideoGame } from "src/app/commons/interfaces/game/videogame.class";
+import { Payload } from "src/app/commons/interfaces/HolyData/Payload";
 
 export default class UnlockLevelModal {
   private subUser: Subscription;
+  private subVideoGame: Subscription;
+
   private user: User;
   private userCanPay: boolean;
 
@@ -29,10 +33,10 @@ export default class UnlockLevelModal {
   private confirmButton: TextButton;
   private cancelButton: TextButton;
 
-  private level: Level;
+  private videogame: VideoGame = new VideoGame();
+  private level: Level = new Level();
 
   constructor(scene: Scene, level: LevelInterface) {
-    this.level = new Level();
     this.level.assign(level);
     this.scene = scene;
     this.container = scene.add.container(this.scene.scale.width + 300, 0);
@@ -72,6 +76,12 @@ export default class UnlockLevelModal {
       this.addButtonEvents();
       this.addButtons();
     });
+
+    this.subVideoGame = HolyData.getPrayer(GAME_PRAY).subscribe(
+      (payload: Payload) => {
+        if (payload?.data) this.videogame.assign(payload.data);
+      }
+    );
   }
 
   private setupButtons(): void {
@@ -107,12 +117,19 @@ export default class UnlockLevelModal {
   }
 
   private addButtonEvents(): void {
-    if (this.userCanPay)
+    if (this.userCanPay) {
       this.confirmButton.on("pointerdown", () => {
         UserService.diffPoints(this.level.unlockPoints);
+        this.unlockLevel();
         this.hide();
       });
+    }
     this.cancelButton.on("pointerdown", () => this.hide());
+  }
+
+  private unlockLevel(): void {
+    this.videogame.unlockLevel(this.level.name);
+    HolyData.updatePrayer({ key: GAME_PRAY, data: this.videogame });
   }
 
   private createButton(

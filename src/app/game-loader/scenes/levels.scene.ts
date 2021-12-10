@@ -1,10 +1,12 @@
 import Phaser from "phaser";
 import { Subscription } from "rxjs";
-import { GAME_PRAY, MODAL_PRAY } from "src/app/commons/const/pray-name";
 import {
-  Level,
-  VideoGame,
-} from "src/app/commons/interfaces/game/videogame.interface";
+  GAME_PRAY,
+  MODAL_PRAY,
+  SELECTED_LEVEL_PRAY,
+} from "src/app/commons/const/pray-name";
+import { VideoGame } from "src/app/commons/interfaces/game/videogame.class";
+import { Level } from "src/app/commons/interfaces/game/videogame.interface";
 import { Payload } from "src/app/commons/interfaces/HolyData/Payload";
 import { User } from "src/app/commons/interfaces/user/user.class";
 import { HolyData } from "src/app/commons/services/holy-data/holy-data.service";
@@ -28,7 +30,7 @@ export class LevelsScene extends Phaser.Scene {
   private subModal: Subscription;
 
   private currentUser: User = new User();
-  private videoGame: VideoGame;
+  private videoGame: VideoGame = new VideoGame();
 
   constructor() {
     super({ key: SCENES.LEVELS });
@@ -46,7 +48,7 @@ export class LevelsScene extends Phaser.Scene {
 
     this.subGame = HolyData.getPrayer(GAME_PRAY).subscribe(
       (gameData: Payload) => {
-        if (gameData) this.videoGame = gameData.data;
+        if (gameData?.data) this.videoGame.assign(gameData.data);
       }
     );
     this.subModal = HolyData.getPrayer(MODAL_PRAY).subscribe(
@@ -159,16 +161,10 @@ export class LevelsScene extends Phaser.Scene {
 
   private addHolyPray(buttonText: string): void {
     const payload: Payload = {
-      key: "selected-level",
-      data: this.findTouchedLevel(buttonText),
+      key: SELECTED_LEVEL_PRAY,
+      data: this.videoGame.findLevelByName(buttonText),
     };
     HolyData.addPrayer(payload);
-  }
-
-  private findTouchedLevel(buttonText: string): Level {
-    return this.videoGame.levels.find(
-      (level: Level) => level.name === buttonText
-    );
   }
 
   private buildTextButton(
