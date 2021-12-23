@@ -32,6 +32,7 @@ export class MenuScene extends Phaser.Scene {
   init() {}
 
   create() {
+    this.cameras.main.fadeIn(1000, 0, 0, 0);
     const titleButton = this.buildTitleButton();
     const playButton = this.buildTextButton("PLAY", 60, 0);
     const levelsButton = this.buildTextButton("LEVELS", 90, 100);
@@ -46,16 +47,28 @@ export class MenuScene extends Phaser.Scene {
     playButton.on("pointerdown", () => {
       this.subUser.unsubscribe();
       this.sound.stopAll();
-      this.scene.start(SCENES.GAME);
+      this.fadeOutScene(SCENES.GAME);
     });
     levelsButton.on("pointerdown", () => {
       this.subUser.unsubscribe();
-      this.scene.start(SCENES.LEVELS);
+      this.fadeOutScene(SCENES.LEVELS);
     });
     exitButton.on("pointerdown", () => {
       this.subUser.unsubscribe();
-      HolyData.updatePrayer({ key: EXIT_PRAY, data: "exit" });
+      this.killGame();
     });
+  }
+
+  private fadeOutScene(scene: string): void {
+    this.cameras.main.fadeOut(1000, 0, 0, 0);
+    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
+      this.scene.start(scene)
+    });
+  }
+
+  private killGame():void{
+    this.cameras.main.fadeOut(1000, 0, 0, 0);
+    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => { HolyData.updatePrayer({key: EXIT_PRAY, data: "exit"})});
   }
 
   private buildTitleButton(): TextButton {

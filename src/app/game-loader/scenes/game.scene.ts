@@ -129,6 +129,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   public create(): void {
+    this.cameras.main.fadeIn(1000,0,0,0);
     this.createSounds();
     this.createBackground();
     this.createFloor();
@@ -359,8 +360,9 @@ export class GameScene extends Phaser.Scene {
     this.deadSound.play();
     this.subGame.unsubscribe();
     this.subLevelConfig.unsubscribe();
-    this.scene.start(SCORE_SCENE_NAME, {
-      bombsCaught: this.bombsCaught,
+    this.cameras.main.fadeOut(1000, 0, 0, 0);
+    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
+      this.scene.start(SCORE_SCENE_NAME, {bombsCaught: this.bombsCaught})
     });
   }
 

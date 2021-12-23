@@ -46,6 +46,7 @@ export class ScoreScene extends Phaser.Scene {
   }
 
   create(): void {
+    this.fadeInScene();
     const background: Phaser.GameObjects.TileSprite = this.add.tileSprite(
       0,
       this.renderer.height / 2,
@@ -66,10 +67,20 @@ export class ScoreScene extends Phaser.Scene {
     );
     this.input.on(
       "pointerdown",
-      function (/*pointer*/) {
-        this.scene.start(WELCOME_SCENE_NAME);
+      function (_) {
+        this.fadeOutScene();
       },
       this
     );
   }
+
+  private fadeInScene(): void{
+    this.cameras.main.fadeIn(1000, 0, 0, 0);
+  }
+
+  private fadeOutScene(): void {
+    this.cameras.main.fadeOut(1000, 0, 0, 0);
+    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => { this.scene.start(WELCOME_SCENE_NAME) })
+  }
+
 }

@@ -38,6 +38,7 @@ export class WelcomeScene extends Phaser.Scene {
   }
 
   create(): void {
+    this.cameras.main.fadeIn(1000, 0, 0, 0);
     this.buildAllElements();
     this.addAllExisting();
     this.music.play();
@@ -58,10 +59,15 @@ export class WelcomeScene extends Phaser.Scene {
       "pointerdown",
       function () {
         this.startGameSound.play();
-        this.scene.start(SCENES.MENU);
+        this.fadeOutScene();
       },
       this
     );
+  }
+
+  private fadeOutScene(): void {
+    this.cameras.main.fadeOut(1000, 0, 0, 0);
+    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {this.scene.start(SCENES.MENU)});
   }
 
   private buildAllElements(): void {

@@ -68,6 +68,17 @@ export class LoadScene extends Phaser.Scene {
   }
 
   create() {
-    this.scene.start(SCENES.WELCOME);
+    this.fadeInScene();
+    this.fadeOutScene();
   }
+
+  private fadeInScene():void{
+    this.cameras.main.fadeIn(1000, 0, 0 , 0);
+  }
+
+  private fadeOutScene():void{
+    this.cameras.main.fadeOut(1000, 0, 0, 0);
+    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => { this.scene.start(SCENES.WELCOME)});
+  }
+  
 }

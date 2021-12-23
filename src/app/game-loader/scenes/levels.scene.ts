@@ -70,6 +70,7 @@ export class LevelsScene extends Phaser.Scene {
   preload() {}
 
   create() {
+    this.fadeInScene();
     this.createAllButtons();
     this.addAllExisting();
     this.addAllTouchEvents();
@@ -128,7 +129,7 @@ export class LevelsScene extends Phaser.Scene {
       this.addHolyPray(button.text);
       this.sound.stopAll();
       this.unsubscribeAll();
-      this.scene.start(SCENES.GAME);
+      this.fadeOutScene(SCENES.GAME);
     });
   }
 
@@ -155,7 +156,7 @@ export class LevelsScene extends Phaser.Scene {
   private addReturnEvent(): void {
     this.returnButton.on("pointerdown", () => {
       this.unsubscribeAll();
-      this.scene.start(SCENES.MENU);
+      this.fadeOutScene(SCENES.MENU);
     });
   }
 
@@ -194,5 +195,14 @@ export class LevelsScene extends Phaser.Scene {
     this.subUser.unsubscribe();
     this.subGame.unsubscribe();
     this.subModal.unsubscribe();
+  }
+
+  private fadeInScene(): void{
+    this.cameras.main.fadeIn(1000, 0, 0, 0);
+  }
+
+  private fadeOutScene(scene: string): void{
+    this.cameras.main.fadeOut(1000, 0, 0, 0);
+    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => { this.scene.start(scene) });
   }
 }
