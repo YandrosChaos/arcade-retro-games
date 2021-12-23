@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { Scene } from "../game-objects/scene";
 import {
   IMAGES,
   LOAD_SCENE_NAME,
@@ -9,9 +10,9 @@ import {
 
 const RESOURCES_PATH: string = "assets/games/k-boom";
 
-export class LoadScene extends Phaser.Scene {
+export class LoadScene extends Scene {
   constructor() {
-    super({ key: LOAD_SCENE_NAME });
+    super(LOAD_SCENE_NAME);
   }
 
   init() {}
@@ -68,17 +69,6 @@ export class LoadScene extends Phaser.Scene {
   }
 
   create() {
-    this.fadeInScene();
-    this.fadeOutScene();
+    super.fadeOutScene(SCENES.WELCOME);
   }
-
-  private fadeInScene():void{
-    this.cameras.main.fadeIn(1000, 0, 0 , 0);
-  }
-
-  private fadeOutScene():void{
-    this.cameras.main.fadeOut(1000, 0, 0, 0);
-    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => { this.scene.start(SCENES.WELCOME)});
-  }
-  
 }

@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { Scene } from "../game-objects/scene";
 import { TextButton } from "../game-objects/text-button";
 import { TileSprite } from "../game-objects/tile-sprite";
 import {
@@ -16,7 +17,7 @@ import {
   START_SOUND_SECTION_NAME,
   WELCOME_SCENE_NAME,
 } from "./k-boom.routes";
-export class WelcomeScene extends Phaser.Scene {
+export class WelcomeScene extends Scene {
   private titleButton: TextButton;
   private touchButton: TextButton;
 
@@ -26,9 +27,7 @@ export class WelcomeScene extends Phaser.Scene {
   private startGameSound: Phaser.Sound.BaseSound;
 
   constructor() {
-    super({
-      key: WELCOME_SCENE_NAME,
-    });
+    super(WELCOME_SCENE_NAME);
   }
 
   preload() {
@@ -38,7 +37,7 @@ export class WelcomeScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.cameras.main.fadeIn(1000, 0, 0, 0);
+    this.fadeInScene();
     this.buildAllElements();
     this.addAllExisting();
     this.music.play();
@@ -57,17 +56,12 @@ export class WelcomeScene extends Phaser.Scene {
   private onScreenTouchedEvent(): void {
     this.input.on(
       "pointerdown",
-      function () {
+      () => {
         this.startGameSound.play();
-        this.fadeOutScene();
+        super.fadeOutScene(SCENES.MENU);
       },
       this
     );
-  }
-
-  private fadeOutScene(): void {
-    this.cameras.main.fadeOut(1000, 0, 0, 0);
-    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {this.scene.start(SCENES.MENU)});
   }
 
   private buildAllElements(): void {

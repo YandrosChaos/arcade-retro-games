@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { calculateHalfOfHalf } from "src/app/commons/functions/responsive.function";
 import { UserService } from "src/app/commons/services/user/user.service";
+import { Scene } from "../game-objects/scene";
 import {
   BACKGROUND_IMG_PATH,
   BACKGROUND_SECTION_NAME,
@@ -8,16 +9,14 @@ import {
   WELCOME_SCENE_NAME,
 } from "./k-boom.routes";
 
-export class ScoreScene extends Phaser.Scene {
+export class ScoreScene extends Scene {
   private score: number;
   private result: Phaser.GameObjects.Text;
   private hint: Phaser.GameObjects.Text;
   private hintText: string = "Touch to restart";
 
   constructor() {
-    super({
-      key: SCORE_SCENE_NAME,
-    });
+    super(SCORE_SCENE_NAME);
   }
 
   init(params: any): void {
@@ -46,7 +45,7 @@ export class ScoreScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.fadeInScene();
+    super.fadeInScene();
     const background: Phaser.GameObjects.TileSprite = this.add.tileSprite(
       0,
       this.renderer.height / 2,
@@ -67,20 +66,10 @@ export class ScoreScene extends Phaser.Scene {
     );
     this.input.on(
       "pointerdown",
-      function (_) {
-        this.fadeOutScene();
+      () => {
+        super.fadeOutScene(WELCOME_SCENE_NAME);
       },
       this
     );
   }
-
-  private fadeInScene(): void{
-    this.cameras.main.fadeIn(1000, 0, 0, 0);
-  }
-
-  private fadeOutScene(): void {
-    this.cameras.main.fadeOut(1000, 0, 0, 0);
-    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => { this.scene.start(WELCOME_SCENE_NAME) })
-  }
-
 }

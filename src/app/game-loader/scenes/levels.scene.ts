@@ -12,6 +12,7 @@ import { User } from "src/app/commons/interfaces/user/user.class";
 import { HolyData } from "src/app/commons/services/holy-data/holy-data.service";
 import { UserService } from "src/app/commons/services/user/user.service";
 import UnlockLevelModal from "../game-modals/unlock-level.game-modal";
+import { Scene } from "../game-objects/scene";
 import { TextButton } from "../game-objects/text-button";
 import {
   BUTTON_CONFIG,
@@ -20,7 +21,7 @@ import {
 } from "./k-boom.config";
 import { SCENES } from "./k-boom.routes";
 
-export class LevelsScene extends Phaser.Scene {
+export class LevelsScene extends Scene {
   private returnButton: TextButton;
   private pointsButton: TextButton;
   private levelButtons: TextButton[];
@@ -33,7 +34,7 @@ export class LevelsScene extends Phaser.Scene {
   private videoGame: VideoGame = new VideoGame();
 
   constructor() {
-    super({ key: SCENES.LEVELS });
+    super(SCENES.LEVELS);
   }
 
   init(params) {
@@ -70,7 +71,7 @@ export class LevelsScene extends Phaser.Scene {
   preload() {}
 
   create() {
-    this.fadeInScene();
+    super.fadeInScene();
     this.createAllButtons();
     this.addAllExisting();
     this.addAllTouchEvents();
@@ -129,7 +130,7 @@ export class LevelsScene extends Phaser.Scene {
       this.addHolyPray(button.text);
       this.sound.stopAll();
       this.unsubscribeAll();
-      this.fadeOutScene(SCENES.GAME);
+      super.fadeOutScene(SCENES.GAME);
     });
   }
 
@@ -156,7 +157,7 @@ export class LevelsScene extends Phaser.Scene {
   private addReturnEvent(): void {
     this.returnButton.on("pointerdown", () => {
       this.unsubscribeAll();
-      this.fadeOutScene(SCENES.MENU);
+      super.fadeOutScene(SCENES.MENU);
     });
   }
 
@@ -195,14 +196,5 @@ export class LevelsScene extends Phaser.Scene {
     this.subUser.unsubscribe();
     this.subGame.unsubscribe();
     this.subModal.unsubscribe();
-  }
-
-  private fadeInScene(): void{
-    this.cameras.main.fadeIn(1000, 0, 0, 0);
-  }
-
-  private fadeOutScene(scene: string): void{
-    this.cameras.main.fadeOut(1000, 0, 0, 0);
-    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => { this.scene.start(scene) });
   }
 }
