@@ -90,7 +90,7 @@ export class GameLoaderPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.phaserGame?.destroy(true, false);
+    this.phaserGame?.destroy(false, true);
     this.subCloseGame.unsubscribe();
     this.subGamedata.unsubscribe();
     HolyData.holyGrenade();

@@ -62,7 +62,7 @@ export class LevelsScene extends Scene {
       this.returnButton.setInteractive();
       this.pointsButton.destroy();
       this.destroyAllLevelButtons();
-      this.createPointsButton();
+      this.createPointsButton(this.renderer.width - 150);
       this.add.existing(this.pointsButton);
       this.createAllLevelButtons();
     }
@@ -75,18 +75,19 @@ export class LevelsScene extends Scene {
     this.createAllButtons();
     this.addAllExisting();
     this.addAllTouchEvents();
+    this.pointsButtonAnimations();
   }
 
   private createAllButtons(): void {
-    this.createPointsButton();
+    this.createPointsButton(300);
     this.createReturnButton();
     this.createAllLevelButtons();
   }
 
-  private createPointsButton(): void {
+  private createPointsButton(x: number): void {
     this.pointsButton = new TextButton(
       this,
-      this.renderer.width - 150,
+      x,
       10,
       this.currentUser.formattedPoints(),
       SECONDARY_BUTTON_CONFIG
@@ -152,6 +153,10 @@ export class LevelsScene extends Scene {
 
   private addAllTouchEvents(): void {
     this.addReturnEvent();
+  }
+
+  private pointsButtonAnimations(): void {
+    super.animateItems(this.pointsButton, this.renderer.width - 150);
   }
 
   private addReturnEvent(): void {
