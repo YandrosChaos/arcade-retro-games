@@ -41,4 +41,17 @@ export class Scene extends Phaser.Scene {
       }
     );
   }
+
+  protected animateItems(
+    targets: any,
+    x: number,
+    duration: number = 300
+  ): void {
+    this.add.tween({
+      targets: targets,
+      x: x,
+      duration: duration,
+      ease: Phaser.Math.Easing.Sine.InOut,
+    });
+  }
 }
