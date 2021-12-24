@@ -20,6 +20,7 @@ import { Payload } from "src/app/commons/interfaces/HolyData/Payload";
 import {
   START_SOUND_PATH,
   START_SOUND_SECTION_NAME,
+  WRONG_SOUND_SECTION,
 } from "../scenes/k-boom.routes";
 
 export default class UnlockLevelModal {
@@ -39,6 +40,7 @@ export default class UnlockLevelModal {
   private cancelButton: TextButton;
 
   private successSound: Phaser.Sound.BaseSound;
+  private wrongSound: Phaser.Sound.BaseSound;
 
   private videogame: VideoGame = new VideoGame();
   private level: Level = new Level();
@@ -134,7 +136,10 @@ export default class UnlockLevelModal {
         this.hide();
       });
     }
-    this.cancelButton.on("pointerdown", () => this.hide());
+    this.cancelButton.on("pointerdown", () => {
+      this.wrongSound.play();
+      this.hide();
+    });
   }
 
   private unlockLevel(): void {
@@ -172,6 +177,10 @@ export default class UnlockLevelModal {
 
   private buildSounds(): void {
     this.successSound = this.scene.sound.add(START_SOUND_SECTION_NAME, {
+      volume: SOUND_EFFECTS_VOLUME,
+    });
+
+    this.wrongSound = this.scene.sound.add(WRONG_SOUND_SECTION, {
       volume: SOUND_EFFECTS_VOLUME,
     });
   }

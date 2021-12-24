@@ -24,6 +24,8 @@ import {
   SCENES,
   START_SOUND_PATH,
   START_SOUND_SECTION_NAME,
+  WRONG_SOUND_PATH,
+  WRONG_SOUND_SECTION,
 } from "./k-boom.routes";
 
 export class LevelsScene extends Scene {
@@ -77,6 +79,7 @@ export class LevelsScene extends Scene {
 
   preload() {
     this.load.audio(START_SOUND_SECTION_NAME, START_SOUND_PATH);
+    this.load.audio(WRONG_SOUND_SECTION, WRONG_SOUND_PATH);
   }
 
   create() {

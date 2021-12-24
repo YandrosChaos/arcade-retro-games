@@ -16,6 +16,7 @@ export const SOUNDS: Map<string, string> = new Map([
   ["dead-sound", "deadnotification.wav"],
   ["start-sound", "start-game.wav"],
   ["safe-bonus", "extra-bonus.wav"],
+  ["wrong-sound", "wrong_touch.ogg"],
 ]);
 
 export const SPRITES: Map<string, string> = new Map([
@@ -58,6 +59,7 @@ export const EXPLOSION_SOUND_SECTION_NAME: string = "explosion-sound";
 export const DEAD_SOUND_SECTION_NAME: string = "dead-sound";
 export const START_SOUND_SECTION_NAME: string = "start-sound";
 export const BONUS_SOUND_SECTION_NAME: string = "safe-bonus";
+export const WRONG_SOUND_SECTION: string = "wrong-sound";
 
 // animations names
 export const KABOOM_ANIM_NAME: string = "explode";
@@ -99,6 +101,7 @@ export const MAIN_GAME_MUSIC_PATH: string =
   "assets/games/k-boom/IntergalacticOdyssey.ogg";
 
 //sound paths
+export const WRONG_SOUND_PATH: string = "assets/games/k-boom/wrong_touch.ogg"
 export const START_SOUND_PATH: string = "assets/games/k-boom/start-game.wav";
 export const BONUS_SOUND_PATH: string = "assets/games/k-boom/extra-bonus.wav";
 export const DEAD_SOUND_PATH: string =
