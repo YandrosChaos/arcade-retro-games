@@ -18,8 +18,13 @@ import {
   BUTTON_CONFIG,
   LOCK_BUTTON_CONFIG,
   SECONDARY_BUTTON_CONFIG,
+  SOUND_EFFECTS_VOLUME,
 } from "./k-boom.config";
-import { SCENES } from "./k-boom.routes";
+import {
+  SCENES,
+  START_SOUND_PATH,
+  START_SOUND_SECTION_NAME,
+} from "./k-boom.routes";
 
 export class LevelsScene extends Scene {
   private returnButton: TextButton;
@@ -32,6 +37,8 @@ export class LevelsScene extends Scene {
 
   private currentUser: User = new User();
   private videoGame: VideoGame = new VideoGame();
+
+  private touchedSound: Phaser.Sound.BaseSound;
 
   constructor() {
     super(SCENES.LEVELS);
@@ -68,7 +75,9 @@ export class LevelsScene extends Scene {
     }
   }
 
-  preload() {}
+  preload() {
+    this.load.audio(START_SOUND_SECTION_NAME, START_SOUND_PATH);
+  }
 
   create() {
     super.fadeInScene();
@@ -76,6 +85,7 @@ export class LevelsScene extends Scene {
     this.addAllExisting();
     this.addAllTouchEvents();
     this.pointsButtonAnimations();
+    this.buildSounds();
   }
 
   private createAllButtons(): void {
@@ -130,6 +140,7 @@ export class LevelsScene extends Scene {
     button.on("pointerdown", () => {
       this.addHolyPray(button.text);
       this.sound.stopAll();
+      this.touchedSound.play();
       this.unsubscribeAll();
       super.fadeOutScene(SCENES.GAME);
     });
@@ -162,6 +173,7 @@ export class LevelsScene extends Scene {
   private addReturnEvent(): void {
     this.returnButton.on("pointerdown", () => {
       this.unsubscribeAll();
+      this.touchedSound.play();
       super.fadeOutScene(SCENES.MENU);
     });
   }
@@ -186,6 +198,12 @@ export class LevelsScene extends Scene {
       level.name,
       this.getLevelStyles(level)
     );
+  }
+
+  private buildSounds(): void {
+    this.touchedSound = this.sound.add(START_SOUND_SECTION_NAME, {
+      volume: SOUND_EFFECTS_VOLUME,
+    });
   }
 
   private getLevelStyles(level: Level) {

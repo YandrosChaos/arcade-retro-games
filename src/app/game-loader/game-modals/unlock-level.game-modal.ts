@@ -7,6 +7,7 @@ import {
   BUTTON_CONFIG,
   LOCK_SECONDARY_BUTTON_CONFIG,
   SECONDARY_BUTTON_CONFIG,
+  SOUND_EFFECTS_VOLUME,
   TERTIARY_BUTTON_CONFIG,
 } from "../scenes/k-boom.config";
 import { BACKGROUND_CONF } from "./unlock-level.config";
@@ -16,6 +17,10 @@ import { User } from "src/app/commons/interfaces/user/user.interface";
 import { UserService } from "src/app/commons/services/user/user.service";
 import { VideoGame } from "src/app/commons/interfaces/game/videogame.class";
 import { Payload } from "src/app/commons/interfaces/HolyData/Payload";
+import {
+  START_SOUND_PATH,
+  START_SOUND_SECTION_NAME,
+} from "../scenes/k-boom.routes";
 
 export default class UnlockLevelModal {
   private subUser: Subscription;
@@ -33,6 +38,8 @@ export default class UnlockLevelModal {
   private confirmButton: TextButton;
   private cancelButton: TextButton;
 
+  private successSound: Phaser.Sound.BaseSound;
+
   private videogame: VideoGame = new VideoGame();
   private level: Level = new Level();
 
@@ -45,6 +52,8 @@ export default class UnlockLevelModal {
     this.background.fillRect(0, 0, scene.scale.width, scene.scale.height);
     this.container.add(this.background);
     this.container;
+
+    this.buildSounds();
   }
 
   public show(): void {
@@ -120,6 +129,7 @@ export default class UnlockLevelModal {
     if (this.userCanPay) {
       this.confirmButton.on("pointerdown", () => {
         UserService.diffPoints(this.level.unlockPoints);
+        this.successSound.play();
         this.unlockLevel();
         this.hide();
       });
@@ -158,5 +168,11 @@ export default class UnlockLevelModal {
 
   private canPay(): void {
     this.userCanPay = this.user.points >= this.level.unlockPoints;
+  }
+
+  private buildSounds(): void {
+    this.successSound = this.scene.sound.add(START_SOUND_SECTION_NAME, {
+      volume: SOUND_EFFECTS_VOLUME,
+    });
   }
 }
