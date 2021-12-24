@@ -76,6 +76,7 @@ export class MenuScene extends Scene {
     this.levelsButton.on("pointerdown", () => {
       this.subUser.unsubscribe();
       this.buttonSound.play();
+      this.throwAllOutAnimation();
       super.fadeOutScene(SCENES.LEVELS);
     });
     this.exitButton.on("pointerdown", () => {
@@ -90,6 +91,13 @@ export class MenuScene extends Scene {
     super.animateItems(this.levelsButton, this.renderer.width / 2 - 90, 350);
     super.animateItems(this.exitButton, this.renderer.width / 2 - 60, 400);
     super.animateItems(this.pointsButton, 10, 400);
+  }
+
+  private throwAllOutAnimation(): void {
+    super.animateItems(this.playButton, this.scale.width + 300);
+    super.animateItems(this.levelsButton, this.scale.width + 300, 400);
+    super.animateItems(this.exitButton, this.scale.width + 300, 500);
+    super.animateItems(this.pointsButton, -300, 500);
   }
 
   private buildTitleButton(): TextButton {
