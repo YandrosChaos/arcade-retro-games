@@ -1,7 +1,12 @@
 import { TextButton } from "../game-objects/text-button";
-import { SCENES } from "./k-boom.routes";
+import {
+  SCENES,
+  START_SOUND_PATH,
+  START_SOUND_SECTION_NAME,
+} from "./k-boom.routes";
 import {
   BUTTON_CONFIG,
+  SOUND_EFFECTS_VOLUME,
   TERTIARY_BUTTON_CONFIG,
   TITLE_BUTTON_CONFIG,
 } from "./k-boom.config";
@@ -21,11 +26,14 @@ export class MenuScene extends Scene {
   private exitButton: TextButton;
   private pointsButton: TextButton;
 
+  private buttonSound: Phaser.Sound.BaseSound;
+
   constructor() {
     super(SCENES.MENU);
   }
 
   preload() {
+    this.load.audio(START_SOUND_SECTION_NAME, START_SOUND_PATH);
     this.subUser = UserService.getCurrent().subscribe((user) =>
       this.user.assign(user)
     );
@@ -39,6 +47,7 @@ export class MenuScene extends Scene {
     this.addAllButtonsToScene();
     this.manageAllButtonEvent();
     this.throwAllInitialAnimation();
+    this.buildSounds();
   }
 
   private createAllButtons(): void {
@@ -61,14 +70,17 @@ export class MenuScene extends Scene {
     this.playButton.on("pointerdown", () => {
       this.subUser.unsubscribe();
       this.sound.stopAll();
+      this.buttonSound.play();
       super.fadeOutScene(SCENES.GAME);
     });
     this.levelsButton.on("pointerdown", () => {
       this.subUser.unsubscribe();
+      this.buttonSound.play();
       super.fadeOutScene(SCENES.LEVELS);
     });
     this.exitButton.on("pointerdown", () => {
       this.subUser.unsubscribe();
+      this.sound.stopAll();
       super.killGame();
     });
   }
@@ -77,7 +89,7 @@ export class MenuScene extends Scene {
     super.animateItems(this.playButton, this.renderer.width / 2 - 60);
     super.animateItems(this.levelsButton, this.renderer.width / 2 - 90, 350);
     super.animateItems(this.exitButton, this.renderer.width / 2 - 60, 400);
-    super.animateItems(this.pointsButton, 10, 400)
+    super.animateItems(this.pointsButton, 10, 400);
   }
 
   private buildTitleButton(): TextButton {
@@ -108,5 +120,11 @@ export class MenuScene extends Scene {
       text,
       BUTTON_CONFIG
     );
+  }
+
+  private buildSounds(): void {
+    this.buttonSound = this.sound.add(START_SOUND_SECTION_NAME, {
+      volume: SOUND_EFFECTS_VOLUME,
+    });
   }
 }
