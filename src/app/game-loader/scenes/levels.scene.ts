@@ -41,6 +41,7 @@ export class LevelsScene extends Scene {
   private videoGame: VideoGame = new VideoGame();
 
   private touchedSound: Phaser.Sound.BaseSound;
+  private goBackSound: Phaser.Sound.BaseSound;
 
   constructor() {
     super(SCENES.LEVELS);
@@ -110,7 +111,7 @@ export class LevelsScene extends Scene {
   private createReturnButton(): void {
     this.returnButton = new TextButton(
       this,
-      20,
+      -20,
       10,
       "<",
       SECONDARY_BUTTON_CONFIG
@@ -171,12 +172,13 @@ export class LevelsScene extends Scene {
 
   private pointsButtonAnimations(): void {
     super.animateItems(this.pointsButton, this.renderer.width - 150);
+    super.animateItems(this.returnButton, 20)
   }
 
   private addReturnEvent(): void {
     this.returnButton.on("pointerdown", () => {
       this.unsubscribeAll();
-      this.touchedSound.play();
+      this.goBackSound.play();
       super.fadeOutScene(SCENES.MENU);
     });
   }
@@ -205,6 +207,10 @@ export class LevelsScene extends Scene {
 
   private buildSounds(): void {
     this.touchedSound = this.sound.add(START_SOUND_SECTION_NAME, {
+      volume: SOUND_EFFECTS_VOLUME,
+    });
+
+    this.goBackSound = this.sound.add(WRONG_SOUND_SECTION, {
       volume: SOUND_EFFECTS_VOLUME,
     });
   }
