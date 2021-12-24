@@ -88,7 +88,7 @@ export class LevelsScene extends Scene {
     this.createAllButtons();
     this.addAllExisting();
     this.addAllTouchEvents();
-    this.pointsButtonAnimations();
+    this.inAllButtonAnimation();
     this.buildSounds();
   }
 
@@ -146,6 +146,7 @@ export class LevelsScene extends Scene {
       this.sound.stopAll();
       this.touchedSound.play();
       this.unsubscribeAll();
+      this.outAllButtonAnimation();
       super.fadeOutScene(SCENES.GAME);
     });
   }
@@ -170,15 +171,21 @@ export class LevelsScene extends Scene {
     this.addReturnEvent();
   }
 
-  private pointsButtonAnimations(): void {
+  private inAllButtonAnimation(): void {
     super.animateItems(this.pointsButton, this.renderer.width - 150);
     super.animateItems(this.returnButton, 20)
+  }
+
+  private outAllButtonAnimation(): void{
+    super.animateItems(this.pointsButton, 300);
+    super.animateItems(this.returnButton, -20)
   }
 
   private addReturnEvent(): void {
     this.returnButton.on("pointerdown", () => {
       this.unsubscribeAll();
       this.goBackSound.play();
+      this.outAllButtonAnimation();
       super.fadeOutScene(SCENES.MENU);
     });
   }
