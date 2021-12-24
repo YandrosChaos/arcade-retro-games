@@ -71,6 +71,7 @@ export class MenuScene extends Scene {
       this.subUser.unsubscribe();
       this.sound.stopAll();
       this.buttonSound.play();
+      this.throwAllOutAnimation();
       super.fadeOutScene(SCENES.GAME);
     });
     this.levelsButton.on("pointerdown", () => {
@@ -82,6 +83,7 @@ export class MenuScene extends Scene {
     this.exitButton.on("pointerdown", () => {
       this.subUser.unsubscribe();
       this.sound.stopAll();
+      this.throwAllOutAnimation();
       super.killGame();
     });
   }
