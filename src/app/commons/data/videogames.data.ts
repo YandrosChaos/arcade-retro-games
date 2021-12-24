@@ -1,9 +1,9 @@
-import { GameScene } from "src/app/game-loader/scenes/game.scene";
-import { LevelsScene } from "src/app/game-loader/scenes/levels.scene";
-import { LoadScene } from "src/app/game-loader/scenes/load.scene";
-import { MenuScene } from "src/app/game-loader/scenes/menu.scene";
-import { ScoreScene } from "src/app/game-loader/scenes/score.scene";
-import { WelcomeScene } from "src/app/game-loader/scenes/welcome.scene";
+import { GameScene } from "src/app/game-loader/game-scenes/k-boom/game.scene";
+import { LevelsScene } from "src/app/game-loader/game-scenes/k-boom/levels.scene";
+import { LoadScene } from "src/app/game-loader/game-scenes/k-boom/load.scene";
+import { MenuScene } from "src/app/game-loader/game-scenes/k-boom/menu.scene";
+import { ScoreScene } from "src/app/game-loader/game-scenes/k-boom/score.scene";
+import { WelcomeScene } from "src/app/game-loader/game-scenes/k-boom/welcome.scene";
 import { Difficulty, VideoGame } from "../interfaces/game/videogame.interface";
 
 export const VIDEO_GAMES: VideoGame[] = [
@@ -86,42 +86,21 @@ export const VIDEO_GAMES: VideoGame[] = [
     name: "Space Invaders",
     type: "arcade",
     imgLink: "assets/games/space-invaders/alien.jpg",
-    scenes: [
-      LoadScene,
-      WelcomeScene,
-      MenuScene,
-      GameScene,
-      ScoreScene,
-      LevelsScene,
-    ],
+    scenes: [],
     levels: [],
   },
   {
     name: "Pong",
     type: "arcade",
     imgLink: "assets/games/pong/pong.jpg",
-    scenes: [
-      LoadScene,
-      WelcomeScene,
-      MenuScene,
-      GameScene,
-      ScoreScene,
-      LevelsScene,
-    ],
+    scenes: [],
     levels: [],
   },
   {
     name: "Klimber",
     type: "arcade",
     imgLink: "assets/games/klimber/gorilla.jpg",
-    scenes: [
-      LoadScene,
-      WelcomeScene,
-      MenuScene,
-      GameScene,
-      ScoreScene,
-      LevelsScene,
-    ],
+    scenes: [],
     levels: [],
   },
 ];

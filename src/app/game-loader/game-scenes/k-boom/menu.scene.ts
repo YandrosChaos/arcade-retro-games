@@ -1,4 +1,4 @@
-import { TextButton } from "../game-objects/text-button";
+import { TextButton } from "../../game-objects/text-button";
 import {
   SCENES,
   START_SOUND_PATH,
@@ -13,7 +13,7 @@ import {
 import { Subscription } from "rxjs";
 import { User } from "src/app/commons/interfaces/user/user.class";
 import { UserService } from "src/app/commons/services/user/user.service";
-import { Scene } from "../game-objects/scene";
+import { Scene } from "../../game-objects/scene";
 
 const NUMBER_OF_BUTTONS: number = 3;
 export class MenuScene extends Scene {

@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import { calculateHalfOfHalf } from "src/app/commons/functions/responsive.function";
 import { UserService } from "src/app/commons/services/user/user.service";
-import { Scene } from "../game-objects/scene";
+import { Scene } from "../../game-objects/scene";
 import { SOUND_EFFECTS_VOLUME } from "./k-boom.config";
 import {
   BACKGROUND_IMG_PATH,

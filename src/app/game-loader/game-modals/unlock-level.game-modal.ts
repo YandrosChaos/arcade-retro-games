@@ -9,7 +9,7 @@ import {
   SECONDARY_BUTTON_CONFIG,
   SOUND_EFFECTS_VOLUME,
   TERTIARY_BUTTON_CONFIG,
-} from "../scenes/k-boom.config";
+} from "../game-scenes/k-boom/k-boom.config";
 import { BACKGROUND_CONF } from "./unlock-level.config";
 import { GAME_PRAY, MODAL_PRAY } from "../../commons/const/pray-name";
 import { Subscription } from "rxjs";
@@ -21,7 +21,7 @@ import {
   START_SOUND_PATH,
   START_SOUND_SECTION_NAME,
   WRONG_SOUND_SECTION,
-} from "../scenes/k-boom.routes";
+} from "../game-scenes/k-boom/k-boom.routes";
 
 export default class UnlockLevelModal {
   private subUser: Subscription;

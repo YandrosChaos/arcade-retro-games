@@ -39,17 +39,20 @@ export class GameLoaderPage implements OnInit, OnDestroy {
 
     this.subCloseGame = HolyData.getPrayer(EXIT_PRAY).subscribe(
       (payload: Payload) => {
-        if (payload.data) this.onGameExit();
+        if (payload?.data) this.onGameExit();
       }
     );
   }
 
   private onGame(payload: Payload): void {
-    if (payload && !this.phaserGame) {
+    if (payload && !this.phaserGame && payload?.data?.scenes?.length > 0) {
       this.videoGame = payload.data;
       this.setGameConfig();
       this.phaserGame = new Phaser.Game(this.config);
-    } else if (!payload) this.router.navigate(["/home"]);
+    } else {
+      this.router.navigate(["/home"]);
+      this.ngOnDestroy();
+    }
   }
 
   ionViewDidEnter() {
@@ -91,8 +94,8 @@ export class GameLoaderPage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.phaserGame?.destroy(false);
-    this.subCloseGame.unsubscribe();
-    this.subGamedata.unsubscribe();
-    HolyData.holyGrenade();
+    this.subCloseGame?.unsubscribe();
+    this.subGamedata?.unsubscribe();
+    HolyData?.holyGrenade();
   }
 }

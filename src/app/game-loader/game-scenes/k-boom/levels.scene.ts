@@ -11,9 +11,9 @@ import { Payload } from "src/app/commons/interfaces/HolyData/Payload";
 import { User } from "src/app/commons/interfaces/user/user.class";
 import { HolyData } from "src/app/commons/services/holy-data/holy-data.service";
 import { UserService } from "src/app/commons/services/user/user.service";
-import UnlockLevelModal from "../game-modals/unlock-level.game-modal";
-import { Scene } from "../game-objects/scene";
-import { TextButton } from "../game-objects/text-button";
+import UnlockLevelModal from "../../game-modals/unlock-level.game-modal";
+import { Scene } from "../../game-objects/scene";
+import { TextButton } from "../../game-objects/text-button";
 import {
   BUTTON_CONFIG,
   LOCK_BUTTON_CONFIG,

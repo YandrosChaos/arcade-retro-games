@@ -1,7 +1,7 @@
 import Phaser from "phaser";
-import { Scene } from "../game-objects/scene";
-import { TextButton } from "../game-objects/text-button";
-import { TileSprite } from "../game-objects/tile-sprite";
+import { Scene } from "../../game-objects/scene";
+import { TextButton } from "../../game-objects/text-button";
+import { TileSprite } from "../../game-objects/tile-sprite";
 import {
   BUTTON_CONFIG,
   MENU_MUSIC_VOLUME,

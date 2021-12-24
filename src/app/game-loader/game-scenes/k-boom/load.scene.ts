@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { Scene } from "../game-objects/scene";
+import { Scene } from "../../game-objects/scene";
 import {
   IMAGES,
   LOAD_SCENE_NAME,
@@ -27,7 +27,7 @@ export class LoadScene extends Scene {
   private initLoadingBar(): void {
     const loadingBar = this.add.graphics({
       fillStyle: {
-        color: 0xffffff, //white
+        color: 0xBC00FF,
       },
     });
 
