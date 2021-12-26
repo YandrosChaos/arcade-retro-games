@@ -1,12 +1,42 @@
 import { EXIT_PRAY } from "@const/pray-name";
+import { SOUND_EFFECTS_VOLUME } from "@game-scenes/k-boom/config/k-boom.config";
+import {
+  MENU_MUSIC_SECTION,
+  START_SOUND_SECTION,
+  BACKGROUND_MENU_SECTION,
+  BACKGROUND_SECTION,
+  WRONG_SOUND_SECTION,
+  BONUS_SOUND_SECTION,
+  SAFE_PACK_SECTION,
+} from "@game-scenes/k-boom/config/k-boom.section";
+import {
+  getMusicPath,
+  getSoundPath,
+  getImgPath,
+} from "@game-scenes/k-boom/functions/path.functions";
+import { Sound } from "@game-scenes/k-boom/game-objects/sound/sound.interface";
 import { HolyData } from "@services/holy-data/holy-data.service";
 
 export class Scene extends Phaser.Scene {
+  protected touchSound?: Sound;
+  protected confirmSound?: Sound;
+  protected cancelSound?: Sound;
+
   constructor(sceneKey: string) {
     super({ key: sceneKey });
   }
 
-  public preload(): void {}
+  public preload(): void {
+    this.load.audio(BONUS_SOUND_SECTION, getSoundPath(BONUS_SOUND_SECTION));
+    this.load.audio(WRONG_SOUND_SECTION, getSoundPath(WRONG_SOUND_SECTION));
+    this.load.audio(MENU_MUSIC_SECTION, getMusicPath(MENU_MUSIC_SECTION));
+    this.load.audio(START_SOUND_SECTION, getSoundPath(START_SOUND_SECTION));
+    this.load.image(BACKGROUND_SECTION, getImgPath(BACKGROUND_SECTION));
+    this.load.image(
+      BACKGROUND_MENU_SECTION,
+      getImgPath(BACKGROUND_MENU_SECTION)
+    );
+  }
 
   public init(params: any): void {}
 
@@ -52,6 +82,18 @@ export class Scene extends Phaser.Scene {
       x: x,
       duration: duration,
       ease: Phaser.Math.Easing.Sine.InOut,
+    });
+  }
+
+  protected buildMainSoundEffects(): void {
+    this.touchSound = this.sound?.add(BONUS_SOUND_SECTION, {
+      volume: SOUND_EFFECTS_VOLUME,
+    });
+    this.confirmSound = this.sound.add(START_SOUND_SECTION, {
+      volume: SOUND_EFFECTS_VOLUME,
+    });
+    this.cancelSound = this.sound.add(WRONG_SOUND_SECTION, {
+      volume: SOUND_EFFECTS_VOLUME,
     });
   }
 }

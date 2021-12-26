@@ -8,7 +8,6 @@ import {
   WRONG_SOUND_SECTION,
 } from "@k-boom/config/k-boom.section";
 import { getImgPath, getSoundPath } from "@k-boom/functions/path.functions";
-import { Sound } from "@k-boom/game-objects/sound/sound.interface";
 import { Text } from "@k-boom/game-objects/text/text.interface";
 import { TileSprite } from "@game-objects/tile-sprite";
 import { HINT_TEXT_CONFIG, RESULT_TEXT_CONFIG } from "./score.config";
@@ -24,22 +23,14 @@ export class ScoreScene extends Scene {
   private hint: Text;
   private hintText: string = "Touch to restart";
 
-  private touchSound: Sound;
-
   constructor() {
     super(Scenes.Score);
   }
 
   init(params: any): void {
+    this.tapCounter = 0;
     this.score = params.bombsCaught;
     UserService.sumPoints(this.score);
-  }
-
-  preload() {
-    this.load.image(BACKGROUND_SECTION, getImgPath(BACKGROUND_SECTION));
-    this.load.audio(WRONG_SOUND_SECTION, getSoundPath(WRONG_SOUND_SECTION));
-
-    this.tapCounter = 0;
   }
 
   update(time: number): void {
@@ -52,7 +43,7 @@ export class ScoreScene extends Scene {
 
   create(): void {
     super.fadeInScene();
-    this.buildSounds();
+    super.buildMainSoundEffects();
     this.buildBackground();
     this.buildResultText();
     this.addTouchEventToScreen();
@@ -60,7 +51,7 @@ export class ScoreScene extends Scene {
 
   private closeScene(): void {
     if (this.tapCounter >= 1) {
-      this.touchSound.play();
+      this.cancelSound.play();
       super.fadeOutScene(Scenes.Welcome);
     } else {
       this.tapCounter++;
@@ -105,11 +96,5 @@ export class ScoreScene extends Scene {
       BACKGROUND_SECTION
     );
     this.background.setAngle(90);
-  }
-
-  private buildSounds(): void {
-    this.touchSound = this.sound.add(WRONG_SOUND_SECTION, {
-      volume: SOUND_EFFECTS_VOLUME,
-    });
   }
 }
