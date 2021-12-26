@@ -53,7 +53,12 @@ export class GameLoaderPage implements OnInit, AfterViewInit, OnDestroy {
       this.setGameConfig();
       this.phaserGame = new Phaser.Game(this.config);
     }
-    if (!payload) this.onGameExit();
+    if (
+      !payload ||
+      this.videoGame.scenes.length === 0 ||
+      this.videoGame.levels.length === 0
+    )
+      this.onGameExit();
   }
 
   ionViewDidEnter() {
