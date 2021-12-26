@@ -45,6 +45,8 @@ import { Text } from "@k-boom/game-objects/text/text.interface";
 import { Bomb } from "@k-boom/game-objects/throwable-item/bomb.interface";
 import { SafePackage } from "@k-boom/game-objects/throwable-item/safe-package.interface";
 import { ThrowableItem } from "@k-boom/game-objects/throwable-item/throwable-item";
+import { GAME_TEXT_STYLES } from "./game.config";
+import { PointerEvent } from "@interfaces/events/events.interface";
 export class GameScene extends Scene {
   private subLevelConfig: Subscription;
   private subGame: Subscription;
@@ -169,15 +171,8 @@ export class GameScene extends Scene {
     const lifes = this.add.image(100, 30, RIP_SECTION);
     lifes.setScale(0.15);
 
-    this.score = this.add.text(50, 20, "", {
-      font: "16px Minecraft",
-      color: "#FBFBAC",
-    });
-
-    this.lifes = this.add.text(125, 20, "", {
-      font: "16px Minecraft",
-      color: "#FBFBAC",
-    });
+    this.score = this.add.text(50, 20, "", GAME_TEXT_STYLES);
+    this.lifes = this.add.text(125, 20, "", GAME_TEXT_STYLES);
   }
 
   private createSounds(): void {
@@ -335,7 +330,7 @@ export class GameScene extends Scene {
     );
     safePackage.setVelocity(0, safePackage.generatedVelocity);
     safePackage.setInteractive();
-    safePackage.on("pointerdown", this.onSafeTouched(safePackage), this);
+    safePackage.on(PointerEvent.Down, this.onSafeTouched(safePackage), this);
     safePackage.points = 0;
     safePackage.damage = 0;
     return safePackage;

@@ -1,4 +1,3 @@
-import Phaser, { Scene } from "phaser";
 import { Level } from "@interfaces/game/level.class";
 import { Level as LevelInterface } from "@interfaces/game/videogame.interface";
 import { HolyData } from "@services/holy-data/holy-data.service";
@@ -21,6 +20,11 @@ import {
   BONUS_SOUND_SECTION,
   WRONG_SOUND_SECTION,
 } from "@k-boom/config/k-boom.section";
+import { Scene } from "@game-objects/scene";
+import { Graphics } from "@game-scenes/k-boom/game-objects/graphics/graphics.interface";
+import { Sound } from "@game-scenes/k-boom/game-objects/sound/sound.interface";
+import { Container } from "@game-scenes/k-boom/game-objects/container/container.interface";
+import { PointerEvent } from "@interfaces/events/events.interface";
 
 export class UnlockLevelModal {
   private subUser: Subscription;
@@ -30,16 +34,16 @@ export class UnlockLevelModal {
   private userCanPay: boolean;
 
   private scene: Scene;
-  private container!: Phaser.GameObjects.Container;
+  private container!: Container;
 
-  private background: Phaser.GameObjects.Graphics;
+  private background: Graphics;
   private unlockText: TextButton;
   private pointCostText: TextButton;
   private confirmButton: TextButton;
   private cancelButton: TextButton;
 
-  private successSound: Phaser.Sound.BaseSound;
-  private wrongSound: Phaser.Sound.BaseSound;
+  private successSound: Sound;
+  private wrongSound: Sound;
 
   private videogame: VideoGame = new VideoGame();
   private level: Level = new Level();
@@ -79,20 +83,25 @@ export class UnlockLevelModal {
   }
 
   private initAllSubscriptions(): void {
-    this.subUser = UserService.getCurrent().subscribe((user: User) => {
-      this.user = user;
-      this.canPay();
-      this.setupButtons();
-      this.addButtonEvents();
-      this.addButtons();
-    });
+    this.subUser = UserService.getCurrent().subscribe((user: User) =>
+      this.onUser(user)
+    );
 
     this.subVideoGame = HolyData.getPrayer(GAME_PRAY).subscribe(
-      (payload: Payload) => {
-        console.log(payload);
-        if (payload?.data) this.videogame.assign({ ...payload.data });
-      }
+      (payload: Payload) => this.onPayload(payload)
     );
+  }
+
+  private onUser(user: User): void {
+    this.user = user;
+    this.canPay();
+    this.setupButtons();
+    this.addButtonEvents();
+    this.addButtons();
+  }
+
+  private onPayload(payload: Payload): void {
+    if (payload?.data) this.videogame.assign({ ...payload.data });
   }
 
   private killAllSubscriptions(): void {
@@ -134,20 +143,24 @@ export class UnlockLevelModal {
 
   private addButtonEvents(): void {
     if (this.userCanPay) {
-      this.confirmButton.on("pointerdown", () => {
-        UserService.diffPoints(this.level.unlockPoints);
-        this.successSound.play();
-        this.unlockLevel();
-        this.hide();
-      });
+      this.confirmButton.on(PointerEvent.Down, () => this.onConfirmEvent());
     }
-    this.cancelButton.on("pointerdown", () => {
-      this.wrongSound.play();
-      this.hide();
-    });
+    this.cancelButton.on(PointerEvent.Down, () => this.onCancelEvent());
+  }
+
+  private onConfirmEvent(): void {
+    this.successSound.play();
+    this.unlockLevel();
+    this.hide();
+  }
+
+  private onCancelEvent(): void {
+    this.wrongSound.play();
+    this.hide();
   }
 
   private unlockLevel(): void {
+    UserService.diffPoints(this.level.unlockPoints);
     this.videogame.unlockLevel(this.level.name);
     HolyData.updatePrayer({ key: GAME_PRAY, data: this.videogame });
   }

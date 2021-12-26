@@ -21,6 +21,8 @@ import {
 } from "@k-boom/config/k-boom.section";
 import { getSoundPath } from "@k-boom/functions/path.functions";
 import { UnlockLevelModal } from "./modals/unlock-level/unlock-level.game-modal";
+import { Sound } from "@game-scenes/k-boom/game-objects/sound/sound.interface";
+import { PointerEvent } from "@interfaces/events/events.interface";
 
 export class LevelsScene extends Scene {
   private returnButton: TextButton;
@@ -34,8 +36,8 @@ export class LevelsScene extends Scene {
   private currentUser: User = new User();
   private videoGame: VideoGame = new VideoGame();
 
-  private touchedSound: Phaser.Sound.BaseSound;
-  private goBackSound: Phaser.Sound.BaseSound;
+  private touchedSound: Sound;
+  private goBackSound: Sound;
 
   constructor() {
     super(Scenes.Levels);
@@ -124,7 +126,7 @@ export class LevelsScene extends Scene {
   }
 
   private addUnlockEvent(button: TextButton, level: Level): void {
-    button.on("pointerdown", () => {
+    button.on(PointerEvent.Down, () => {
       this.allButtonsDisabled();
       const unlockLevelPanel: UnlockLevelModal = new UnlockLevelModal(
         this,
@@ -135,7 +137,7 @@ export class LevelsScene extends Scene {
   }
 
   private addPlayEvent(button: TextButton): void {
-    button.on("pointerdown", () => {
+    button.on(PointerEvent.Down, () => {
       this.addHolyPray(button.text);
       this.sound.stopAll();
       this.touchedSound.play();
@@ -176,7 +178,7 @@ export class LevelsScene extends Scene {
   }
 
   private addReturnEvent(): void {
-    this.returnButton.on("pointerdown", () => {
+    this.returnButton.on(PointerEvent.Down, () => {
       this.unsubscribeAll();
       this.goBackSound.play();
       this.outAllButtonAnimation();

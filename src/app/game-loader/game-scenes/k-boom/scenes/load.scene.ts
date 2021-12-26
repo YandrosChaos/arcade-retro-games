@@ -1,5 +1,5 @@
-import Phaser from "phaser";
 import { Scene } from "@game-objects/scene";
+import { LoadStatus } from "@interfaces/events/events.interface";
 import { Scenes } from "@k-boom/config/k-boom.names";
 import {
   IMAGES,
@@ -13,7 +13,12 @@ import {
   SVGS,
   SVG_MAIN_PATH,
 } from "@k-boom/config/k-boom.routes";
+import { Graphics } from "../game-objects/graphics/graphics.interface";
+
+export const PINK: number = 0xbc00ff;
 export class LoadScene extends Scene {
+  private loadingBar: Graphics;
+
   constructor() {
     super(Scenes.Load);
   }
@@ -21,23 +26,18 @@ export class LoadScene extends Scene {
   init() {}
 
   preload() {
+    this.buildLoadingBar();
+    this.initLoadingBar();
     this.loadMusic();
     this.loadSounds();
     this.loadSprites();
     this.loadImages();
     this.loadSVG();
-    this.initLoadingBar();
   }
 
   private initLoadingBar(): void {
-    const loadingBar = this.add.graphics({
-      fillStyle: {
-        color: 0xbc00ff,
-      },
-    });
-
-    this.load.on("progress", (percent: number) => {
-      loadingBar.fillRect(
+    this.load.on(LoadStatus.Progress, (percent: number) => {
+      this.loadingBar.fillRect(
         this.renderer.width / 2 - 25,
         0,
         50,
@@ -45,8 +45,16 @@ export class LoadScene extends Scene {
       );
     });
 
-    this.load.on("complete", () => {});
-    this.load.on("load", (file: Phaser.Loader.File) => {});
+    this.load.on(LoadStatus.Complete, () => {});
+    this.load.on(LoadStatus.Load, (file: Phaser.Loader.File) => {});
+  }
+
+  private buildLoadingBar(): void {
+    this.loadingBar = this.add.graphics({
+      fillStyle: {
+        color: PINK,
+      },
+    });
   }
 
   private loadImages(): void {

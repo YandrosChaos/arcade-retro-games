@@ -12,6 +12,8 @@ import { Scene } from "@game-objects/scene";
 import { Scenes } from "@k-boom/config/k-boom.names";
 import { BONUS_SOUND_SECTION } from "@k-boom/config/k-boom.section";
 import { getSoundPath } from "@k-boom/functions/path.functions";
+import { Sound } from "../game-objects/sound/sound.interface";
+import { PointerEvent } from "@interfaces/events/events.interface";
 
 const NUMBER_OF_BUTTONS: number = 3;
 export class MenuScene extends Scene {
@@ -24,7 +26,7 @@ export class MenuScene extends Scene {
   private exitButton: TextButton;
   private pointsButton: TextButton;
 
-  private buttonSound: Phaser.Sound.BaseSound;
+  private buttonSound: Sound;
 
   constructor() {
     super(Scenes.Menu);
@@ -65,20 +67,20 @@ export class MenuScene extends Scene {
   }
 
   private manageAllButtonEvent(): void {
-    this.playButton.on("pointerdown", () => {
+    this.playButton.on(PointerEvent.Down, () => {
       this.subUser.unsubscribe();
       this.sound.stopAll();
       this.buttonSound.play();
       this.throwAllOutAnimation();
       super.fadeOutScene(Scenes.Game);
     });
-    this.levelsButton.on("pointerdown", () => {
+    this.levelsButton.on(PointerEvent.Down, () => {
       this.subUser.unsubscribe();
       this.buttonSound.play();
       this.throwAllOutAnimation();
       super.fadeOutScene(Scenes.Levels);
     });
-    this.exitButton.on("pointerdown", () => {
+    this.exitButton.on(PointerEvent.Down, () => {
       this.subUser.unsubscribe();
       this.sound.stopAll();
       this.throwAllOutAnimation();

@@ -1,4 +1,3 @@
-import Phaser from "phaser";
 import { Scene } from "@game-objects/scene";
 import { TextButton } from "@game-objects/text-button";
 import { TileSprite } from "@game-objects/tile-sprite";
@@ -18,14 +17,18 @@ import {
   getMusicPath,
   getSoundPath,
 } from "@k-boom/functions/path.functions";
+import { Sound } from "@game-scenes/k-boom/game-objects/sound/sound.interface";
+import { KBOOM_TEXT, TITLE_BUTTON_CONFIG, TOUCH_TEXT } from "./welcome.config";
+import { TextStyle } from "@game-scenes/k-boom/game-objects/text/text.interface";
+import { PointerEvent } from "@interfaces/events/events.interface";
 export class WelcomeScene extends Scene {
   private titleButton: TextButton;
   private touchButton: TextButton;
 
   private background: TileSprite;
 
-  private music: Phaser.Sound.BaseSound;
-  private startGameSound: Phaser.Sound.BaseSound;
+  private music: Sound;
+  private startGameSound: Sound;
 
   constructor() {
     super(Scenes.Welcome);
@@ -51,15 +54,12 @@ export class WelcomeScene extends Scene {
   update(time: number): void {
     const seconds: number = Number((time / 1000).toFixed(0));
     this.touchButton?.destroy();
-    if (seconds % 2 !== 0) {
-      this.buildTouchButton();
-      this.add.existing(this.touchButton);
-    }
+    if (seconds % 2 !== 0) this.buildTouchButton();
   }
 
   private onScreenTouchedEvent(): void {
     this.input.on(
-      "pointerdown",
+      PointerEvent.Down,
       () => {
         this.startGameSound.play();
         super.fadeOutScene(Scenes.Menu);
@@ -93,30 +93,28 @@ export class WelcomeScene extends Scene {
 
   private buildTitleButton(): void {
     this.titleButton = this.buildTextButton(
-      "K-BOOM!",
+      KBOOM_TEXT,
       this.renderer.width / 10,
       this.renderer.height / 2 - 40,
-      {
-        font: "5rem Xenon",
-        color: "black",
-      }
+      TITLE_BUTTON_CONFIG
     );
   }
 
   private buildTouchButton(): void {
     this.touchButton = this.buildTextButton(
-      "Touch!",
+      TOUCH_TEXT,
       this.renderer.width / 2 - 75,
       this.renderer.height / 2 + 40,
       BUTTON_CONFIG
     );
+    this.add.existing(this.touchButton);
   }
 
   private buildTextButton(
     text: string,
     x: number,
     y: number,
-    config: Phaser.Types.GameObjects.Text.TextStyle
+    config: TextStyle
   ): TextButton {
     return new TextButton(this, x, y, text, config);
   }

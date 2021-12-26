@@ -1,4 +1,3 @@
-import Phaser from "phaser";
 import { calculateHalfOfHalf } from "@functions/responsive.function";
 import { UserService } from "@services/user/user.service";
 import { Scene } from "@game-objects/scene";
@@ -13,6 +12,7 @@ import { Sound } from "@k-boom/game-objects/sound/sound.interface";
 import { Text } from "@k-boom/game-objects/text/text.interface";
 import { TileSprite } from "@game-objects/tile-sprite";
 import { HINT_TEXT_CONFIG, RESULT_TEXT_CONFIG } from "./score.config";
+import { PointerEvent } from "@interfaces/events/events.interface";
 
 export class ScoreScene extends Scene {
   private score: number;
@@ -69,7 +69,7 @@ export class ScoreScene extends Scene {
 
   private addTouchEventToScreen(): void {
     this.input.on(
-      "pointerdown",
+      PointerEvent.Down,
       () => {
         this.closeScene();
       },

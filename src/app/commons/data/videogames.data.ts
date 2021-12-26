@@ -1,10 +1,10 @@
-import { GameScene } from "@k-boom/scenes/game.scene";
+import { GameScene } from "@game-scenes/k-boom/scenes/game/game.scene";
 import { LevelsScene } from "@k-boom/scenes/levels/levels.scene";
 import { LoadScene } from "@k-boom/scenes/load.scene";
 import { MenuScene } from "@k-boom/scenes/menu.scene";
 import { ScoreScene } from "@game-scenes/k-boom/scenes/score/score.scene";
-import { WelcomeScene } from "@k-boom/scenes/welcome.scene";
 import { Difficulty, VideoGame } from "@interfaces/game/videogame.interface";
+import { WelcomeScene } from "@game-scenes/k-boom/scenes/welcome/welcome.scene";
 
 export const VIDEO_GAMES: VideoGame[] = [
   {
