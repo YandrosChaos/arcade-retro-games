@@ -1,0 +1,1 @@
+export interface Text extends Phaser.GameObjects.Text {}

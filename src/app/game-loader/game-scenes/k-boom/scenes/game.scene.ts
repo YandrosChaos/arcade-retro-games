@@ -11,8 +11,11 @@ import {
 import { Payload } from "src/app/commons/interfaces/HolyData/Payload";
 import { HolyData } from "src/app/commons/services/holy-data/holy-data.service";
 import { Scene } from "src/app/game-loader/game-objects/scene";
+import { TileSprite } from "src/app/game-loader/game-objects/tile-sprite";
 import {
+  FLOOR_FRAME_QUANTITY,
   GAMEPLAY_MUSIC_VOLUME,
+  MAX_LIFES,
   SOUND_EFFECTS_VOLUME,
 } from "../config/k-boom.config";
 import { KABOOM_ANIM_NAME, Scenes } from "../config/k-boom.names";
@@ -37,22 +40,12 @@ import {
   getSpritesPath,
   getSvgPath,
 } from "../functions/path.functions";
-
-class ThrowableItem extends Phaser.Physics.Arcade.Image {
-  public points?: number = 0;
-  public damage?: number = 0;
-  public generatedVelocity?: number = 0;
-}
-interface Bomb extends ThrowableItem {}
-interface SafePackage extends ThrowableItem {}
-interface Sound extends Phaser.Sound.BaseSound {}
-interface Background extends Phaser.GameObjects.TileSprite {}
-interface Group extends Phaser.GameObjects.Group {}
-interface StaticGroup extends Phaser.Physics.Arcade.StaticGroup {}
-interface Text extends Phaser.GameObjects.Text {}
-
-const MAX_LIFES: number = 3;
-const FLOOR_FRAME_QUANTITY: number = 2;
+import { Group, StaticGroup } from "../game-objects/groups/group.interface";
+import { Sound } from "../game-objects/sound/sound.interface";
+import { Text } from "../game-objects/text/text.interface";
+import { Bomb } from "../game-objects/throwable-item/bomb.interface";
+import { SafePackage } from "../game-objects/throwable-item/safe-package.interface";
+import { ThrowableItem } from "../game-objects/throwable-item/throwable-item";
 export class GameScene extends Scene {
   private subLevelConfig: Subscription;
   private subGame: Subscription;
@@ -97,7 +90,7 @@ export class GameScene extends Scene {
 
   private initAllSubscriptions(): void {
     this.subGame = HolyData.getPrayer(GAME_PRAY).subscribe(
-      (payload: Payload) => (this.videoGame = {...payload.data})
+      (payload: Payload) => (this.videoGame = { ...payload.data })
     );
     this.subLevelConfig = HolyData.getPrayer(SELECTED_LEVEL_PRAY).subscribe(
       (payload: Payload) =>
@@ -195,7 +188,7 @@ export class GameScene extends Scene {
   }
 
   private createBackground(): void {
-    const background: Background = this.add.tileSprite(
+    const background: TileSprite = this.add.tileSprite(
       0,
       this.renderer.height / 2,
       this.renderer.width * 2,
@@ -256,7 +249,8 @@ export class GameScene extends Scene {
   }
 
   private updateLifesText(): void {
-    this.lifes.text = String(MAX_LIFES - this.bombsFallen);
+    const life: number = MAX_LIFES - this.bombsFallen;
+    this.lifes.text = String(life >= 0 ? life : 0);
   }
 
   private emitBomb(): void {
