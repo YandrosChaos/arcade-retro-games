@@ -1,6 +1,6 @@
 import Phaser from "phaser";
-import { Scene } from "../../../game-objects/scene";
-import { Scenes } from "../config/k-boom.names";
+import { Scene } from "@game-objects/scene";
+import { Scenes } from "@k-boom/config/k-boom.names";
 import {
   IMAGES,
   IMG_MAIN_PATH,
@@ -12,7 +12,7 @@ import {
   SPRITES_MAIN_PATH,
   SVGS,
   SVG_MAIN_PATH,
-} from "../config/k-boom.routes";
+} from "@k-boom/config/k-boom.routes";
 export class LoadScene extends Scene {
   constructor() {
     super(Scenes.Load);

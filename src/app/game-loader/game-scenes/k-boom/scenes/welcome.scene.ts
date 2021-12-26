@@ -1,23 +1,23 @@
 import Phaser from "phaser";
-import { Scene } from "../../../game-objects/scene";
-import { TextButton } from "../../../game-objects/text-button";
-import { TileSprite } from "../../../game-objects/tile-sprite";
+import { Scene } from "@game-objects/scene";
+import { TextButton } from "@game-objects/text-button";
+import { TileSprite } from "@game-objects/tile-sprite";
 import {
   BUTTON_CONFIG,
   MENU_MUSIC_VOLUME,
   SOUND_EFFECTS_VOLUME,
-} from "../config/k-boom.config";
-import { Scenes } from "../config/k-boom.names";
+} from "@k-boom/config/k-boom.config";
+import { Scenes } from "@k-boom/config/k-boom.names";
 import {
   BACKGROUND_MENU_SECTION,
   MENU_MUSIC_SECTION,
   START_SOUND_SECTION,
-} from "../config/k-boom.section";
+} from "@k-boom/config/k-boom.section";
 import {
   getImgPath,
   getMusicPath,
   getSoundPath,
-} from "../functions/path.functions";
+} from "@k-boom/functions/path.functions";
 export class WelcomeScene extends Scene {
   private titleButton: TextButton;
   private touchButton: TextButton;

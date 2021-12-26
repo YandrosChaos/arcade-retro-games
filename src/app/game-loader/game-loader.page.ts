@@ -1,11 +1,11 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { MenuController, Platform } from "@ionic/angular";
-import { HolyData } from "../commons/services/holy-data/holy-data.service";
+import { HolyData } from "@services/holy-data/holy-data.service";
 import { Subscription } from "rxjs";
-import { EXIT_PRAY, GAME_PRAY } from "../commons/const/pray-name";
-import { VideoGame } from "../commons/interfaces/game/videogame.interface";
-import { Payload } from "../commons/interfaces/HolyData/Payload";
+import { EXIT_PRAY, GAME_PRAY } from "@const/pray-name";
+import { Payload } from "@interfaces/HolyData/Payload";
+import { VideoGame } from "@interfaces/game/videogame.interface";
 
 @Component({
   selector: "app-game-loader",

@@ -1,17 +1,17 @@
-import { TextButton } from "../../../game-objects/text-button";
+import { TextButton } from "@game-objects/text-button";
 import {
   BUTTON_CONFIG,
   SOUND_EFFECTS_VOLUME,
   TERTIARY_BUTTON_CONFIG,
   TITLE_BUTTON_CONFIG,
-} from "../config/k-boom.config";
+} from "@k-boom/config/k-boom.config";
 import { Subscription } from "rxjs";
-import { User } from "src/app/commons/interfaces/user/user.class";
-import { UserService } from "src/app/commons/services/user/user.service";
-import { Scene } from "../../../game-objects/scene";
-import { Scenes } from "../config/k-boom.names";
-import { START_SOUND_SECTION } from "../config/k-boom.section";
-import { getSoundPath } from "../functions/path.functions";
+import { User } from "@interfaces/user/user.class";
+import { UserService } from "@services/user/user.service";
+import { Scene } from "@game-objects/scene";
+import { Scenes } from "@k-boom/config/k-boom.names";
+import { START_SOUND_SECTION } from "@k-boom/config/k-boom.section";
+import { getSoundPath } from "@k-boom/functions/path.functions";
 
 const NUMBER_OF_BUTTONS: number = 3;
 export class MenuScene extends Scene {

@@ -1,5 +1,5 @@
 import { BehaviorSubject, Observable } from "rxjs";
-import { User } from "../../interfaces/user/user.interface";
+import { User } from "@interfaces/user/user.interface";
 
 let user: BehaviorSubject<User> = new BehaviorSubject({
   name: "SnowCrash",

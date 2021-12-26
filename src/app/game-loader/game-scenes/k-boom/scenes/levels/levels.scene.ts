@@ -1,30 +1,26 @@
 import { Subscription } from "rxjs";
-import {
-  GAME_PRAY,
-  MODAL_PRAY,
-  SELECTED_LEVEL_PRAY,
-} from "src/app/commons/const/pray-name";
-import { VideoGame } from "src/app/commons/interfaces/game/videogame.class";
-import { Level } from "src/app/commons/interfaces/game/videogame.interface";
-import { Payload } from "src/app/commons/interfaces/HolyData/Payload";
-import { User } from "src/app/commons/interfaces/user/user.class";
-import { HolyData } from "src/app/commons/services/holy-data/holy-data.service";
-import { UserService } from "src/app/commons/services/user/user.service";
-import { Scene } from "../../../game-objects/scene";
-import { TextButton } from "../../../game-objects/text-button";
+import { GAME_PRAY, MODAL_PRAY, SELECTED_LEVEL_PRAY } from "@const/pray-name";
+import { VideoGame } from "@interfaces/game/videogame.class";
+import { Level } from "@interfaces/game/videogame.interface";
+import { Payload } from "@interfaces/HolyData/Payload";
+import { User } from "@interfaces/user/user.class";
+import { HolyData } from "@services/holy-data/holy-data.service";
+import { UserService } from "@services/user/user.service";
+import { Scene } from "@game-objects/scene";
+import { TextButton } from "@game-objects/text-button";
 import {
   BUTTON_CONFIG,
   LOCK_BUTTON_CONFIG,
   SECONDARY_BUTTON_CONFIG,
   SOUND_EFFECTS_VOLUME,
-} from "../config/k-boom.config";
-import { Scenes } from "../config/k-boom.names";
+} from "@k-boom/config/k-boom.config";
+import { Scenes } from "@k-boom/config/k-boom.names";
 import {
   BONUS_SOUND_SECTION,
   WRONG_SOUND_SECTION,
-} from "../config/k-boom.section";
-import { getSoundPath } from "../functions/path.functions";
-import { UnlockLevelModal } from "../modal/unlock-level/unlock-level.game-modal";
+} from "@k-boom/config/k-boom.section";
+import { getSoundPath } from "@k-boom/functions/path.functions";
+import { UnlockLevelModal } from "./modals/unlock-level/unlock-level.game-modal";
 
 export class LevelsScene extends Scene {
   private returnButton: TextButton;

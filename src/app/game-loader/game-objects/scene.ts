@@ -1,5 +1,5 @@
-import { EXIT_PRAY } from "src/app/commons/const/pray-name";
-import { HolyData } from "src/app/commons/services/holy-data/holy-data.service";
+import { EXIT_PRAY } from "@const/pray-name";
+import { HolyData } from "@services/holy-data/holy-data.service";
 
 export class Scene extends Phaser.Scene {
   constructor(sceneKey: string) {

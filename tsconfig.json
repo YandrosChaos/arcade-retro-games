@@ -13,7 +13,18 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "es2020",
-    "lib": ["es2018", "dom", "scripthost"]
+    "lib": ["es2018", "dom", "scripthost"],
+    "paths": {
+      "@interfaces/*": ["src/app/commons/interfaces/*"],
+      "@services/*": ["src/app/commons/services/*"],
+      "@functions/*": ["src/app/commons/functions/*"],
+      "@const/*": ["src/app/commons/const/*"],
+      "@data/*": ["src/app/commons/data/*"],
+      "@game-scenes/*": ["src/app/game-loader/game-scenes/*"],
+      "@game-objects/*": ["src/app/game-loader/game-objects/*"],
+      "@game-modals/*": ["src/app/game-loader/game/modals/*"],
+      "@k-boom/*": ["src/app/game-loader/game-scenes/k-boom/*"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

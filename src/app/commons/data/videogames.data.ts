@@ -1,10 +1,10 @@
-import { GameScene } from "src/app/game-loader/game-scenes/k-boom/scenes/game.scene";
-import { LevelsScene } from "src/app/game-loader/game-scenes/k-boom/scenes/levels.scene";
-import { LoadScene } from "src/app/game-loader/game-scenes/k-boom/scenes/load.scene";
-import { MenuScene } from "src/app/game-loader/game-scenes/k-boom/scenes/menu.scene";
-import { ScoreScene } from "src/app/game-loader/game-scenes/k-boom/scenes/score.scene";
-import { WelcomeScene } from "src/app/game-loader/game-scenes/k-boom/scenes/welcome.scene";
-import { Difficulty, VideoGame } from "../interfaces/game/videogame.interface";
+import { GameScene } from "@k-boom/scenes/game.scene";
+import { LevelsScene } from "@k-boom/scenes/levels/levels.scene";
+import { LoadScene } from "@k-boom/scenes/load.scene";
+import { MenuScene } from "@k-boom/scenes/menu.scene";
+import { ScoreScene } from "@k-boom/scenes/score.scene";
+import { WelcomeScene } from "@k-boom/scenes/welcome.scene";
+import { Difficulty, VideoGame } from "@interfaces/game/videogame.interface";
 
 export const VIDEO_GAMES: VideoGame[] = [
   {

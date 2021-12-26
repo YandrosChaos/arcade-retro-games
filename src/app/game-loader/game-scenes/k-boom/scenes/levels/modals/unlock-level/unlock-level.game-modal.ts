@@ -1,26 +1,26 @@
 import Phaser, { Scene } from "phaser";
-import { Level } from "src/app/commons/interfaces/game/level.class";
-import { Level as LevelInterface } from "src/app/commons/interfaces/game/videogame.interface";
-import { HolyData } from "src/app/commons/services/holy-data/holy-data.service";
-import { TextButton } from "../../../../game-objects/text-button";
+import { Level } from "@interfaces/game/level.class";
+import { Level as LevelInterface } from "@interfaces/game/videogame.interface";
+import { HolyData } from "@services/holy-data/holy-data.service";
+import { TextButton } from "@game-objects/text-button";
 import {
   BUTTON_CONFIG,
   LOCK_SECONDARY_BUTTON_CONFIG,
   SECONDARY_BUTTON_CONFIG,
   SOUND_EFFECTS_VOLUME,
   TERTIARY_BUTTON_CONFIG,
-} from "../../config/k-boom.config";
+} from "@k-boom/config/k-boom.config";
 import { BACKGROUND_CONF } from "./unlock-level.config";
-import { GAME_PRAY, MODAL_PRAY } from "../../../../../commons/const/pray-name";
+import { GAME_PRAY, MODAL_PRAY } from "@const/pray-name";
 import { Subscription } from "rxjs";
-import { User } from "src/app/commons/interfaces/user/user.interface";
-import { UserService } from "src/app/commons/services/user/user.service";
-import { VideoGame } from "src/app/commons/interfaces/game/videogame.class";
-import { Payload } from "src/app/commons/interfaces/HolyData/Payload";
+import { User } from "@interfaces/user/user.interface";
+import { UserService } from "@services/user/user.service";
+import { VideoGame } from "@interfaces/game/videogame.class";
+import { Payload } from "@interfaces/HolyData/Payload";
 import {
   BONUS_SOUND_SECTION,
   WRONG_SOUND_SECTION,
-} from "../../config/k-boom.section";
+} from "@k-boom/config/k-boom.section";
 
 export class UnlockLevelModal {
   private subUser: Subscription;

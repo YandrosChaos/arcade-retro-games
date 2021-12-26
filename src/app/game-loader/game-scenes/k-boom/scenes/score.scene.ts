@@ -1,14 +1,14 @@
 import Phaser from "phaser";
-import { calculateHalfOfHalf } from "src/app/commons/functions/responsive.function";
-import { UserService } from "src/app/commons/services/user/user.service";
-import { Scene } from "../../../game-objects/scene";
-import { SOUND_EFFECTS_VOLUME } from "../config/k-boom.config";
-import { Scenes } from "../config/k-boom.names";
+import { calculateHalfOfHalf } from "@functions/responsive.function";
+import { UserService } from "@services/user/user.service";
+import { Scene } from "@game-objects/scene";
+import { SOUND_EFFECTS_VOLUME } from "@k-boom/config/k-boom.config";
+import { Scenes } from "@k-boom/config/k-boom.names";
 import {
   BACKGROUND_SECTION,
   START_SOUND_SECTION,
-} from "../config/k-boom.section";
-import { getImgPath, getSoundPath } from "../functions/path.functions";
+} from "@k-boom/config/k-boom.section";
+import { getImgPath, getSoundPath } from "@k-boom/functions/path.functions";
 
 export class ScoreScene extends Scene {
   private score: number;

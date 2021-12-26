@@ -1,24 +1,18 @@
 import Phaser from "phaser";
 import { Subscription } from "rxjs";
-import {
-  GAME_PRAY,
-  SELECTED_LEVEL_PRAY,
-} from "src/app/commons/const/pray-name";
-import {
-  Level,
-  VideoGame,
-} from "src/app/commons/interfaces/game/videogame.interface";
-import { Payload } from "src/app/commons/interfaces/HolyData/Payload";
-import { HolyData } from "src/app/commons/services/holy-data/holy-data.service";
-import { Scene } from "src/app/game-loader/game-objects/scene";
-import { TileSprite } from "src/app/game-loader/game-objects/tile-sprite";
+import { GAME_PRAY, SELECTED_LEVEL_PRAY } from "@const/pray-name";
+import { Level, VideoGame } from "@interfaces/game/videogame.interface";
+import { Payload } from "@interfaces/HolyData/Payload";
+import { HolyData } from "@services/holy-data/holy-data.service";
+import { Scene } from "@game-objects/scene";
+import { TileSprite } from "@game-objects/tile-sprite";
 import {
   FLOOR_FRAME_QUANTITY,
   GAMEPLAY_MUSIC_VOLUME,
   MAX_LIFES,
   SOUND_EFFECTS_VOLUME,
-} from "../config/k-boom.config";
-import { KABOOM_ANIM_NAME, Scenes } from "../config/k-boom.names";
+} from "@k-boom/config/k-boom.config";
+import { KABOOM_ANIM_NAME, Scenes } from "@k-boom/config/k-boom.names";
 import {
   BACKGROUND_SECTION,
   BOMB_ATOMIC_SECTION,
@@ -32,20 +26,23 @@ import {
   MAIN_GAME_MUSIC_SECTION,
   RIP_SECTION,
   SAFE_PACK_SECTION,
-} from "../config/k-boom.section";
+} from "@k-boom/config/k-boom.section";
 import {
   getImgPath,
   getMusicPath,
   getSoundPath,
   getSpritesPath,
   getSvgPath,
-} from "../functions/path.functions";
-import { Group, StaticGroup } from "../game-objects/groups/group.interface";
-import { Sound } from "../game-objects/sound/sound.interface";
-import { Text } from "../game-objects/text/text.interface";
-import { Bomb } from "../game-objects/throwable-item/bomb.interface";
-import { SafePackage } from "../game-objects/throwable-item/safe-package.interface";
-import { ThrowableItem } from "../game-objects/throwable-item/throwable-item";
+} from "@k-boom/functions/path.functions";
+import {
+  Group,
+  StaticGroup,
+} from "@k-boom/game-objects/groups/group.interface";
+import { Sound } from "@k-boom/game-objects/sound/sound.interface";
+import { Text } from "@k-boom/game-objects/text/text.interface";
+import { Bomb } from "@k-boom/game-objects/throwable-item/bomb.interface";
+import { SafePackage } from "@k-boom/game-objects/throwable-item/safe-package.interface";
+import { ThrowableItem } from "@k-boom/game-objects/throwable-item/throwable-item";
 export class GameScene extends Scene {
   private subLevelConfig: Subscription;
   private subGame: Subscription;

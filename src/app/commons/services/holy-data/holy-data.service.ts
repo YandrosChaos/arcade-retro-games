@@ -1,6 +1,6 @@
-import { BehaviorSubject, Observable, of } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import { Payload } from "../../interfaces/HolyData/Payload";
+import { Payload } from "@interfaces/HolyData/Payload";
 
 let prayers: BehaviorSubject<Payload[]> = new BehaviorSubject([]);
 let prayersObs: Observable<Payload[]> = prayers.asObservable();

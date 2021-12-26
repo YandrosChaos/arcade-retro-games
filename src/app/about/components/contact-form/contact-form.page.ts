@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ModalController, ToastController } from "@ionic/angular";
-import { Message } from "src/app/commons/interfaces/message.interface";
+import { Message } from "@interfaces/message.interface";
 
 @Component({
   selector: "app-contact-form",

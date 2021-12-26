@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { GAME_PRAY } from "../commons/const/pray-name";
-import { VIDEO_GAMES } from "../commons/data/videogames.data";
-import { VideoGame } from "../commons/interfaces/game/videogame.interface";
-import { HolyData } from "../commons/services/holy-data/holy-data.service";
+import { GAME_PRAY } from "@const/pray-name";
+import { VIDEO_GAMES } from "@data/videogames.data";
+import { VideoGame } from "@interfaces/game/videogame.interface";
+import { HolyData } from "@services/holy-data/holy-data.service";
 
 @Component({
   selector: "app-home",
