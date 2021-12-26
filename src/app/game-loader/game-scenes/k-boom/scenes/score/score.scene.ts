@@ -9,16 +9,22 @@ import {
   WRONG_SOUND_SECTION,
 } from "@k-boom/config/k-boom.section";
 import { getImgPath, getSoundPath } from "@k-boom/functions/path.functions";
+import { Sound } from "@k-boom/game-objects/sound/sound.interface";
+import { Text } from "@k-boom/game-objects/text/text.interface";
+import { TileSprite } from "@game-objects/tile-sprite";
+import { HINT_TEXT_CONFIG, RESULT_TEXT_CONFIG } from "./score.config";
 
 export class ScoreScene extends Scene {
   private score: number;
   private tapCounter: number;
 
-  private result: Phaser.GameObjects.Text;
-  private hint: Phaser.GameObjects.Text;
+  private background: TileSprite;
+
+  private result: Text;
+  private hint: Text;
   private hintText: string = "Touch to restart";
 
-  private touchSound: Phaser.Sound.BaseSound;
+  private touchSound: Sound;
 
   constructor() {
     super(Scenes.Score);
@@ -40,46 +46,16 @@ export class ScoreScene extends Scene {
     const seconds: number = Number((time / 1000).toFixed(0));
     this.hint?.destroy();
     if (seconds % 2 !== 0) {
-      this.hint = this.add.text(
-        calculateHalfOfHalf(this.renderer.width) / 2,
-        this.renderer.height - 100,
-        this.hintText,
-        {
-          font: "2rem Minecraft",
-          color: "#BC00FF",
-        }
-      );
+      this.buildHintText();
     }
   }
 
   create(): void {
     super.fadeInScene();
     this.buildSounds();
-    const background: Phaser.GameObjects.TileSprite = this.add.tileSprite(
-      0,
-      this.renderer.height / 2,
-      this.renderer.width * 2,
-      this.renderer.height * 2,
-      BACKGROUND_SECTION
-    );
-    background.setAngle(90);
-    const resultText: string = "Your score is " + this.score;
-    this.result = this.add.text(
-      calculateHalfOfHalf(this.renderer.width) / 1.5,
-      calculateHalfOfHalf(this.renderer.height) - 100,
-      resultText,
-      {
-        font: "2rem Minecraft",
-        color: "#FBFBAC",
-      }
-    );
-    this.input.on(
-      "pointerdown",
-      () => {
-        this.closeScene();
-      },
-      this
-    );
+    this.buildBackground();
+    this.buildResultText();
+    this.addTouchEventToScreen();
   }
 
   private closeScene(): void {
@@ -89,6 +65,46 @@ export class ScoreScene extends Scene {
     } else {
       this.tapCounter++;
     }
+  }
+
+  private addTouchEventToScreen(): void {
+    this.input.on(
+      "pointerdown",
+      () => {
+        this.closeScene();
+      },
+      this
+    );
+  }
+
+  private buildResultText(): void {
+    const resultText: string = "Your score is " + this.score;
+    this.result = this.add.text(
+      calculateHalfOfHalf(this.renderer.width) / 1.5,
+      calculateHalfOfHalf(this.renderer.height) - 100,
+      resultText,
+      RESULT_TEXT_CONFIG
+    );
+  }
+
+  private buildHintText(): void {
+    this.hint = this.add.text(
+      calculateHalfOfHalf(this.renderer.width) / 2,
+      this.renderer.height - 100,
+      this.hintText,
+      HINT_TEXT_CONFIG
+    );
+  }
+
+  private buildBackground(): void {
+    this.background = this.add.tileSprite(
+      0,
+      this.renderer.height / 2,
+      this.renderer.width * 2,
+      this.renderer.height * 2,
+      BACKGROUND_SECTION
+    );
+    this.background.setAngle(90);
   }
 
   private buildSounds(): void {
