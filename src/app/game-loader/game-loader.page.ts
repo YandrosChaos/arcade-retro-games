@@ -9,7 +9,9 @@ import { Payload } from "../commons/interfaces/HolyData/Payload";
 
 @Component({
   selector: "app-game-loader",
-  templateUrl: "game-loader.page.html",
+  template: ` <ion-content>
+    <div id="game"></div>
+  </ion-content>`,
   styleUrls: ["game-loader.page.scss"],
 })
 export class GameLoaderPage implements OnInit, AfterViewInit, OnDestroy {
