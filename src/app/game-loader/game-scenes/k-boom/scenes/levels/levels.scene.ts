@@ -36,9 +36,6 @@ export class LevelsScene extends Scene {
   private currentUser: User = new User();
   private videoGame: VideoGame = new VideoGame();
 
-  private touchedSound: Sound;
-  private goBackSound: Sound;
-
   constructor() {
     super(Scenes.Levels);
   }
@@ -74,18 +71,13 @@ export class LevelsScene extends Scene {
     }
   }
 
-  preload() {
-    this.load.audio(BONUS_SOUND_SECTION, getSoundPath(BONUS_SOUND_SECTION));
-    this.load.audio(WRONG_SOUND_SECTION, getSoundPath(WRONG_SOUND_SECTION));
-  }
-
   create() {
     super.fadeInScene();
     this.createAllButtons();
     this.addAllExisting();
     this.addAllTouchEvents();
     this.inAllButtonAnimation();
-    this.buildSounds();
+    this.buildMainSoundEffects();
   }
 
   private createAllButtons(): void {
@@ -140,7 +132,7 @@ export class LevelsScene extends Scene {
     button.on(PointerEvent.Down, () => {
       this.addHolyPray(button.text);
       this.sound.stopAll();
-      this.touchedSound.play();
+      this.touchSound.play();
       this.unsubscribeAll();
       this.outAllButtonAnimation();
       super.fadeOutScene(Scenes.Game);
@@ -180,7 +172,7 @@ export class LevelsScene extends Scene {
   private addReturnEvent(): void {
     this.returnButton.on(PointerEvent.Down, () => {
       this.unsubscribeAll();
-      this.goBackSound.play();
+      this.cancelSound.play();
       this.outAllButtonAnimation();
       super.fadeOutScene(Scenes.Menu);
     });
@@ -206,16 +198,6 @@ export class LevelsScene extends Scene {
       level.name,
       this.getLevelStyles(level)
     );
-  }
-
-  private buildSounds(): void {
-    this.touchedSound = this.sound.add(BONUS_SOUND_SECTION, {
-      volume: SOUND_EFFECTS_VOLUME,
-    });
-
-    this.goBackSound = this.sound.add(WRONG_SOUND_SECTION, {
-      volume: SOUND_EFFECTS_VOLUME,
-    });
   }
 
   private getLevelStyles(level: Level) {
