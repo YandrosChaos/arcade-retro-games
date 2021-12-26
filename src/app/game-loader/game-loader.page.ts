@@ -1,5 +1,4 @@
-import Phaser from "phaser";
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { AfterViewInit, Component, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { MenuController, Platform } from "@ionic/angular";
 import { HolyData } from "../commons/services/holy-data/holy-data.service";
@@ -13,7 +12,7 @@ import { Payload } from "../commons/interfaces/HolyData/Payload";
   templateUrl: "game-loader.page.html",
   styleUrls: ["game-loader.page.scss"],
 })
-export class GameLoaderPage implements OnInit, OnDestroy {
+export class GameLoaderPage implements OnInit, AfterViewInit, OnDestroy {
   private videoGame: VideoGame;
   private phaserGame: Phaser.Game;
   private config: Phaser.Types.Core.GameConfig;
@@ -27,7 +26,9 @@ export class GameLoaderPage implements OnInit, OnDestroy {
     private menuCtrl: MenuController
   ) {}
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  ngAfterViewInit(): void {
     HolyData.addPrayer({ key: EXIT_PRAY, data: null });
     this.initAllSubscriptions();
   }
