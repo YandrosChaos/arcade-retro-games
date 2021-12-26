@@ -1,13 +1,10 @@
 import { calculateHalfOfHalf } from "@functions/responsive.function";
 import { UserService } from "@services/user/user.service";
 import { Scene } from "@game-objects/scene";
-import { SOUND_EFFECTS_VOLUME } from "@k-boom/config/k-boom.config";
 import { Scenes } from "@k-boom/config/k-boom.names";
 import {
   BACKGROUND_SECTION,
-  WRONG_SOUND_SECTION,
 } from "@k-boom/config/k-boom.section";
-import { getImgPath, getSoundPath } from "@k-boom/functions/path.functions";
 import { Text } from "@k-boom/game-objects/text/text.interface";
 import { TileSprite } from "@game-objects/tile-sprite";
 import { HINT_TEXT_CONFIG, RESULT_TEXT_CONFIG } from "./score.config";

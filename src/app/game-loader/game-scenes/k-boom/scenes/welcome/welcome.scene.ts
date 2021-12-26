@@ -4,18 +4,14 @@ import { TileSprite } from "@game-objects/tile-sprite";
 import {
   BUTTON_CONFIG,
   MENU_MUSIC_VOLUME,
-  SOUND_EFFECTS_VOLUME,
 } from "@k-boom/config/k-boom.config";
 import { Scenes } from "@k-boom/config/k-boom.names";
 import {
   BACKGROUND_MENU_SECTION,
   MENU_MUSIC_SECTION,
-  START_SOUND_SECTION,
 } from "@k-boom/config/k-boom.section";
 import {
-  getImgPath,
   getMusicPath,
-  getSoundPath,
 } from "@k-boom/functions/path.functions";
 import { Sound } from "@game-scenes/k-boom/game-objects/sound/sound.interface";
 import { KBOOM_TEXT, TITLE_BUTTON_CONFIG, TOUCH_TEXT } from "./welcome.config";
@@ -28,19 +24,14 @@ export class WelcomeScene extends Scene {
   private background: TileSprite;
 
   private music: Sound;
-  private startGameSound: Sound;
 
   constructor() {
     super(Scenes.Welcome);
   }
 
   preload() {
+    super.preload();
     this.load.audio(MENU_MUSIC_SECTION, getMusicPath(MENU_MUSIC_SECTION));
-    this.load.audio(START_SOUND_SECTION, getSoundPath(START_SOUND_SECTION));
-    this.load.image(
-      BACKGROUND_MENU_SECTION,
-      getImgPath(BACKGROUND_MENU_SECTION)
-    );
   }
 
   create(): void {
@@ -61,7 +52,7 @@ export class WelcomeScene extends Scene {
     this.input.on(
       PointerEvent.Down,
       () => {
-        this.startGameSound.play();
+        this.confirmSound.play();
         super.fadeOutScene(Scenes.Menu);
       },
       this
@@ -72,7 +63,8 @@ export class WelcomeScene extends Scene {
     this.buildTitleButton();
     this.buildTouchButton();
     this.buildBackground();
-    this.buildSound();
+    this.buildMusic();
+    this.buildMainSoundEffects();
   }
 
   private addAllExisting(): void {
@@ -81,10 +73,7 @@ export class WelcomeScene extends Scene {
     this.add.existing(this.touchButton);
   }
 
-  private buildSound(): void {
-    this.startGameSound = this.sound.add(START_SOUND_SECTION, {
-      volume: SOUND_EFFECTS_VOLUME,
-    });
+  private buildMusic(): void {
     this.music = this.sound.add(MENU_MUSIC_SECTION, {
       volume: MENU_MUSIC_VOLUME,
       loop: true,
