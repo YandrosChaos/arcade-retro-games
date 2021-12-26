@@ -22,6 +22,8 @@ import {
   DEAD_SOUND_SECTION,
   EXPLOSION_SECTION,
   EXPLOSION_SOUND_SECTION,
+  EXPLOSION_SOUND_TREE_SECTION,
+  EXPLOSION_SOUND_TWO_SECTION,
   FLOOR_SECTION,
   MAIN_GAME_MUSIC_SECTION,
   RIP_SECTION,
@@ -63,7 +65,9 @@ export class GameScene extends Scene {
   private lifes: Text;
 
   private explosions: Group;
-  private explosionSound: Sound;
+  private primaryExplosionSound: Sound;
+  private secondaryExplosionSound: Sound;
+  private tertiaryExplosionSound: Sound;
   private bonusSound: Sound;
   private deadSound: Sound;
   private music: Sound;
@@ -114,6 +118,14 @@ export class GameScene extends Scene {
     this.load.audio(
       EXPLOSION_SOUND_SECTION,
       getSoundPath(EXPLOSION_SOUND_SECTION)
+    );
+    this.load.audio(
+      EXPLOSION_SOUND_TWO_SECTION,
+      getSoundPath(EXPLOSION_SOUND_TWO_SECTION)
+    );
+    this.load.audio(
+      EXPLOSION_SOUND_TREE_SECTION,
+      getSoundPath(EXPLOSION_SOUND_TREE_SECTION)
     );
     this.load.audio(BONUS_SOUND_SECTION, getSoundPath(BONUS_SOUND_SECTION));
     this.load.audio(DEAD_SOUND_SECTION, getSoundPath(DEAD_SOUND_SECTION));
@@ -173,7 +185,13 @@ export class GameScene extends Scene {
       volume: GAMEPLAY_MUSIC_VOLUME,
       loop: true,
     });
-    this.explosionSound = this.sound.add(EXPLOSION_SOUND_SECTION, {
+    this.primaryExplosionSound = this.sound.add(EXPLOSION_SOUND_SECTION, {
+      volume: SOUND_EFFECTS_VOLUME,
+    });
+    this.secondaryExplosionSound = this.sound.add(EXPLOSION_SOUND_TWO_SECTION, {
+      volume: SOUND_EFFECTS_VOLUME,
+    });
+    this.tertiaryExplosionSound = this.sound.add(EXPLOSION_SOUND_TREE_SECTION, {
       volume: SOUND_EFFECTS_VOLUME,
     });
     this.deadSound = this.sound.add(DEAD_SOUND_SECTION, {
@@ -384,7 +402,15 @@ export class GameScene extends Scene {
     explosion.setOrigin(0.5, 0.5);
     explosion.x = bomb.x;
     explosion.y = bomb.y;
-    this.explosionSound.play();
+    this, this.randomExplosionSound();
     explosion.play(KABOOM_ANIM_NAME);
+  }
+
+  private randomExplosionSound(): void {
+    const randomValue: number = Math.random() * 100;
+    if (randomValue >= 0 && randomValue < 33) this.primaryExplosionSound.play();
+    if (randomValue >= 33 && randomValue < 66)
+      this.secondaryExplosionSound.play();
+    if (randomValue >= 66) this.tertiaryExplosionSound.play();
   }
 }

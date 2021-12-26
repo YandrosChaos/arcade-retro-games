@@ -10,7 +10,7 @@ import { User } from "@interfaces/user/user.class";
 import { UserService } from "@services/user/user.service";
 import { Scene } from "@game-objects/scene";
 import { Scenes } from "@k-boom/config/k-boom.names";
-import { START_SOUND_SECTION } from "@k-boom/config/k-boom.section";
+import { BONUS_SOUND_SECTION } from "@k-boom/config/k-boom.section";
 import { getSoundPath } from "@k-boom/functions/path.functions";
 
 const NUMBER_OF_BUTTONS: number = 3;
@@ -31,7 +31,7 @@ export class MenuScene extends Scene {
   }
 
   preload() {
-    this.load.audio(START_SOUND_SECTION, getSoundPath(START_SOUND_SECTION));
+    this.load.audio(BONUS_SOUND_SECTION, getSoundPath(BONUS_SOUND_SECTION));
     this.subUser = UserService.getCurrent().subscribe((user) =>
       this.user.assign(user)
     );
@@ -131,7 +131,7 @@ export class MenuScene extends Scene {
   }
 
   private buildSounds(): void {
-    this.buttonSound = this.sound.add(START_SOUND_SECTION, {
+    this.buttonSound = this.sound.add(BONUS_SOUND_SECTION, {
       volume: SOUND_EFFECTS_VOLUME,
     });
   }

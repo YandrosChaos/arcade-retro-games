@@ -6,7 +6,7 @@ import { SOUND_EFFECTS_VOLUME } from "@k-boom/config/k-boom.config";
 import { Scenes } from "@k-boom/config/k-boom.names";
 import {
   BACKGROUND_SECTION,
-  START_SOUND_SECTION,
+  WRONG_SOUND_SECTION,
 } from "@k-boom/config/k-boom.section";
 import { getImgPath, getSoundPath } from "@k-boom/functions/path.functions";
 
@@ -31,7 +31,7 @@ export class ScoreScene extends Scene {
 
   preload() {
     this.load.image(BACKGROUND_SECTION, getImgPath(BACKGROUND_SECTION));
-    this.load.audio(START_SOUND_SECTION, getSoundPath(START_SOUND_SECTION));
+    this.load.audio(WRONG_SOUND_SECTION, getSoundPath(WRONG_SOUND_SECTION));
 
     this.tapCounter = 0;
   }
@@ -92,7 +92,7 @@ export class ScoreScene extends Scene {
   }
 
   private buildSounds(): void {
-    this.touchSound = this.sound.add(START_SOUND_SECTION, {
+    this.touchSound = this.sound.add(WRONG_SOUND_SECTION, {
       volume: SOUND_EFFECTS_VOLUME,
     });
   }

@@ -23,6 +23,8 @@ export const MUSIC: Map<string, string> = new Map([
 export const SOUNDS_MAIN_PATH: string = "assets/games/k-boom/soundeffects";
 export const SOUNDS: Map<string, string> = new Map([
   ["explosion-sound", "explosion.wav"],
+  ["explosion-sound-two", "explosion2.wav"],
+  ["explosion-sound-three", "explosion3.wav"],
   ["dead-sound", "deadnotification.wav"],
   ["start-sound", "start_game.wav"],
   ["safe-bonus", "unlock.wav"],
