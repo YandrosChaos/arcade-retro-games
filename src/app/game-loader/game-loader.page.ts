@@ -45,14 +45,12 @@ export class GameLoaderPage implements OnInit, OnDestroy {
   }
 
   private onGame(payload: Payload): void {
-    if (payload && !this.phaserGame && payload?.data?.scenes?.length > 0) {
-      this.videoGame = payload.data;
+    if (payload && !this.phaserGame) {
+      this.videoGame = { ...payload.data };
       this.setGameConfig();
       this.phaserGame = new Phaser.Game(this.config);
-    } else {
-      this.router.navigate(["/home"]);
-      this.ngOnDestroy();
     }
+    if (!payload) this.onGameExit();
   }
 
   ionViewDidEnter() {
@@ -88,8 +86,8 @@ export class GameLoaderPage implements OnInit, OnDestroy {
   }
 
   private onGameExit(): void {
-    this.router.navigate(["/"]);
     this.ngOnDestroy();
+    this.router.navigate(["/"]);
   }
 
   ngOnDestroy() {

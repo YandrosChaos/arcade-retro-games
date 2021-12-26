@@ -2,28 +2,27 @@ import Phaser, { Scene } from "phaser";
 import { Level } from "src/app/commons/interfaces/game/level.class";
 import { Level as LevelInterface } from "src/app/commons/interfaces/game/videogame.interface";
 import { HolyData } from "src/app/commons/services/holy-data/holy-data.service";
-import { TextButton } from "../game-objects/text-button";
+import { TextButton } from "../../../../game-objects/text-button";
 import {
   BUTTON_CONFIG,
   LOCK_SECONDARY_BUTTON_CONFIG,
   SECONDARY_BUTTON_CONFIG,
   SOUND_EFFECTS_VOLUME,
   TERTIARY_BUTTON_CONFIG,
-} from "../game-scenes/k-boom/k-boom.config";
+} from "../../config/k-boom.config";
 import { BACKGROUND_CONF } from "./unlock-level.config";
-import { GAME_PRAY, MODAL_PRAY } from "../../commons/const/pray-name";
+import { GAME_PRAY, MODAL_PRAY } from "../../../../../commons/const/pray-name";
 import { Subscription } from "rxjs";
 import { User } from "src/app/commons/interfaces/user/user.interface";
 import { UserService } from "src/app/commons/services/user/user.service";
 import { VideoGame } from "src/app/commons/interfaces/game/videogame.class";
 import { Payload } from "src/app/commons/interfaces/HolyData/Payload";
 import {
-  START_SOUND_PATH,
-  START_SOUND_SECTION_NAME,
+  BONUS_SOUND_SECTION,
   WRONG_SOUND_SECTION,
-} from "../game-scenes/k-boom/k-boom.routes";
+} from "../../config/k-boom.section";
 
-export default class UnlockLevelModal {
+export class UnlockLevelModal {
   private subUser: Subscription;
   private subVideoGame: Subscription;
 
@@ -69,7 +68,7 @@ export default class UnlockLevelModal {
   }
 
   public hide(): void {
-    this.subUser?.unsubscribe();
+    this.killAllSubscriptions();
     HolyData.updatePrayer({ key: MODAL_PRAY, data: true });
     this.scene.add.tween({
       targets: this.container,
@@ -90,9 +89,15 @@ export default class UnlockLevelModal {
 
     this.subVideoGame = HolyData.getPrayer(GAME_PRAY).subscribe(
       (payload: Payload) => {
-        if (payload?.data) this.videogame.assign(payload.data);
+        console.log(payload);
+        if (payload?.data) this.videogame.assign({ ...payload.data });
       }
     );
+  }
+
+  private killAllSubscriptions(): void {
+    this.subUser.unsubscribe();
+    this.subVideoGame.unsubscribe();
   }
 
   private setupButtons(): void {
@@ -176,7 +181,7 @@ export default class UnlockLevelModal {
   }
 
   private buildSounds(): void {
-    this.successSound = this.scene.sound.add(START_SOUND_SECTION_NAME, {
+    this.successSound = this.scene.sound.add(BONUS_SOUND_SECTION, {
       volume: SOUND_EFFECTS_VOLUME,
     });
 

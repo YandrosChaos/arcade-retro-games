@@ -1,4 +1,3 @@
-import Phaser from "phaser";
 import { Subscription } from "rxjs";
 import {
   GAME_PRAY,
@@ -11,22 +10,21 @@ import { Payload } from "src/app/commons/interfaces/HolyData/Payload";
 import { User } from "src/app/commons/interfaces/user/user.class";
 import { HolyData } from "src/app/commons/services/holy-data/holy-data.service";
 import { UserService } from "src/app/commons/services/user/user.service";
-import UnlockLevelModal from "../../game-modals/unlock-level.game-modal";
-import { Scene } from "../../game-objects/scene";
-import { TextButton } from "../../game-objects/text-button";
+import { Scene } from "../../../game-objects/scene";
+import { TextButton } from "../../../game-objects/text-button";
 import {
   BUTTON_CONFIG,
   LOCK_BUTTON_CONFIG,
   SECONDARY_BUTTON_CONFIG,
   SOUND_EFFECTS_VOLUME,
-} from "./k-boom.config";
+} from "../config/k-boom.config";
+import { Scenes } from "../config/k-boom.names";
 import {
-  SCENES,
-  START_SOUND_PATH,
-  START_SOUND_SECTION_NAME,
-  WRONG_SOUND_PATH,
+  BONUS_SOUND_SECTION,
   WRONG_SOUND_SECTION,
-} from "./k-boom.routes";
+} from "../config/k-boom.section";
+import { getSoundPath } from "../functions/path.functions";
+import { UnlockLevelModal } from "../modal/unlock-level/unlock-level.game-modal";
 
 export class LevelsScene extends Scene {
   private returnButton: TextButton;
@@ -44,7 +42,7 @@ export class LevelsScene extends Scene {
   private goBackSound: Phaser.Sound.BaseSound;
 
   constructor() {
-    super(SCENES.LEVELS);
+    super(Scenes.Levels);
   }
 
   init(params) {
@@ -59,7 +57,7 @@ export class LevelsScene extends Scene {
 
     this.subGame = HolyData.getPrayer(GAME_PRAY).subscribe(
       (gameData: Payload) => {
-        if (gameData?.data) this.videoGame.assign(gameData.data);
+        if (gameData?.data) this.videoGame.assign({ ...gameData.data });
       }
     );
     this.subModal = HolyData.getPrayer(MODAL_PRAY).subscribe(
@@ -79,8 +77,8 @@ export class LevelsScene extends Scene {
   }
 
   preload() {
-    this.load.audio(START_SOUND_SECTION_NAME, START_SOUND_PATH);
-    this.load.audio(WRONG_SOUND_SECTION, WRONG_SOUND_PATH);
+    this.load.audio(BONUS_SOUND_SECTION, getSoundPath(BONUS_SOUND_SECTION));
+    this.load.audio(WRONG_SOUND_SECTION, getSoundPath(WRONG_SOUND_SECTION));
   }
 
   create() {
@@ -147,7 +145,7 @@ export class LevelsScene extends Scene {
       this.touchedSound.play();
       this.unsubscribeAll();
       this.outAllButtonAnimation();
-      super.fadeOutScene(SCENES.GAME);
+      super.fadeOutScene(Scenes.Game);
     });
   }
 
@@ -173,12 +171,12 @@ export class LevelsScene extends Scene {
 
   private inAllButtonAnimation(): void {
     super.animateItems(this.pointsButton, this.renderer.width - 150);
-    super.animateItems(this.returnButton, 20)
+    super.animateItems(this.returnButton, 20);
   }
 
-  private outAllButtonAnimation(): void{
+  private outAllButtonAnimation(): void {
     super.animateItems(this.pointsButton, 300);
-    super.animateItems(this.returnButton, -20)
+    super.animateItems(this.returnButton, -20);
   }
 
   private addReturnEvent(): void {
@@ -186,7 +184,7 @@ export class LevelsScene extends Scene {
       this.unsubscribeAll();
       this.goBackSound.play();
       this.outAllButtonAnimation();
-      super.fadeOutScene(SCENES.MENU);
+      super.fadeOutScene(Scenes.Menu);
     });
   }
 
@@ -213,7 +211,7 @@ export class LevelsScene extends Scene {
   }
 
   private buildSounds(): void {
-    this.touchedSound = this.sound.add(START_SOUND_SECTION_NAME, {
+    this.touchedSound = this.sound.add(BONUS_SOUND_SECTION, {
       volume: SOUND_EFFECTS_VOLUME,
     });
 

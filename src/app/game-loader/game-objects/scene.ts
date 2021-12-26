@@ -18,12 +18,12 @@ export class Scene extends Phaser.Scene {
     this.cameras.main.fadeIn(250, 0, 0, 0);
   }
 
-  protected fadeOutScene(nextScene: string): void {
+  protected fadeOutScene(nextScene: string, param?: object): void {
     this.cameras.main.fadeOut(250, 0, 0, 0);
     this.cameras.main.once(
       Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
       (cam, effect) => {
-        this.scene.start(nextScene);
+        this.scene.start(nextScene, param || {});
       }
     );
   }

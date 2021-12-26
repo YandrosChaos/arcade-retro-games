@@ -10,36 +10,33 @@ import {
 } from "src/app/commons/interfaces/game/videogame.interface";
 import { Payload } from "src/app/commons/interfaces/HolyData/Payload";
 import { HolyData } from "src/app/commons/services/holy-data/holy-data.service";
-import { GAMEPLAY_MUSIC_VOLUME, SOUND_EFFECTS_VOLUME } from "./k-boom.config";
+import { Scene } from "src/app/game-loader/game-objects/scene";
 import {
-  BACKGROUND_IMG_PATH,
-  BACKGROUND_SECTION_NAME,
-  BOMB_IMG_PATH,
-  BOMB_SECTION_NAME,
-  EXPLOSION_SECTION_NAME,
-  FLOOR_IMG_PATH,
-  GAME_SCENE_NAME,
-  KABOOM_ANIM_NAME,
-  KABOOM_IMG_PATH,
-  FLOOR_SECTION_NAME,
-  SCORE_SCENE_NAME,
-  EXPLOSION_SOUND_SECTION_NAME,
-  EXPLOSION_SOUND_PATH,
-  DEAD_SOUND_PATH,
-  MAIN_GAME_MUSIC_PATH,
-  DEAD_SOUND_SECTION_NAME,
-  MAIN_GAME_MUSIC_SECTION_NAME,
-  RIP_IMG_PATH,
-  RIP_SECTION_NAME,
-  BOMB_ATOMIC_IMG_PATH,
-  BOMB_ATOMIC_SECTION_NAME,
-  BOMB_NUCLEAR_SECTION_NAME,
-  BOMB_NUCLEAR_IMG_PATH,
-  SAFE_PACK_SECTION_NAME,
-  SAFE_PACK_IMG_PATH,
-  BONUS_SOUND_SECTION_NAME,
-  BONUS_SOUND_PATH,
-} from "./k-boom.routes";
+  GAMEPLAY_MUSIC_VOLUME,
+  SOUND_EFFECTS_VOLUME,
+} from "../config/k-boom.config";
+import { KABOOM_ANIM_NAME, Scenes } from "../config/k-boom.names";
+import {
+  BACKGROUND_SECTION,
+  BOMB_ATOMIC_SECTION,
+  BOMB_NUCLEAR_SECTION,
+  BOMB_SECTION,
+  BONUS_SOUND_SECTION,
+  DEAD_SOUND_SECTION,
+  EXPLOSION_SECTION,
+  EXPLOSION_SOUND_SECTION,
+  FLOOR_SECTION,
+  MAIN_GAME_MUSIC_SECTION,
+  RIP_SECTION,
+  SAFE_PACK_SECTION,
+} from "../config/k-boom.section";
+import {
+  getImgPath,
+  getMusicPath,
+  getSoundPath,
+  getSpritesPath,
+  getSvgPath,
+} from "../functions/path.functions";
 
 class ThrowableItem extends Phaser.Physics.Arcade.Image {
   public points?: number = 0;
@@ -56,7 +53,7 @@ interface Text extends Phaser.GameObjects.Text {}
 
 const MAX_LIFES: number = 3;
 const FLOOR_FRAME_QUANTITY: number = 2;
-export class GameScene extends Phaser.Scene {
+export class GameScene extends Scene {
   private subLevelConfig: Subscription;
   private subGame: Subscription;
 
@@ -82,9 +79,7 @@ export class GameScene extends Phaser.Scene {
   private music: Sound;
 
   constructor() {
-    super({
-      key: GAME_SCENE_NAME,
-    });
+    super(Scenes.Game);
   }
 
   init(params) {
@@ -102,7 +97,7 @@ export class GameScene extends Phaser.Scene {
 
   private initAllSubscriptions(): void {
     this.subGame = HolyData.getPrayer(GAME_PRAY).subscribe(
-      (payload: Payload) => (this.videoGame = payload.data)
+      (payload: Payload) => (this.videoGame = {...payload.data})
     );
     this.subLevelConfig = HolyData.getPrayer(SELECTED_LEVEL_PRAY).subscribe(
       (payload: Payload) =>
@@ -111,35 +106,65 @@ export class GameScene extends Phaser.Scene {
   }
 
   preload(): void {
-    this.load.audio(EXPLOSION_SOUND_SECTION_NAME, EXPLOSION_SOUND_PATH);
-    this.load.audio(BONUS_SOUND_SECTION_NAME, BONUS_SOUND_PATH);
-    this.load.audio(DEAD_SOUND_SECTION_NAME, DEAD_SOUND_PATH);
-    this.load.audio(MAIN_GAME_MUSIC_SECTION_NAME, MAIN_GAME_MUSIC_PATH);
-    this.load.image(BOMB_SECTION_NAME, BOMB_IMG_PATH);
-    this.load.image(BOMB_ATOMIC_SECTION_NAME, BOMB_ATOMIC_IMG_PATH);
-    this.load.image(BOMB_NUCLEAR_SECTION_NAME, BOMB_NUCLEAR_IMG_PATH);
-    this.load.image(SAFE_PACK_SECTION_NAME, SAFE_PACK_IMG_PATH);
-    this.load.image(FLOOR_SECTION_NAME, FLOOR_IMG_PATH);
-    this.load.image(BACKGROUND_SECTION_NAME, BACKGROUND_IMG_PATH);
-    this.load.image(RIP_SECTION_NAME, RIP_IMG_PATH);
-    this.load.spritesheet(EXPLOSION_SECTION_NAME, KABOOM_IMG_PATH, {
-      frameWidth: 128,
-      frameHeight: 128,
-    });
+    this.preloadMusic();
+    this.preloadSoundEffect();
+    this.preloadImages();
+    this.preloadSvg();
+    this.preloadSprites();
+  }
+
+  private preloadMusic(): void {
+    this.load.audio(
+      MAIN_GAME_MUSIC_SECTION,
+      getMusicPath(MAIN_GAME_MUSIC_SECTION)
+    );
+  }
+
+  private preloadSoundEffect(): void {
+    this.load.audio(
+      EXPLOSION_SOUND_SECTION,
+      getSoundPath(EXPLOSION_SOUND_SECTION)
+    );
+    this.load.audio(BONUS_SOUND_SECTION, getSoundPath(BONUS_SOUND_SECTION));
+    this.load.audio(DEAD_SOUND_SECTION, getSoundPath(DEAD_SOUND_SECTION));
+  }
+
+  private preloadImages(): void {
+    this.load.image(FLOOR_SECTION, getImgPath(FLOOR_SECTION));
+    this.load.image(BACKGROUND_SECTION, getImgPath(BACKGROUND_SECTION));
+  }
+
+  private preloadSvg(): void {
+    this.load.image(BOMB_SECTION, getSvgPath(BOMB_SECTION));
+    this.load.image(BOMB_ATOMIC_SECTION, getSvgPath(BOMB_ATOMIC_SECTION));
+    this.load.image(BOMB_NUCLEAR_SECTION, getSvgPath(BOMB_NUCLEAR_SECTION));
+    this.load.image(SAFE_PACK_SECTION, getSvgPath(SAFE_PACK_SECTION));
+    this.load.image(RIP_SECTION, getSvgPath(RIP_SECTION));
+  }
+
+  private preloadSprites(): void {
+    this.load.spritesheet(
+      EXPLOSION_SECTION,
+      getSpritesPath(EXPLOSION_SECTION),
+      {
+        frameWidth: 128,
+        frameHeight: 128,
+      }
+    );
   }
 
   public create(): void {
-    this.cameras.main.fadeIn(1000,0,0,0);
+    super.fadeInScene();
     this.createSounds();
     this.createBackground();
     this.createFloor();
     this.createAnimations();
     this.music.play();
 
-    const destroyedBombs = this.add.image(25, 25, BOMB_SECTION_NAME);
+    const destroyedBombs = this.add.image(25, 25, BOMB_SECTION);
     destroyedBombs.setScale(0.07);
 
-    const lifes = this.add.image(100, 30, RIP_SECTION_NAME);
+    const lifes = this.add.image(100, 30, RIP_SECTION);
     lifes.setScale(0.15);
 
     this.score = this.add.text(50, 20, "", {
@@ -154,17 +179,17 @@ export class GameScene extends Phaser.Scene {
   }
 
   private createSounds(): void {
-    this.music = this.sound.add(MAIN_GAME_MUSIC_SECTION_NAME, {
+    this.music = this.sound.add(MAIN_GAME_MUSIC_SECTION, {
       volume: GAMEPLAY_MUSIC_VOLUME,
       loop: true,
     });
-    this.explosionSound = this.sound.add(EXPLOSION_SOUND_SECTION_NAME, {
+    this.explosionSound = this.sound.add(EXPLOSION_SOUND_SECTION, {
       volume: SOUND_EFFECTS_VOLUME,
     });
-    this.deadSound = this.sound.add(DEAD_SOUND_SECTION_NAME, {
+    this.deadSound = this.sound.add(DEAD_SOUND_SECTION, {
       volume: SOUND_EFFECTS_VOLUME,
     });
-    this.bonusSound = this.sound.add(BONUS_SOUND_SECTION_NAME, {
+    this.bonusSound = this.sound.add(BONUS_SOUND_SECTION, {
       volume: SOUND_EFFECTS_VOLUME,
     });
   }
@@ -175,14 +200,14 @@ export class GameScene extends Phaser.Scene {
       this.renderer.height / 2,
       this.renderer.width * 2,
       this.renderer.height * 2,
-      BACKGROUND_SECTION_NAME
+      BACKGROUND_SECTION
     );
     background.setAngle(90);
   }
 
   private createFloor(): void {
     this.floor = this.physics.add.staticGroup({
-      key: FLOOR_SECTION_NAME,
+      key: FLOOR_SECTION,
       frameQuantity: FLOOR_FRAME_QUANTITY,
     });
     Phaser.Actions.PlaceOnLine(
@@ -200,7 +225,7 @@ export class GameScene extends Phaser.Scene {
   private createAnimations(): void {
     this.anims.create({
       key: KABOOM_ANIM_NAME,
-      frames: this.anims.generateFrameNumbers(EXPLOSION_SECTION_NAME, {
+      frames: this.anims.generateFrameNumbers(EXPLOSION_SECTION, {
         start: 0,
         end: 15,
       }),
@@ -210,7 +235,7 @@ export class GameScene extends Phaser.Scene {
     });
 
     this.explosions = this.add.group({
-      defaultKey: EXPLOSION_SECTION_NAME,
+      defaultKey: EXPLOSION_SECTION,
       maxSize: -1,
     });
   }
@@ -244,17 +269,17 @@ export class GameScene extends Phaser.Scene {
     const x: number = this.generateRandomBetween(25, this.renderer.width - 25);
     const y: number = 25;
     if (randomBombType < this.levelConfig.ranges[0]) {
-      return this.buildBomb(BOMB_SECTION_NAME, x, y, 1, 1, 100, 200);
+      return this.buildBomb(BOMB_SECTION, x, y, 1, 1, 100, 200);
     } else if (
       randomBombType >= this.levelConfig.ranges[0] &&
       randomBombType < this.levelConfig.ranges[1]
     ) {
-      return this.buildBomb(BOMB_NUCLEAR_SECTION_NAME, x, y, 10, 2, 150, 200);
+      return this.buildBomb(BOMB_NUCLEAR_SECTION, x, y, 10, 2, 150, 200);
     } else if (
       randomBombType >= this.levelConfig.ranges[1] &&
       randomBombType < this.levelConfig.ranges[2]
     ) {
-      return this.buildBomb(BOMB_ATOMIC_SECTION_NAME, x, y, 100, 3, 200, 230);
+      return this.buildBomb(BOMB_ATOMIC_SECTION, x, y, 100, 3, 200, 230);
     } else {
       return this.buildSafePackage(x, y);
     }
@@ -292,7 +317,7 @@ export class GameScene extends Phaser.Scene {
     const safePackage: SafePackage = this.physics.add.image(
       x,
       y,
-      SAFE_PACK_SECTION_NAME
+      SAFE_PACK_SECTION
     );
     safePackage.generatedVelocity = this.generateRandomBetween(200, 230);
     safePackage.setDisplaySize(
@@ -360,10 +385,7 @@ export class GameScene extends Phaser.Scene {
     this.deadSound.play();
     this.subGame.unsubscribe();
     this.subLevelConfig.unsubscribe();
-    this.cameras.main.fadeOut(1000, 0, 0, 0);
-    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
-      this.scene.start(SCORE_SCENE_NAME, {bombsCaught: this.bombsCaught})
-    });
+    super.fadeOutScene(Scenes.Score, { bombsCaught: this.bombsCaught });
   }
 
   private explosionEffect(bomb: Bomb): void {

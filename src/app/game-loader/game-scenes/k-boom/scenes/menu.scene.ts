@@ -1,19 +1,17 @@
-import { TextButton } from "../../game-objects/text-button";
-import {
-  SCENES,
-  START_SOUND_PATH,
-  START_SOUND_SECTION_NAME,
-} from "./k-boom.routes";
+import { TextButton } from "../../../game-objects/text-button";
 import {
   BUTTON_CONFIG,
   SOUND_EFFECTS_VOLUME,
   TERTIARY_BUTTON_CONFIG,
   TITLE_BUTTON_CONFIG,
-} from "./k-boom.config";
+} from "../config/k-boom.config";
 import { Subscription } from "rxjs";
 import { User } from "src/app/commons/interfaces/user/user.class";
 import { UserService } from "src/app/commons/services/user/user.service";
-import { Scene } from "../../game-objects/scene";
+import { Scene } from "../../../game-objects/scene";
+import { Scenes } from "../config/k-boom.names";
+import { START_SOUND_SECTION } from "../config/k-boom.section";
+import { getSoundPath } from "../functions/path.functions";
 
 const NUMBER_OF_BUTTONS: number = 3;
 export class MenuScene extends Scene {
@@ -29,11 +27,11 @@ export class MenuScene extends Scene {
   private buttonSound: Phaser.Sound.BaseSound;
 
   constructor() {
-    super(SCENES.MENU);
+    super(Scenes.Menu);
   }
 
   preload() {
-    this.load.audio(START_SOUND_SECTION_NAME, START_SOUND_PATH);
+    this.load.audio(START_SOUND_SECTION, getSoundPath(START_SOUND_SECTION));
     this.subUser = UserService.getCurrent().subscribe((user) =>
       this.user.assign(user)
     );
@@ -72,13 +70,13 @@ export class MenuScene extends Scene {
       this.sound.stopAll();
       this.buttonSound.play();
       this.throwAllOutAnimation();
-      super.fadeOutScene(SCENES.GAME);
+      super.fadeOutScene(Scenes.Game);
     });
     this.levelsButton.on("pointerdown", () => {
       this.subUser.unsubscribe();
       this.buttonSound.play();
       this.throwAllOutAnimation();
-      super.fadeOutScene(SCENES.LEVELS);
+      super.fadeOutScene(Scenes.Levels);
     });
     this.exitButton.on("pointerdown", () => {
       this.subUser.unsubscribe();
@@ -133,7 +131,7 @@ export class MenuScene extends Scene {
   }
 
   private buildSounds(): void {
-    this.buttonSound = this.sound.add(START_SOUND_SECTION_NAME, {
+    this.buttonSound = this.sound.add(START_SOUND_SECTION, {
       volume: SOUND_EFFECTS_VOLUME,
     });
   }

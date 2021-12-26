@@ -1,22 +1,23 @@
 import Phaser from "phaser";
-import { Scene } from "../../game-objects/scene";
-import { TextButton } from "../../game-objects/text-button";
-import { TileSprite } from "../../game-objects/tile-sprite";
+import { Scene } from "../../../game-objects/scene";
+import { TextButton } from "../../../game-objects/text-button";
+import { TileSprite } from "../../../game-objects/tile-sprite";
 import {
   BUTTON_CONFIG,
   MENU_MUSIC_VOLUME,
   SOUND_EFFECTS_VOLUME,
-} from "./k-boom.config";
+} from "../config/k-boom.config";
+import { Scenes } from "../config/k-boom.names";
 import {
-  BACKGROUND_MENU_IMG_PATH,
-  BACKGROUND_MENU_SECTION_NAME,
-  MENU_MUSIC_PATH,
-  MENU_MUSIC_SECTION_NAME,
-  SCENES,
-  START_SOUND_PATH,
-  START_SOUND_SECTION_NAME,
-  WELCOME_SCENE_NAME,
-} from "./k-boom.routes";
+  BACKGROUND_MENU_SECTION,
+  MENU_MUSIC_SECTION,
+  START_SOUND_SECTION,
+} from "../config/k-boom.section";
+import {
+  getImgPath,
+  getMusicPath,
+  getSoundPath,
+} from "../functions/path.functions";
 export class WelcomeScene extends Scene {
   private titleButton: TextButton;
   private touchButton: TextButton;
@@ -27,13 +28,16 @@ export class WelcomeScene extends Scene {
   private startGameSound: Phaser.Sound.BaseSound;
 
   constructor() {
-    super(WELCOME_SCENE_NAME);
+    super(Scenes.Welcome);
   }
 
   preload() {
-    this.load.audio(MENU_MUSIC_SECTION_NAME, MENU_MUSIC_PATH);
-    this.load.audio(START_SOUND_SECTION_NAME, START_SOUND_PATH);
-    this.load.image(BACKGROUND_MENU_SECTION_NAME, BACKGROUND_MENU_IMG_PATH);
+    this.load.audio(MENU_MUSIC_SECTION, getMusicPath(MENU_MUSIC_SECTION));
+    this.load.audio(START_SOUND_SECTION, getSoundPath(START_SOUND_SECTION));
+    this.load.image(
+      BACKGROUND_MENU_SECTION,
+      getImgPath(BACKGROUND_MENU_SECTION)
+    );
   }
 
   create(): void {
@@ -58,7 +62,7 @@ export class WelcomeScene extends Scene {
       "pointerdown",
       () => {
         this.startGameSound.play();
-        super.fadeOutScene(SCENES.MENU);
+        super.fadeOutScene(Scenes.Menu);
       },
       this
     );
@@ -78,10 +82,10 @@ export class WelcomeScene extends Scene {
   }
 
   private buildSound(): void {
-    this.startGameSound = this.sound.add(START_SOUND_SECTION_NAME, {
+    this.startGameSound = this.sound.add(START_SOUND_SECTION, {
       volume: SOUND_EFFECTS_VOLUME,
     });
-    this.music = this.sound.add(MENU_MUSIC_SECTION_NAME, {
+    this.music = this.sound.add(MENU_MUSIC_SECTION, {
       volume: MENU_MUSIC_VOLUME,
       loop: true,
     });
@@ -124,7 +128,7 @@ export class WelcomeScene extends Scene {
       this.renderer.height / 2,
       this.renderer.width,
       this.renderer.height,
-      BACKGROUND_MENU_SECTION_NAME
+      BACKGROUND_MENU_SECTION
     );
   }
 }
