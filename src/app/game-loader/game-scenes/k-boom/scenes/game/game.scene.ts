@@ -21,6 +21,7 @@ import {
   BONUS_SOUND_SECTION,
   DEAD_SOUND_SECTION,
   EXPLOSION_SECTION,
+  EXPLOSION_SOUND_FOUR_SECTION,
   EXPLOSION_SOUND_SECTION,
   EXPLOSION_SOUND_TREE_SECTION,
   EXPLOSION_SOUND_TWO_SECTION,
@@ -47,6 +48,7 @@ import { SafePackage } from "@k-boom/game-objects/throwable-item/safe-package.in
 import { ThrowableItem } from "@k-boom/game-objects/throwable-item/throwable-item";
 import { GAME_TEXT_STYLES } from "./game.config";
 import { PointerEvent } from "@interfaces/events/events.interface";
+import { generateRandomBetween } from "@game-scenes/k-boom/functions/random.functions";
 export class GameScene extends Scene {
   private subLevelConfig: Subscription;
   private subGame: Subscription;
@@ -70,6 +72,7 @@ export class GameScene extends Scene {
   private primaryExplosionSound: Sound;
   private secondaryExplosionSound: Sound;
   private tertiaryExplosionSound: Sound;
+  private forthyExplosionSound: Sound;
   private bonusSound: Sound;
   private deadSound: Sound;
   private music: Sound;
@@ -129,6 +132,10 @@ export class GameScene extends Scene {
       EXPLOSION_SOUND_TREE_SECTION,
       getSoundPath(EXPLOSION_SOUND_TREE_SECTION)
     );
+    this.load.audio(
+      EXPLOSION_SOUND_FOUR_SECTION,
+      getSoundPath(EXPLOSION_SOUND_FOUR_SECTION)
+    );
     this.load.audio(BONUS_SOUND_SECTION, getSoundPath(BONUS_SOUND_SECTION));
     this.load.audio(DEAD_SOUND_SECTION, getSoundPath(DEAD_SOUND_SECTION));
   }
@@ -187,6 +194,9 @@ export class GameScene extends Scene {
       volume: SOUND_EFFECTS_VOLUME,
     });
     this.tertiaryExplosionSound = this.sound.add(EXPLOSION_SOUND_TREE_SECTION, {
+      volume: SOUND_EFFECTS_VOLUME,
+    });
+    this.forthyExplosionSound = this.sound.add(EXPLOSION_SOUND_FOUR_SECTION, {
       volume: SOUND_EFFECTS_VOLUME,
     });
     this.deadSound = this.sound.add(DEAD_SOUND_SECTION, {
@@ -269,8 +279,8 @@ export class GameScene extends Scene {
   }
 
   private buildThrowableItem(): ThrowableItem {
-    const randomBombType: number = this.generateRandomBetween(0, 100);
-    const x: number = this.generateRandomBetween(25, this.renderer.width - 25);
+    const randomBombType: number = generateRandomBetween(0, 100);
+    const x: number = generateRandomBetween(25, this.renderer.width - 25);
     const y: number = 25;
     if (randomBombType < this.levelConfig.ranges[0]) {
       return this.buildBomb(BOMB_SECTION, x, y, 1, 1, 100, 200);
@@ -298,9 +308,9 @@ export class GameScene extends Scene {
     randomVelocityFrom: number,
     randomVelocityTo: number
   ): Bomb {
-    const randomBombWidth: number = this.generateRandomBetween(0.17, 0.25);
+    const randomBombWidth: number = generateRandomBetween(0.17, 0.25);
     const bomb: Bomb = this.physics.add.image(x, y, section);
-    bomb.generatedVelocity = this.generateRandomBetween(
+    bomb.generatedVelocity = generateRandomBetween(
       randomVelocityFrom,
       randomVelocityTo
     );
@@ -317,13 +327,13 @@ export class GameScene extends Scene {
   }
 
   private buildSafePackage(x: number, y: number): SafePackage {
-    const randomWidth: number = this.generateRandomBetween(0.17, 0.25);
+    const randomWidth: number = generateRandomBetween(0.17, 0.25);
     const safePackage: SafePackage = this.physics.add.image(
       x,
       y,
       SAFE_PACK_SECTION
     );
-    safePackage.generatedVelocity = this.generateRandomBetween(200, 230);
+    safePackage.generatedVelocity = generateRandomBetween(200, 230);
     safePackage.setDisplaySize(
       this.renderer.width * randomWidth,
       this.renderer.height * 0.15
@@ -334,10 +344,6 @@ export class GameScene extends Scene {
     safePackage.points = 0;
     safePackage.damage = 0;
     return safePackage;
-  }
-
-  private generateRandomBetween(first: number, second: number): number {
-    return Phaser.Math.FloatBetween(first, second);
   }
 
   private onSafeTouched(item: ThrowableItem): () => void {
@@ -403,9 +409,11 @@ export class GameScene extends Scene {
 
   private randomExplosionSound(): void {
     const randomValue: number = Math.random() * 100;
-    if (randomValue >= 0 && randomValue < 33) this.primaryExplosionSound.play();
-    if (randomValue >= 33 && randomValue < 66)
+    if (randomValue >= 0 && randomValue < 25) this.primaryExplosionSound.play();
+    if (randomValue >= 25 && randomValue < 50)
       this.secondaryExplosionSound.play();
-    if (randomValue >= 66) this.tertiaryExplosionSound.play();
+    if (randomValue >= 50 && randomValue < 75)
+      this.tertiaryExplosionSound.play();
+    if (randomValue >= 75) this.forthyExplosionSound.play();
   }
 }
