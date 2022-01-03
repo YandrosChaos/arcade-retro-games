@@ -49,6 +49,12 @@ import { ThrowableItem } from "@k-boom/game-objects/throwable-item/throwable-ite
 import { GAME_TEXT_STYLES } from "./game.config";
 import { PointerEvent } from "@interfaces/events/events.interface";
 import { generateRandomBetween } from "@game-scenes/k-boom/functions/random.functions";
+import { BombFactory } from "@game-scenes/k-boom/game-objects/throwable-item/bomb-factory.class";
+import { BoundElementProperty } from "@angular/compiler";
+import {
+  isBomb,
+  isSafePackage,
+} from "@game-scenes/k-boom/functions/check-type.functions";
 export class GameScene extends Scene {
   private subLevelConfig: Subscription;
   private subGame: Subscription;
@@ -76,6 +82,8 @@ export class GameScene extends Scene {
   private bonusSound: Sound;
   private deadSound: Sound;
   private music: Sound;
+
+  private bombFactory: BombFactory;
 
   constructor() {
     super(Scenes.Game);
@@ -110,6 +118,11 @@ export class GameScene extends Scene {
     this.preloadImages();
     this.preloadSvg();
     this.preloadSprites();
+    this.preloadBombFactory();
+  }
+
+  private preloadBombFactory(): void {
+    this.bombFactory = new BombFactory(this, this.levelConfig?.ranges);
   }
 
   private preloadMusic(): void {
@@ -279,71 +292,12 @@ export class GameScene extends Scene {
   }
 
   private buildThrowableItem(): ThrowableItem {
-    const randomBombType: number = generateRandomBetween(0, 100);
-    const x: number = generateRandomBetween(25, this.renderer.width - 25);
-    const y: number = 25;
-    if (randomBombType < this.levelConfig.ranges[0]) {
-      return this.buildBomb(BOMB_SECTION, x, y, 1, 1, 100, 200);
-    } else if (
-      randomBombType >= this.levelConfig.ranges[0] &&
-      randomBombType < this.levelConfig.ranges[1]
-    ) {
-      return this.buildBomb(BOMB_NUCLEAR_SECTION, x, y, 10, 2, 150, 200);
-    } else if (
-      randomBombType >= this.levelConfig.ranges[1] &&
-      randomBombType < this.levelConfig.ranges[2]
-    ) {
-      return this.buildBomb(BOMB_ATOMIC_SECTION, x, y, 100, 3, 200, 230);
-    } else {
-      return this.buildSafePackage(x, y);
-    }
-  }
-
-  private buildBomb(
-    section: string,
-    x: number,
-    y: number,
-    points: number,
-    damage: number,
-    randomVelocityFrom: number,
-    randomVelocityTo: number
-  ): Bomb {
-    const randomBombWidth: number = generateRandomBetween(0.17, 0.25);
-    const bomb: Bomb = this.physics.add.image(x, y, section);
-    bomb.generatedVelocity = generateRandomBetween(
-      randomVelocityFrom,
-      randomVelocityTo
-    );
-    bomb.setDisplaySize(
-      this.renderer.width * randomBombWidth,
-      this.renderer.height * 0.15
-    );
-    bomb.setVelocity(0, bomb.generatedVelocity);
-    bomb.setInteractive();
-    bomb.on("pointerdown", this.onBombTouched(bomb), this);
-    bomb.points = points;
-    bomb.damage = damage;
-    return bomb;
-  }
-
-  private buildSafePackage(x: number, y: number): SafePackage {
-    const randomWidth: number = generateRandomBetween(0.17, 0.25);
-    const safePackage: SafePackage = this.physics.add.image(
-      x,
-      y,
-      SAFE_PACK_SECTION
-    );
-    safePackage.generatedVelocity = generateRandomBetween(200, 230);
-    safePackage.setDisplaySize(
-      this.renderer.width * randomWidth,
-      this.renderer.height * 0.15
-    );
-    safePackage.setVelocity(0, safePackage.generatedVelocity);
-    safePackage.setInteractive();
-    safePackage.on(PointerEvent.Down, this.onSafeTouched(safePackage), this);
-    safePackage.points = 0;
-    safePackage.damage = 0;
-    return safePackage;
+    const item: ThrowableItem = this.bombFactory.buildThrowableItem();
+    if (isBomb(item))
+      item.on(PointerEvent.Down, this.onBombTouched(item), this);
+    if (isSafePackage(item))
+      item.on(PointerEvent.Down, this.onSafeTouched(item), this);
+    return item;
   }
 
   private onSafeTouched(item: ThrowableItem): () => void {
@@ -391,7 +345,7 @@ export class GameScene extends Scene {
   }
 
   private gameOver(): void {
-    this.music.destroy();
+    this.music?.destroy();
     this.deadSound.play();
     this.subGame.unsubscribe();
     this.subLevelConfig.unsubscribe();

@@ -7,7 +7,6 @@ import {
   BACKGROUND_SECTION,
   WRONG_SOUND_SECTION,
   BONUS_SOUND_SECTION,
-  SAFE_PACK_SECTION,
 } from "@game-scenes/k-boom/config/k-boom.section";
 import {
   getMusicPath,
