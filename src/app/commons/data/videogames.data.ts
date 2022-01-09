@@ -8,7 +8,7 @@ import { Difficulty, VideoGame } from "@interfaces/game/videogame.interface";
 import { WelcomeScene } from "@game-scenes/k-boom/scenes/welcome/welcome.scene";
 
 // Space Invaders - Scenes
-import { LoadScene as LoadSceneSpaceInvaders } from "@space-invaders/scenes/load-scene/load.scene";
+import { LoadScene as LoadSceneSpaceInvaders } from "@game-scenes/space-invaders/scenes/load/load.scene";
 
 export const VIDEO_GAMES: VideoGame[] = [
   {

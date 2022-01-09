@@ -5,7 +5,7 @@ import { Scenes } from "@k-boom/config/k-boom.names";
 import {
   BACKGROUND_SECTION,
 } from "@k-boom/config/k-boom.section";
-import { Text } from "@k-boom/game-objects/text/text.interface";
+import { Text } from "@game-objects/text/text.interface";
 import { TileSprite } from "@game-objects/tile-sprite";
 import { HINT_TEXT_CONFIG, RESULT_TEXT_CONFIG } from "./score.config";
 import { PointerEvent } from "@interfaces/events/events.interface";

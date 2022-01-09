@@ -1,4 +1,4 @@
-import { TextStyle } from "@game-scenes/k-boom/game-objects/text/text.interface";
+import { TextStyle } from "@game-objects/text/text.interface";
 
 export const RESULT_TEXT_CONFIG: TextStyle = {
   font: "2rem Minecraft",

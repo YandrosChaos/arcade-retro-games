@@ -13,7 +13,7 @@ import {
   getSoundPath,
   getImgPath,
 } from "@game-scenes/k-boom/functions/path.functions";
-import { Sound } from "@game-scenes/k-boom/game-objects/sound/sound.interface";
+import { Sound } from "@game-objects/sound/sound.interface";
 import { HolyData } from "@services/holy-data/holy-data.service";
 
 export class Scene extends Phaser.Scene {

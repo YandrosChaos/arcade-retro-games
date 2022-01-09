@@ -28,11 +28,11 @@ export class LoadScene extends Scene {
   preload() {
     this.buildLoadingBar();
     this.initLoadingBar();
-    this.loadMusic();
-    this.loadSounds();
-    this.loadSprites();
-    this.loadImages();
-    this.loadSVG();
+    // this.loadMusic();
+    // this.loadSounds();
+    // this.loadSprites();
+    // this.loadImages();
+    // this.loadSVG();
   }
 
   private initLoadingBar(): void {

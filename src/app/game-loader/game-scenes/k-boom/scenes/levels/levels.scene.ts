@@ -21,7 +21,7 @@ import {
 } from "@k-boom/config/k-boom.section";
 import { getSoundPath } from "@k-boom/functions/path.functions";
 import { UnlockLevelModal } from "./modals/unlock-level/unlock-level.game-modal";
-import { Sound } from "@game-scenes/k-boom/game-objects/sound/sound.interface";
+import { Sound } from "@game-objects/sound/sound.interface";
 import { PointerEvent } from "@interfaces/events/events.interface";
 
 export class LevelsScene extends Scene {

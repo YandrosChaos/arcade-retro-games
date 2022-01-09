@@ -5,6 +5,7 @@ export enum Fonts {
 
 export enum Scenes {
   Load = "LoadScene",
+  Welcome = "WelcomeScene",
 }
 
 // game name

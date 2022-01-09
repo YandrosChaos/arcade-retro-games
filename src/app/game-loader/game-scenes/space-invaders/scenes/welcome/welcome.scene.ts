@@ -1,22 +1,14 @@
 import { Scene } from "@game-objects/scene";
 import { TextButton } from "@game-objects/text-button";
 import { TileSprite } from "@game-objects/tile-sprite";
-import {
-  BUTTON_CONFIG,
-  MENU_MUSIC_VOLUME,
-} from "@k-boom/config/k-boom.config";
-import { Scenes } from "@k-boom/config/k-boom.names";
-import {
-  BACKGROUND_MENU_SECTION,
-  MENU_MUSIC_SECTION,
-} from "@k-boom/config/k-boom.section";
-import {
-  getMusicPath,
-} from "@k-boom/functions/path.functions";
+import { BUTTON_CONFIG, MENU_MUSIC_VOLUME } from "@space-invaders/config/global-config";
+import { Scenes } from "@space-invaders/config/names";
+import { getMusicPath } from "@space-invaders/functions/path.functions";
 import { Sound } from "@game-objects/sound/sound.interface";
 import { KBOOM_TEXT, TITLE_BUTTON_CONFIG, TOUCH_TEXT } from "./welcome.config";
 import { TextStyle } from "@game-objects/text/text.interface";
 import { PointerEvent } from "@interfaces/events/events.interface";
+import { BACKGROUND_MENU_SECTION, MENU_MUSIC_SECTION } from "@game-scenes/space-invaders/config/section";
 export class WelcomeScene extends Scene {
   private titleButton: TextButton;
   private touchButton: TextButton;
@@ -53,7 +45,7 @@ export class WelcomeScene extends Scene {
       PointerEvent.Down,
       () => {
         this.confirmSound.play();
-        super.fadeOutScene(Scenes.Menu);
+        //super.fadeOutScene(Scenes.Menu);
       },
       this
     );
@@ -84,7 +76,7 @@ export class WelcomeScene extends Scene {
     this.titleButton = this.buildTextButton(
       KBOOM_TEXT,
       this.renderer.width / 10,
-      this.renderer.height / 2 - 40,
+      this.renderer.height / 2 - 195,
       TITLE_BUTTON_CONFIG
     );
   }

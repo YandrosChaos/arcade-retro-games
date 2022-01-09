@@ -41,8 +41,8 @@ import {
   Group,
   StaticGroup,
 } from "@k-boom/game-objects/groups/group.interface";
-import { Sound } from "@k-boom/game-objects/sound/sound.interface";
-import { Text } from "@k-boom/game-objects/text/text.interface";
+import { Sound } from "@game-objects/sound/sound.interface";
+import { Text } from "@game-objects/text/text.interface";
 import { Bomb } from "@k-boom/game-objects/throwable-item/bomb.interface";
 import { SafePackage } from "@k-boom/game-objects/throwable-item/safe-package.interface";
 import { ThrowableItem } from "@k-boom/game-objects/throwable-item/throwable-item";

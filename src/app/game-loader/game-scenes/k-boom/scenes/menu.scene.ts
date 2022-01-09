@@ -12,7 +12,7 @@ import { Scene } from "@game-objects/scene";
 import { Scenes } from "@k-boom/config/k-boom.names";
 import { BONUS_SOUND_SECTION } from "@k-boom/config/k-boom.section";
 import { getSoundPath } from "@k-boom/functions/path.functions";
-import { Sound } from "../game-objects/sound/sound.interface";
+import { Sound } from "../../../game-objects/sound/sound.interface";
 import { PointerEvent } from "@interfaces/events/events.interface";
 
 const NUMBER_OF_BUTTONS: number = 3;
