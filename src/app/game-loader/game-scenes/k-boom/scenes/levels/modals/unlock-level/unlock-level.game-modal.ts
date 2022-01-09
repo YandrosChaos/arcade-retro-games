@@ -21,7 +21,7 @@ import {
   WRONG_SOUND_SECTION,
 } from "@k-boom/config/k-boom.section";
 import { Scene } from "@game-objects/scene";
-import { Graphics } from "@game-scenes/k-boom/game-objects/graphics/graphics.interface";
+import { Graphics } from "@game-objects/graphics/graphics.interface";
 import { Sound } from "@game-scenes/k-boom/game-objects/sound/sound.interface";
 import { Container } from "@game-scenes/k-boom/game-objects/container/container.interface";
 import { PointerEvent } from "@interfaces/events/events.interface";

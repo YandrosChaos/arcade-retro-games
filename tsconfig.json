@@ -23,7 +23,8 @@
       "@game-scenes/*": ["src/app/game-loader/game-scenes/*"],
       "@game-objects/*": ["src/app/game-loader/game-objects/*"],
       "@game-modals/*": ["src/app/game-loader/game/modals/*"],
-      "@k-boom/*": ["src/app/game-loader/game-scenes/k-boom/*"]
+      "@k-boom/*": ["src/app/game-loader/game-scenes/k-boom/*"],
+      "@space-invaders/*": ["src/app/game-loader/game-scenes/space-invaders/*"]
     }
   },
   "angularCompilerOptions": {

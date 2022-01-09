@@ -1,4 +1,4 @@
-import { GraphicOptions } from "@game-scenes/k-boom/game-objects/graphics/graphics.interface";
+import { GraphicOptions } from "@game-objects/graphics/graphics.interface";
 
 export const BACKGROUND_CONF: GraphicOptions = {
   fillStyle: {

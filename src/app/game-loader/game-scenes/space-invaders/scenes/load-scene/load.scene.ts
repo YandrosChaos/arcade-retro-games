@@ -1,6 +1,7 @@
 import { Scene } from "@game-objects/scene";
 import { LoadStatus } from "@interfaces/events/events.interface";
 import { Scenes } from "@k-boom/config/k-boom.names";
+import { Graphics } from "@game-objects/graphics/graphics.interface";
 import {
   IMAGES,
   IMG_MAIN_PATH,
@@ -12,8 +13,7 @@ import {
   SPRITES_MAIN_PATH,
   SVGS,
   SVG_MAIN_PATH,
-} from "@k-boom/config/k-boom.routes";
-import { Graphics } from "../../../game-objects/graphics/graphics.interface";
+} from "@game-scenes/space-invaders/config/routes";
 
 export const PINK: number = 0xbc00ff;
 export class LoadScene extends Scene {
